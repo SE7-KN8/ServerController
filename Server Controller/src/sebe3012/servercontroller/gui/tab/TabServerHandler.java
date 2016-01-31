@@ -49,6 +49,7 @@ public class TabServerHandler {
 
 	public void onStartClicked() {
 		startServer();
+		info.setText("Server: " + server.getName() + "\nPort: " + server.getPort());
 	}
 
 	public void onEndClicked() {
