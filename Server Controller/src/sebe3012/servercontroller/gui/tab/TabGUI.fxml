@@ -31,7 +31,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="cInput" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="52.0" prefWidth="799.0" promptText="Befehl">
+                  <TextField fx:id="cInput" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyPressed="#onEnterPressed" prefHeight="52.0" prefWidth="799.0" promptText="Befehl">
                      <font>
                         <Font name="Arial" size="20.0" />
                      </font></TextField>

@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class TabContentHandler implements Initializable {
 
@@ -52,6 +54,13 @@ public class TabContentHandler implements Initializable {
 	@FXML
 	void onStartClicked(ActionEvent event) {
 		server.onStartClicked();
+	}
+
+	@FXML
+	void onEnterPressed(KeyEvent event) {
+		if (event.getCode() == KeyCode.ENTER) {
+			server.onSendClicked();
+		}
 	}
 
 	@Override
