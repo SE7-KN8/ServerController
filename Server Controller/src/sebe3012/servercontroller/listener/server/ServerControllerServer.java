@@ -86,13 +86,4 @@ public class ServerControllerServer {
 
 	}
 
-	public static void main(String[] args) {
-		try {
-			ServerControllerServer s = new ServerControllerServer(34567);
-			System.out.println(s.getPort());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 }
