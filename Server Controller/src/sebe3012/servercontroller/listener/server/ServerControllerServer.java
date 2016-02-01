@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import sebe3012.servercontroller.gui.tab.Tabs;
+
 public class ServerControllerServer {
 
 	public class ClientHandler implements Runnable {
@@ -74,8 +76,13 @@ public class ServerControllerServer {
 	}
 
 	public void restartServer(String serverID) {
-		// TODO Not yet implemented
-		System.out.println("Test;" + serverID);
+		Tabs.servers.forEach((id, server) -> {
+			if(server.hasServer()){
+				if(server.getServer().getName().equalsIgnoreCase(serverID)){
+					server.onRestartClicked();
+				}
+			}
+		});
 
 	}
 

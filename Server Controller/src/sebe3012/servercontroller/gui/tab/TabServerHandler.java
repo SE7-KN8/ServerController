@@ -23,7 +23,25 @@ public class TabServerHandler {
 
 		@Override
 		public void serverStoped(int code) {
+			System.out.println(restartServer);
+			server.stop();
+			server = null;
+			if (restartServer) {
+				server = new BatchServer(batchPath, propertiesPath, serverName);
+				server.registerListener(new ServerHandler());
+				try {
+					server.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}else{
+				System.out.println("Non restart!");
+				server = new BatchServer(batchPath, propertiesPath, serverName);
+				server.registerListener(new ServerHandler());
+			}
 			output.appendText("Server stopped with code: " + code);
+			System.out.println(server);
+
 		}
 	}
 
@@ -35,24 +53,30 @@ public class TabServerHandler {
 	private Button stop;
 	private Button send;
 	private Label info;
+	private Button restart;
+	private boolean restartServer = false;
 
-	public TabServerHandler(TextArea output, TextField input, Button start, Button stop, Button send, Label info) {
+	public TabServerHandler(TextArea output, TextField input, Button start, Button stop, Button send, Label info,
+			Button btnRestart) {
 		this.output = output;
 		this.input = input;
 		this.start = start;
 		this.stop = stop;
 		this.send = send;
 		this.info = info;
+		this.restart = btnRestart;
 		Tabs.servers.put(Tabs.getNextID(), this);
 		Tabs.IDforServers.put(this, Tabs.getNextID());
 	}
 
 	public void onStartClicked() {
+		restartServer = false;
 		startServer();
 		info.setText("Server: " + server.getName() + "\nPort: " + server.getPort());
 	}
 
 	public void onEndClicked() {
+		restartServer = false;
 		if (server != null) {
 			server.sendCommand("stop");
 		} else {
@@ -73,6 +97,11 @@ public class TabServerHandler {
 		}
 	}
 
+	public void onRestartClicked() {
+		restartServer = true;
+		server.sendCommand("stop");
+	}
+
 	public boolean hasServer() {
 		if (server == null) {
 			return false;
@@ -81,9 +110,16 @@ public class TabServerHandler {
 		}
 	}
 
+	private String batchPath;
+	private String propertiesPath;
+	private String serverName;
+
 	public void initServer(String batch, String properties, String id) {
-		server = new BatchServer(batch, properties, id);
-		server.registerListener(new ServerHandler());
+		this.batchPath = batch;
+		this.propertiesPath = properties;
+		this.serverName = id;
+		this.server = new BatchServer(batch, properties, id);
+		this.server.registerListener(new ServerHandler());
 	}
 
 	public void startServer() {
@@ -99,6 +135,9 @@ public class TabServerHandler {
 		} catch (IOException e) {
 
 		}
+	}
+	public BatchServer getServer() {
+		return server;
 	}
 
 }

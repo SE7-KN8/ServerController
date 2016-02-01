@@ -70,7 +70,9 @@ public class BatchServer {
 				try {
 					String line = batchOutputReader.readLine();
 					listener.forEach(serverListener -> {
-						serverListener.serverReturnMessage(line);
+						if (line != null) {
+							serverListener.serverReturnMessage(line);
+						}
 					});
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -97,6 +99,7 @@ public class BatchServer {
 					serverListener.serverStoped(code);
 				});
 				System.out.println("[" + name + "] Stopped server with code " + code);
+				Servers.servers.remove(this);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -218,6 +221,28 @@ public class BatchServer {
 		batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
 		serverReadThread.start();
 		waitForServerExitThread.start();
+		Servers.servers.add(this);
+	}
+	/**
+	 * Stop the server process
+	 */
+	public void stop(){
+		try {
+			serverProcess.destroy();
+			batchInputWriter.close();
+			batchOutputReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "BatchServer [batchFile=" + batchFile + ", propertiesFile=" + propertiesFile + ", serverBuild="
+				+ serverBuild + ", serverProcess=" + serverProcess + ", port=" + port + ", batchOutputReader="
+				+ batchOutputReader + ", batchInputWriter=" + batchInputWriter + ", listener=" + listener
+				+ ", serverReadThread=" + serverReadThread + ", waitForServerExitThread=" + waitForServerExitThread
+				+ ", name=" + name + "]";
 	}
 
 }

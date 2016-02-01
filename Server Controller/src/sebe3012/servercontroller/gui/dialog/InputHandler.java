@@ -127,7 +127,7 @@ public class InputHandler {
 	 * This method is called when the user selects the batch file
 	 *
 	 * @param event
-	 *            The action event
+	 *            	The action event
 	 */
 	@FXML
 	void onOpenBatch(ActionEvent event) {

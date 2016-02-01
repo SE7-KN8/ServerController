@@ -42,6 +42,9 @@ public class TabContentHandler implements Initializable {
 	private Label lblInfo;
 
 	@FXML
+	private Button btnRestart;
+
+	@FXML
 	void onEndClicked(ActionEvent event) {
 		server.onEndClicked();
 	}
@@ -63,15 +66,21 @@ public class TabContentHandler implements Initializable {
 		}
 	}
 
+	@FXML
+	void onRestartClicked(ActionEvent event) {
+		server.onRestartClicked();
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("Output = " + cOutput);
-		System.out.println("Input  = " + cInput);
-		System.out.println("Send   = " + btnSend);
-		System.out.println("Start  = " + btnStart);
-		System.out.println("End    = " + btnEnd);
-		System.out.println("Info   = " + lblInfo);
-		server = new TabServerHandler(cOutput, cInput, btnStart, btnEnd, btnSend, lblInfo);
+		System.out.println("Output  = " + cOutput);
+		System.out.println("Input   = " + cInput);
+		System.out.println("Send    = " + btnSend);
+		System.out.println("Start   = " + btnStart);
+		System.out.println("End     = " + btnEnd);
+		System.out.println("Info    = " + lblInfo);
+		System.out.println("Restart = " + btnRestart);
+		server = new TabServerHandler(cOutput, cInput, btnStart, btnEnd, btnSend, lblInfo, btnRestart);
 		Tabs.contents.put(Tabs.getNextID(), this);
 		Tabs.IDforContents.put(this, Tabs.getNextID());
 	}
