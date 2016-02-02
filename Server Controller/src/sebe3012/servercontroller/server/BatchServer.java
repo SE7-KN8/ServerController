@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+
 public class BatchServer {
 	/**
 	 * The batch file
@@ -76,10 +81,22 @@ public class BatchServer {
 					});
 				} catch (IOException e) {
 					e.printStackTrace();
+					Platform.runLater(() -> {
+						Alert error = new Alert(AlertType.ERROR, "Server wurde aufgrund eines Fehlers beendet",
+								ButtonType.OK);
+						error.getDialogPane().getStylesheets().add(this.getClass().getClassLoader()
+								.getResource("sebe3012/servercontroller/gui/style.css").toExternalForm());
+					});
+					break;
 				}
 			}
 		}
 	}
+
+	/**
+	 * This boolean is true if the server is running
+	 */
+	private boolean isRunning = false;
 
 	/**
 	 * The the class for the thread is wait for the server exit
@@ -99,9 +116,10 @@ public class BatchServer {
 					serverListener.serverStoped(code);
 				});
 				System.out.println("[" + name + "] Stopped server with code " + code);
-				Servers.servers.remove(this);
+				isRunning = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				isRunning = false;
 			}
 
 		}
@@ -175,7 +193,6 @@ public class BatchServer {
 	 * @see ServerListener
 	 */
 	public void registerListener(ServerListener listener) {
-		System.out.println(listener);
 		this.listener.add(listener);
 	}
 
@@ -221,16 +238,18 @@ public class BatchServer {
 		batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
 		serverReadThread.start();
 		waitForServerExitThread.start();
-		Servers.servers.add(this);
+		isRunning = true;
 	}
+
 	/**
 	 * Stop the server process
 	 */
-	public void stop(){
+	public void stop() {
 		try {
 			serverProcess.destroy();
 			batchInputWriter.close();
 			batchOutputReader.close();
+			isRunning = false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -243,6 +262,10 @@ public class BatchServer {
 				+ batchOutputReader + ", batchInputWriter=" + batchInputWriter + ", listener=" + listener
 				+ ", serverReadThread=" + serverReadThread + ", waitForServerExitThread=" + waitForServerExitThread
 				+ ", name=" + name + "]";
+	}
+
+	public boolean isRunning() {
+		return isRunning;
 	}
 
 }

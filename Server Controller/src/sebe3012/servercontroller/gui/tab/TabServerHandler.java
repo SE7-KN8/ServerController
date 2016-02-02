@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui.tab;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -11,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import sebe3012.servercontroller.server.BatchServer;
 import sebe3012.servercontroller.server.ServerListener;
+import sebe3012.servercontroller.server.Servers;
 
 @SuppressWarnings("unused")
 public class TabServerHandler {
@@ -18,7 +20,10 @@ public class TabServerHandler {
 	public class ServerHandler implements ServerListener {
 		@Override
 		public void serverReturnMessage(String message) {
-			output.appendText(message + "\n");
+			Platform.runLater(() -> {
+				output.appendText(message + "\n");
+			});
+
 		}
 
 		@Override
@@ -34,12 +39,14 @@ public class TabServerHandler {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}else{
-				System.out.println("Non restart!");
+			} else {
 				server = new BatchServer(batchPath, propertiesPath, serverName);
 				server.registerListener(new ServerHandler());
 			}
-			output.appendText("Server stopped with code: " + code);
+			Platform.runLater(() -> {
+				output.appendText("Server stopped with code: " + code + "\n");
+				output.appendText("-----------------------------------------\n");
+			});
 			System.out.println(server);
 
 		}
@@ -78,7 +85,9 @@ public class TabServerHandler {
 	public void onEndClicked() {
 		restartServer = false;
 		if (server != null) {
-			server.sendCommand("stop");
+			if(server.isRunning()){
+				server.sendCommand("stop");
+			}
 		} else {
 			Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
 			a.getDialogPane().getStylesheets().add(TabServerHandler.class.getResource("style.css").toExternalForm());
@@ -120,12 +129,14 @@ public class TabServerHandler {
 		this.serverName = id;
 		this.server = new BatchServer(batch, properties, id);
 		this.server.registerListener(new ServerHandler());
+		Servers.servers.add(server);
 	}
 
 	public void startServer() {
 		try {
 			if (server != null) {
 				server.start();
+				System.out.println(Servers.servers);
 			} else {
 				Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
 				a.getDialogPane().getStylesheets()
@@ -136,6 +147,7 @@ public class TabServerHandler {
 
 		}
 	}
+
 	public BatchServer getServer() {
 		return server;
 	}
