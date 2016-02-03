@@ -80,7 +80,7 @@ public class FrameHandler {
 	@FXML
 	void onOverItemClicked(ActionEvent event) {
 		Alert credits = new Alert(AlertType.INFORMATION,
-				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 31.01.2015 Germany", ButtonType.OK);
+				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany", ButtonType.OK);
 		credits.setTitle("Über");
 		credits.setHeaderText("");
 		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
