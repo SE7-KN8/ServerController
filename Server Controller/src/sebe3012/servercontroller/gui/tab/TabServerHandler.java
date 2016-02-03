@@ -34,11 +34,7 @@ public class TabServerHandler {
 			if (restartServer) {
 				server = new BatchServer(batchPath, propertiesPath, serverName);
 				server.registerListener(new ServerHandler());
-				try {
-					server.start();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				server.start();
 			} else {
 				server = new BatchServer(batchPath, propertiesPath, serverName);
 				server.registerListener(new ServerHandler());
@@ -85,7 +81,7 @@ public class TabServerHandler {
 	public void onEndClicked() {
 		restartServer = false;
 		if (server != null) {
-			if(server.isRunning()){
+			if (server.isRunning()) {
 				server.sendCommand("stop");
 			}
 		} else {
@@ -133,19 +129,15 @@ public class TabServerHandler {
 	}
 
 	public void startServer() {
-		try {
-			if (server != null) {
-				server.start();
-				System.out.println(Servers.servers);
-			} else {
-				Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
-				a.getDialogPane().getStylesheets()
-						.add(TabServerHandler.class.getResource("style.css").toExternalForm());
-				a.showAndWait();
-			}
-		} catch (IOException e) {
-
+		if (server != null) {
+			server.start();
+			System.out.println(Servers.servers);
+		} else {
+			Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
+			a.getDialogPane().getStylesheets().add(TabServerHandler.class.getResource("style.css").toExternalForm());
+			a.showAndWait();
 		}
+
 	}
 
 	public BatchServer getServer() {

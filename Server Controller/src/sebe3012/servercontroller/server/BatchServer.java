@@ -81,12 +81,7 @@ public class BatchServer {
 					});
 				} catch (IOException e) {
 					e.printStackTrace();
-					Platform.runLater(() -> {
-						Alert error = new Alert(AlertType.ERROR, "Server wurde aufgrund eines Fehlers beendet",
-								ButtonType.OK);
-						error.getDialogPane().getStylesheets().add(this.getClass().getClassLoader()
-								.getResource("sebe3012/servercontroller/gui/style.css").toExternalForm());
-					});
+					onError(e.getMessage());
 					break;
 				}
 			}
@@ -118,6 +113,7 @@ public class BatchServer {
 				System.out.println("[" + name + "] Stopped server with code " + code);
 				isRunning = false;
 			} catch (InterruptedException e) {
+				onError(e.getMessage());
 				e.printStackTrace();
 				isRunning = false;
 			}
@@ -208,6 +204,7 @@ public class BatchServer {
 			batchInputWriter.write(command + "\n");
 			batchInputWriter.flush();
 		} catch (IOException e) {
+			onError(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -220,25 +217,30 @@ public class BatchServer {
 	 *             This exception will be throw if the properties and the batch
 	 *             path is incorrect
 	 */
-	public void start() throws IOException {
-		serverReadThread = new ReadThread(serverReadThread);
-		waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
-		Scanner s = new Scanner(propertiesFile);
-		while (s.hasNextLine()) {
-			String line = s.nextLine();
-			if (line.contains("server-port")) {
-				port = Integer.valueOf(line.split("=")[1]);
+	public void start() {
+		try {
+			serverReadThread = new ReadThread(serverReadThread);
+			waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
+			Scanner s = new Scanner(propertiesFile);
+			while (s.hasNextLine()) {
+				String line = s.nextLine();
+				if (line.contains("server-port")) {
+					port = Integer.valueOf(line.split("=")[1]);
+				}
 			}
+			s.close();
+			serverBuild = new ProcessBuilder("cmd", "/c", batchFile.getName());
+			serverBuild.directory(batchFile.getParentFile());
+			serverProcess = serverBuild.start();
+			batchOutputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
+			batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
+			serverReadThread.start();
+			waitForServerExitThread.start();
+			isRunning = true;
+		} catch (Exception e) {
+			onError(e.getMessage());
+			e.printStackTrace();
 		}
-		s.close();
-		serverBuild = new ProcessBuilder("cmd", "/c", batchFile.getName());
-		serverBuild.directory(batchFile.getParentFile());
-		serverProcess = serverBuild.start();
-		batchOutputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
-		batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
-		serverReadThread.start();
-		waitForServerExitThread.start();
-		isRunning = true;
 	}
 
 	/**
@@ -251,6 +253,7 @@ public class BatchServer {
 			batchOutputReader.close();
 			isRunning = false;
 		} catch (IOException e) {
+			onError(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -266,6 +269,16 @@ public class BatchServer {
 
 	public boolean isRunning() {
 		return isRunning;
+	}
+
+	public void onError(String errorMessage) {
+		Platform.runLater(() -> {
+			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + errorMessage,
+					ButtonType.OK);
+			error.getDialogPane().getStylesheets().add(this.getClass().getClassLoader()
+					.getResource("sebe3012/servercontroller/gui/style.css").toExternalForm());
+			error.showAndWait();
+		});
 	}
 
 }
