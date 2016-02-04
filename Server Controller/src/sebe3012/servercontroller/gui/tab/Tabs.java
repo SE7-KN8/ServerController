@@ -13,6 +13,7 @@ public class Tabs {
 	private static boolean value1 = false;
 	private static boolean value2 = false;
 	private static boolean value3 = false;
+	private static boolean value4 = false;
 
 	public static int getNextID() {
 		if (!value1) {
@@ -24,10 +25,14 @@ public class Tabs {
 		} else if (!value3) {
 			value3 = true;
 			return nextID;
+		} else if (!value4) {
+			value4 = true;
+			return nextID;
 		} else {
 			value1 = false;
 			value2 = false;
 			value3 = false;
+			value4 = false;
 			return nextID++;
 		}
 	}

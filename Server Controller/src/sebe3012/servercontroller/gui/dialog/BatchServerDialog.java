@@ -10,10 +10,15 @@ import javafx.stage.Stage;
 public class BatchServerDialog {
 
 	public static Stage stage;
+	public static String batchPath;
+	public static String propertiesPath;
+	public static String name;
+	public static boolean useDefault = true;
 
 	public BatchServerDialog(Stage stage) {
 
 		BatchServerDialog.stage = stage;
+		BatchServerDialog.stage.setAlwaysOnTop(true);
 
 		try {
 			Pane root = FXMLLoader.load(this.getClass().getResource("Dialog.fxml"));
@@ -28,6 +33,14 @@ public class BatchServerDialog {
 			e.printStackTrace();
 		}
 
+	}
+
+	public BatchServerDialog(Stage stage, String batch, String properties, String name) {
+		BatchServerDialog.useDefault = false;
+		BatchServerDialog.batchPath = batch;
+		BatchServerDialog.propertiesPath = properties;
+		BatchServerDialog.name = name;
+		new BatchServerDialog(stage);
 	}
 
 }

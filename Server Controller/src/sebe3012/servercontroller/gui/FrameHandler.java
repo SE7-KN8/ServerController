@@ -16,8 +16,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import sebe3012.servercontroller.gui.dialog.BatchServerDialog;
+import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BatchServer;
 import sebe3012.servercontroller.server.Servers;
@@ -56,12 +56,47 @@ public class FrameHandler {
 
 	@FXML
 	void initialize() {
-		lView.setCellFactory(new Callback<ListView<BatchServer>, ListCell<BatchServer>>() {
+		init();
+	}
 
-			@Override
-			public ListCell<BatchServer> call(ListView<BatchServer> param) {
-				return new ServerCell();
-			}
+	@FXML
+	void onOverItemClicked(ActionEvent event) {
+		showCredits();
+	}
+
+	@FXML
+	void onAddServerItemClicked(ActionEvent event) {
+		new BatchServerDialog(new Stage());
+	}
+
+	@FXML
+	void onServerEditItemClicked(ActionEvent event) {
+		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
+		BatchServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		if (bs.isRunning()) {
+			Alert dialog = new Alert(AlertType.WARNING, "Der Server muß erst gestoppt werden", ButtonType.OK);
+			dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+			dialog.setTitle("Fehler");
+			dialog.setHeaderText("");
+			dialog.showAndWait();
+		} else {
+			new BatchServerDialog(new Stage(), bs.getBatchFile().getAbsolutePath(),
+					bs.getPropertiesFile().getAbsolutePath(), bs.getName());
+		}
+	}
+
+	private void showCredits() {
+		Alert credits = new Alert(AlertType.INFORMATION,
+				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany", ButtonType.OK);
+		credits.setTitle("Über");
+		credits.setHeaderText("");
+		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		credits.showAndWait();
+	}
+
+	private void init() {
+		lView.setCellFactory(e -> {
+			return new ServerCell();
 		});
 		lView.setOnMouseClicked(event -> {
 			BatchServer bs = lView.getSelectionModel().getSelectedItem();
@@ -77,23 +112,8 @@ public class FrameHandler {
 		System.out.println("FXML intitialize");
 	}
 
-	@FXML
-	void onOverItemClicked(ActionEvent event) {
-		Alert credits = new Alert(AlertType.INFORMATION,
-				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany", ButtonType.OK);
-		credits.setTitle("Über");
-		credits.setHeaderText("");
-		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-		credits.showAndWait();
-	}
-
-	@FXML
-	void onAddServerItemClicked(ActionEvent event) {
-		BatchServerDialog bd = new BatchServerDialog(new Stage());
-		System.out.println(bd);
-	}
-
 	private class ServerCell extends ListCell<BatchServer> {
+
 		@Override
 		protected void updateItem(BatchServer item, boolean empty) {
 			super.updateItem(item, empty);
@@ -102,5 +122,6 @@ public class FrameHandler {
 				setText(item.getName());
 			}
 		}
+
 	}
 }

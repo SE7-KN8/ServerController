@@ -16,9 +16,11 @@ import sebe3012.servercontroller.gui.tab.Tabs;
 
 public class Frame extends Application {
 
+	public static Stage primaryStage;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		Frame.primaryStage = primaryStage;
 		BorderPane root = FXMLLoader.load(this.getClass().getResource("BaseFrame.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());

@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
@@ -23,8 +22,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.server.BatchServer;
+import sebe3012.servercontroller.server.Servers;
 
 /***
  *
@@ -87,12 +89,26 @@ public class InputHandler {
 	@FXML
 	void onAction(ActionEvent event) {
 
-		System.out.println("[ServerCreateDialog] ID= " + txfID.getText() + " START= " + txfStart.getText()
-				+ " PROPERTIES= " + txfPro.getText());
-		boolean successful = createNewTab();
-		if(successful){
+		boolean successful = true;
+
+		if (BatchServerDialog.useDefault) {
+			System.out.println("[ServerCreateDialog] ID= " + txfID.getText() + " START= " + txfStart.getText()
+					+ " PROPERTIES= " + txfPro.getText());
+			successful = createNewTab();
+		} else {
+			int id = ((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem()).getTabContent().getId();
+			BatchServer bs = Tabs.servers.get(id).getServer();
+			Servers.servers.remove(bs);
+			if (!bs.isRunning()) {
+				Tabs.servers.get(id).initServer(txfStart.getText(), txfPro.getText(), txfID.getText(), false);
+				FrameHandler.mainPane.getSelectionModel().getSelectedItem().setText(txfID.getText());
+				Servers.servers.add(Tabs.servers.get(id).getServer());
+			}
+		}
+		if (successful) {
 			BatchServerDialog.stage.close();
 		}
+		BatchServerDialog.useDefault = true;
 	}
 
 	/**
@@ -105,15 +121,16 @@ public class InputHandler {
 	 */
 	private boolean createNewTab() {
 		Platform.runLater(() -> {
-			Tab tab = new Tab(txfID.getText());
-			tab.setContent(new TabContent().getTabContent());
+			TabContent content = new TabContent();
+			ServerTab tab = new ServerTab(txfID.getText(), content);
+			tab.setContent(content.getTabContent());
 			tab.setClosable(false);
 			FrameHandler.mainPane.getTabs().add(tab);
 			init = false;
 			Tabs.servers.forEach((id, server) -> {
 				if (!init) {
 					if (!server.hasServer()) {
-						server.initServer(txfStart.getText(), txfPro.getText(), txfID.getText());
+						server.initServer(txfStart.getText(), txfPro.getText(), txfID.getText(), true);
 						init = true;
 					}
 				}
@@ -127,7 +144,7 @@ public class InputHandler {
 	 * This method is called when the user selects the batch file
 	 *
 	 * @param event
-	 *            	The action event
+	 *            The action event
 	 */
 	@FXML
 	void onOpenBatch(ActionEvent event) {
@@ -187,6 +204,7 @@ public class InputHandler {
 			}
 			image.setSmooth(false);
 			image.setImage(SwingFXUtils.toFXImage(i, null));
+
 		}
 	}
 
@@ -198,6 +216,15 @@ public class InputHandler {
 	 */
 	@FXML
 	void initialize() {
+		init();
+	}
+
+	private void init() {
+		if (!BatchServerDialog.useDefault) {
+			txfID.setText(BatchServerDialog.name);
+			txfStart.setText(BatchServerDialog.batchPath);
+			txfPro.setText(BatchServerDialog.propertiesPath);
+		}
 		lbl.setEffect(new DropShadow(10, 10, 10, Color.GREY));
 	}
 }
