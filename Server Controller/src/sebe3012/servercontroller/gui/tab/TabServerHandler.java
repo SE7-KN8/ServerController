@@ -25,18 +25,14 @@ public class TabServerHandler {
 		@Override
 		public void serverStoped(int code) {
 			server.stop();
-			server = null;
+			server = new BatchServer(batchPath, propertiesPath, serverName);
+			server.registerListener(new ServerHandler());
 			if (restartServer) {
-				server = new BatchServer(batchPath, propertiesPath, serverName);
-				server.registerListener(new ServerHandler());
 				server.start();
-			} else {
-				server = new BatchServer(batchPath, propertiesPath, serverName);
-				server.registerListener(new ServerHandler());
 			}
 			Platform.runLater(() -> {
 				output.appendText("Server stopped with code: " + code + "\n");
-				output.appendText("-----------------------------------------\n");
+				output.appendText("------------------------------------------------------------\n");
 			});
 
 		}
@@ -60,7 +56,8 @@ public class TabServerHandler {
 	public void onStartClicked() {
 		restartServer = false;
 		startServer();
-		info.setText("Server: " + server.getName() + "\nPort: " + server.getPort());
+		info.setText("Server: " + server.getName() + "\nPort: " + server.getServerProperties().getServerPort()
+				+ "\nMaximale Spieler: " + server.getServerProperties().getMaxPlayers());
 	}
 
 	public void onEndClicked() {
@@ -68,28 +65,38 @@ public class TabServerHandler {
 		if (server != null) {
 			if (server.isRunning()) {
 				server.sendCommand("stop");
+			} else {
+				showServerNotRunningDialog();
 			}
 		} else {
-			Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
-			a.getDialogPane().getStylesheets().add(TabServerHandler.class.getResource("style.css").toExternalForm());
-			a.showAndWait();
+			showNoServerDialog();
 		}
 	}
 
 	public void onSendClicked() {
 		if (server != null) {
-			server.sendCommand(input.getText());
-			input.setText("");
+			if (server.isRunning()) {
+				server.sendCommand(input.getText());
+				input.setText("");
+			} else {
+				showServerNotRunningDialog();
+			}
 		} else {
-			Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
-			a.getDialogPane().getStylesheets().add(TabServerHandler.class.getResource("style.css").toExternalForm());
-			a.showAndWait();
+			showNoServerDialog();
 		}
 	}
 
 	public void onRestartClicked() {
-		restartServer = true;
-		server.sendCommand("stop");
+		if (server != null) {
+			if (server.isRunning()) {
+				restartServer = true;
+				server.sendCommand("stop");
+			} else {
+				showServerNotRunningDialog();
+			}
+		} else {
+			showNoServerDialog();
+		}
 	}
 
 	public boolean hasServer() {
@@ -114,17 +121,26 @@ public class TabServerHandler {
 	public void startServer() {
 		if (server != null) {
 			server.start();
-			System.out.println(Servers.servers);
 		} else {
-			Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
-			a.getDialogPane().getStylesheets().add(TabServerHandler.class.getResource("style.css").toExternalForm());
-			a.showAndWait();
+			showNoServerDialog();
 		}
 
 	}
 
 	public BatchServer getServer() {
 		return server;
+	}
+
+	private void showNoServerDialog() {
+		Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
+		a.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		a.showAndWait();
+	}
+
+	private void showServerNotRunningDialog() {
+		Alert a = new Alert(AlertType.WARNING, "Der Server läuft noch nicht", ButtonType.OK);
+		a.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		a.showAndWait();
 	}
 
 }

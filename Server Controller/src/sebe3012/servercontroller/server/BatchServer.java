@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -32,10 +31,6 @@ public class BatchServer {
 	 * The serverprocess
 	 */
 	private Process serverProcess;
-	/**
-	 * The server-port
-	 */
-	private int port;
 	/**
 	 * The batch output reader
 	 */
@@ -62,6 +57,12 @@ public class BatchServer {
 	private String name;
 
 	/**
+	 * The server-properties
+	 */
+
+	private PropertiesHandler properties;
+
+	/**
 	 * The class for the read thread
 	 */
 	private class ReadThread extends Thread {
@@ -81,7 +82,7 @@ public class BatchServer {
 					});
 				} catch (IOException e) {
 					e.printStackTrace();
-					onError(e.getMessage());
+					onError(e);
 					break;
 				}
 			}
@@ -113,7 +114,7 @@ public class BatchServer {
 				System.out.println("[" + name + "] Stopped server with code " + code);
 				isRunning = false;
 			} catch (InterruptedException e) {
-				onError(e.getMessage());
+				onError(e);
 				e.printStackTrace();
 				isRunning = false;
 			}
@@ -137,16 +138,6 @@ public class BatchServer {
 		this.propertiesFile = new File(properties);
 		this.name = name;
 		listener = new ArrayList<ServerListener>();
-	}
-
-	/**
-	 *
-	 * Return the server-port
-	 *
-	 * @return The server-port
-	 */
-	public int getPort() {
-		return port;
 	}
 
 	/**
@@ -204,7 +195,7 @@ public class BatchServer {
 			batchInputWriter.write(command + "\n");
 			batchInputWriter.flush();
 		} catch (IOException e) {
-			onError(e.getMessage());
+			onError(e);
 			e.printStackTrace();
 		}
 	}
@@ -221,14 +212,8 @@ public class BatchServer {
 		try {
 			serverReadThread = new ReadThread(serverReadThread);
 			waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
-			Scanner s = new Scanner(propertiesFile);
-			while (s.hasNextLine()) {
-				String line = s.nextLine();
-				if (line.contains("server-port")) {
-					port = Integer.valueOf(line.split("=")[1]);
-				}
-			}
-			s.close();
+			properties = new PropertiesHandler(propertiesFile);
+			properties.readProperties();
 			serverBuild = new ProcessBuilder("cmd", "/c", batchFile.getName());
 			serverBuild.directory(batchFile.getParentFile());
 			serverProcess = serverBuild.start();
@@ -238,7 +223,7 @@ public class BatchServer {
 			waitForServerExitThread.start();
 			isRunning = true;
 		} catch (Exception e) {
-			onError(e.getMessage());
+			onError(e);
 			e.printStackTrace();
 		}
 	}
@@ -253,28 +238,97 @@ public class BatchServer {
 			batchOutputReader.close();
 			isRunning = false;
 		} catch (IOException e) {
-			onError(e.getMessage());
+			onError(e);
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Return the server-properties
+	 */
+	public PropertiesHandler getServerProperties() {
+		return properties;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((batchFile == null) ? 0 : batchFile.hashCode());
+		result = prime * result + (isRunning ? 1231 : 1237);
+		result = prime * result + ((listener == null) ? 0 : listener.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((propertiesFile == null) ? 0 : propertiesFile.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BatchServer other = (BatchServer) obj;
+		if (batchFile == null) {
+			if (other.batchFile != null)
+				return false;
+		} else if (!batchFile.equals(other.batchFile))
+			return false;
+		if (isRunning != other.isRunning)
+			return false;
+		if (listener == null) {
+			if (other.listener != null)
+				return false;
+		} else if (!listener.equals(other.listener))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (propertiesFile == null) {
+			if (other.propertiesFile != null)
+				return false;
+		} else if (!propertiesFile.equals(other.propertiesFile))
+			return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "BatchServer [batchFile=" + batchFile + ", propertiesFile=" + propertiesFile + ", serverBuild="
-				+ serverBuild + ", serverProcess=" + serverProcess + ", port=" + port + ", batchOutputReader="
-				+ batchOutputReader + ", batchInputWriter=" + batchInputWriter + ", listener=" + listener
-				+ ", serverReadThread=" + serverReadThread + ", waitForServerExitThread=" + waitForServerExitThread
-				+ ", name=" + name + "]";
+				+ serverBuild + ", serverProcess=" + serverProcess + ", batchOutputReader=" + batchOutputReader
+				+ ", batchInputWriter=" + batchInputWriter + ", listener=" + listener + ", serverReadThread="
+				+ serverReadThread + ", waitForServerExitThread=" + waitForServerExitThread + ", name=" + name
+				+ ", isRunning=" + isRunning + "]";
 	}
 
 	public boolean isRunning() {
 		return isRunning;
 	}
 
-	public void onError(String errorMessage) {
+	public void onError(Exception errorMessage) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(errorMessage.getLocalizedMessage() + "\n");
+
+		int counter = 12;
+
+		if (errorMessage.getStackTrace().length < 10) {
+			counter = errorMessage.getStackTrace().length;
+		}
+		for (int i = 0; i < counter; i++) {
+			sb.append("at ");
+			sb.append(errorMessage.getStackTrace()[i]);
+			sb.append("\n");
+		}
+
 		Platform.runLater(() -> {
-			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + errorMessage,
+			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + sb.toString(),
 					ButtonType.OK);
+			error.getDialogPane().setPrefSize(800, 400);
 			error.getDialogPane().getStylesheets().add(this.getClass().getClassLoader()
 					.getResource("sebe3012/servercontroller/gui/style.css").toExternalForm());
 			error.showAndWait();
