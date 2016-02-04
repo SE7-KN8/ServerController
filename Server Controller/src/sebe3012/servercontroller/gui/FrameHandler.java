@@ -74,15 +74,24 @@ public class FrameHandler {
 		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
 		BatchServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
 		if (bs.isRunning()) {
-			Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
-			dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-			dialog.setTitle("Fehler");
-			dialog.setHeaderText("");
-			dialog.showAndWait();
+			showServerIsRunningDialog();
 		} else {
 			new BatchServerDialog(new Stage(), bs.getBatchFile().getAbsolutePath(),
 					bs.getPropertiesFile().getAbsolutePath(), bs.getName());
 		}
+	}
+
+	@FXML
+	void onServerRemoveItemClicked(ActionEvent event) {
+		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
+		BatchServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		if (bs.isRunning()) {
+			showServerIsRunningDialog();
+		} else {
+			Servers.servers.remove(bs);
+			mainPane.getTabs().remove(mainPane.getSelectionModel().getSelectedItem());
+		}
+
 	}
 
 	private void showCredits() {
@@ -109,7 +118,15 @@ public class FrameHandler {
 		mainPane = main;
 		list = lView;
 		lView.setItems(Servers.servers);
-		System.out.println("FXML intitialize");
+		System.out.println("[GUI] FXML intitialize");
+	}
+
+	private void showServerIsRunningDialog() {
+		Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
+		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.setTitle("Fehler");
+		dialog.setHeaderText("");
+		dialog.showAndWait();
 	}
 
 	private class ServerCell extends ListCell<BatchServer> {

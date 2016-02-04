@@ -25,6 +25,7 @@
               <items>
                 <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="Server hinzufügen" />
                   <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="Server bearbeiten" />
+                  <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="Server entfernen" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Hilfe">
