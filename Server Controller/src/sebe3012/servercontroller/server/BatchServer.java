@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +223,10 @@ public class BatchServer {
 			serverReadThread.start();
 			waitForServerExitThread.start();
 			isRunning = true;
+
+			Field id = serverProcess.getClass().getDeclaredField("handle");
+			id.setAccessible(true);
+			System.out.println("[" + name + "] Handle: " + id.getLong(serverProcess));
 		} catch (Exception e) {
 			onError(e);
 			e.printStackTrace();

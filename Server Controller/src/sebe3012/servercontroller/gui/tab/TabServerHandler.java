@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+import sebe3012.servercontroller.gui.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.server.BatchServer;
 import sebe3012.servercontroller.server.ServerListener;
 import sebe3012.servercontroller.server.Servers;
@@ -141,6 +143,20 @@ public class TabServerHandler {
 		Alert a = new Alert(AlertType.WARNING, "Der Server läuft noch nicht", ButtonType.OK);
 		a.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		a.showAndWait();
+	}
+
+	public void onPropertiesClicked() {
+		if (server != null) {
+			if (server.isRunning()) {
+				PropertiesDialog.properties = server.getServerProperties();
+				new PropertiesDialog(new Stage());
+			} else {
+				showServerNotRunningDialog();
+			}
+		} else {
+			showNoServerDialog();
+		}
+
 	}
 
 }

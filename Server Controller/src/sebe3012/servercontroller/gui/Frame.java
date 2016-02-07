@@ -34,13 +34,15 @@ public class Frame extends Application {
 			dialog.setHeaderText("Beenden?");
 			dialog.setTitle("");
 			Optional<ButtonType> result = dialog.showAndWait();
-			if(result.isPresent()){
-				if(result.get().equals(ButtonType.OK)){
+			if (result.isPresent()) {
+				if (result.get().equals(ButtonType.OK)) {
 					System.out.println("[Main] Stop Servercontroller");
-					Tabs.servers.forEach((id, server)->{
-						server.onEndClicked();
+					Tabs.servers.forEach((id, server) -> {
+						if (server.getServer().isRunning()) {
+							server.onEndClicked();
+						}
 					});
-				}else{
+				} else {
 					event.consume();
 				}
 			}

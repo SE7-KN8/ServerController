@@ -25,6 +25,10 @@ public class PropertiesHandler {
 			} else {
 				lValue = l.split("=")[1];
 			}
+			if (l.startsWith("#")) {
+				continue;
+			}
+			allValues.put(l.split("=")[0], lValue);
 			if (l.contains("generator-settings")) {
 				generatorSettings = lValue;
 			} else if (l.contains("op-permisson-level")) {

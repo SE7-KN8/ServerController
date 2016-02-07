@@ -45,6 +45,9 @@ public class TabContentHandler implements Initializable {
 	private Button btnRestart;
 
 	@FXML
+	private Button btnPro;
+
+	@FXML
 	void onEndClicked(ActionEvent event) {
 		server.onEndClicked();
 	}
@@ -69,6 +72,11 @@ public class TabContentHandler implements Initializable {
 	@FXML
 	void onRestartClicked(ActionEvent event) {
 		server.onRestartClicked();
+	}
+
+	@FXML
+	void onPropertiesClicked(ActionEvent event) {
+		server.onPropertiesClicked();
 	}
 
 	@Override

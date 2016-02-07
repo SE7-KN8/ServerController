@@ -18,7 +18,6 @@ public class BatchServerDialog {
 	public BatchServerDialog(Stage stage) {
 
 		BatchServerDialog.stage = stage;
-		BatchServerDialog.stage.setAlwaysOnTop(true);
 
 		try {
 			Pane root = FXMLLoader.load(this.getClass().getResource("Dialog.fxml"));
@@ -28,7 +27,7 @@ public class BatchServerDialog {
 			stage.setScene(scene);
 			stage.setTitle("Server erstellen");
 			stage.setResizable(false);
-			stage.show();
+			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
