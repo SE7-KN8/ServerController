@@ -41,7 +41,7 @@
       <ListView fx:id="lView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
    <bottom>
-      <Label fx:id="credits" alignment="CENTER" text="Label" BorderPane.alignment="CENTER" />
+      <Label fx:id="credits" alignment="CENTER" text="Alpha 0.1.2" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
       <VBox fx:id="vBox" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
