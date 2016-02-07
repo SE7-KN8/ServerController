@@ -17,9 +17,10 @@
       <MenuBar fx:id="mBar" BorderPane.alignment="CENTER">
          <menus>
             <Menu mnemonicParsing="false" text="Datei">
-              <items>
-                <MenuItem mnemonicParsing="false" text="-----" />
-              </items>
+               <items>
+                  <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="Einstellungen speichern" />
+                  <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="Einstellungen laden" />
+               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Server">
               <items>

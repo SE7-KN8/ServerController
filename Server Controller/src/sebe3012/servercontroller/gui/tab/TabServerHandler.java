@@ -1,9 +1,10 @@
 package sebe3012.servercontroller.gui.tab;
 
+import java.io.Serializable;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -13,12 +14,21 @@ import sebe3012.servercontroller.server.BatchServer;
 import sebe3012.servercontroller.server.ServerListener;
 import sebe3012.servercontroller.server.Servers;
 
-public class TabServerHandler {
+public class TabServerHandler implements Serializable {
 
-	public class ServerHandler implements ServerListener {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7342140169459198230L;
+
+	public class ServerHandler implements ServerListener, Serializable {
+
+		private static final long serialVersionUID = -7773561411474591661L;
+
 		@Override
 		public void serverReturnMessage(String message) {
 			Platform.runLater(() -> {
+				TextArea output = Tabs.contents.get(id).cOutput;
 				output.appendText(message + "\n");
 			});
 
@@ -33,6 +43,7 @@ public class TabServerHandler {
 				server.start();
 			}
 			Platform.runLater(() -> {
+				TextArea output = Tabs.contents.get(id).cOutput;
 				output.appendText("Server stopped with code: " + code + "\n");
 				output.appendText("------------------------------------------------------------\n");
 			});
@@ -41,25 +52,21 @@ public class TabServerHandler {
 	}
 
 	private BatchServer server;
-
-	private TextArea output;
-	private TextField input;
-	private Label info;
 	private boolean restartServer = false;
+	private final int id;
 
-	public TabServerHandler(TextArea output, TextField input, Label info) {
-		this.output = output;
-		this.input = input;
-		this.info = info;
-		Tabs.servers.put(Tabs.getNextID(), this);
+	public TabServerHandler() {
+		this.id = Tabs.getNextID();
+		Tabs.servers.put(id, this);
 		Tabs.IDforServers.put(this, Tabs.getNextID());
 	}
 
 	public void onStartClicked() {
 		restartServer = false;
 		startServer();
-		info.setText("Server: " + server.getName() + "\nPort: " + server.getServerProperties().getServerPort()
-				+ "\nMaximale Spieler: " + server.getServerProperties().getMaxPlayers());
+		Tabs.contents.get(id).lblInfo
+				.setText("Server: " + server.getName() + "\nPort: " + server.getServerProperties().getServerPort()
+						+ "\nMaximale Spieler: " + server.getServerProperties().getMaxPlayers());
 	}
 
 	public void onEndClicked() {
@@ -78,6 +85,7 @@ public class TabServerHandler {
 	public void onSendClicked() {
 		if (server != null) {
 			if (server.isRunning()) {
+				TextField input = Tabs.contents.get(id).cInput;
 				server.sendCommand(input.getText());
 				input.setText("");
 			} else {

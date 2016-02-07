@@ -40,4 +40,8 @@ public class Tabs {
 	public static int getID() {
 		return nextID;
 	}
+
+	public static void resetID() {
+		nextID = 0;
+	}
 }

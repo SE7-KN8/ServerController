@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
-public class BatchServer {
+public class BatchServer implements Serializable {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -1629588005985214485L;
 	/**
 	 * The batch file
 	 */

@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -15,10 +17,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import sebe3012.servercontroller.gui.dialog.BatchServerDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BatchServer;
 import sebe3012.servercontroller.server.Servers;
 
@@ -55,6 +60,12 @@ public class FrameHandler {
 	private MenuItem addServer;
 
 	@FXML
+	private MenuItem saveItem;
+
+	@FXML
+	private MenuItem openItem;
+
+	@FXML
 	void initialize() {
 		init();
 	}
@@ -67,6 +78,32 @@ public class FrameHandler {
 	@FXML
 	void onAddServerItemClicked(ActionEvent event) {
 		new BatchServerDialog(new Stage());
+	}
+
+	@FXML
+	void onSaveItemClicked(ActionEvent event) {
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
+		File f = fc.showSaveDialog(Frame.primaryStage);
+		try {
+			ServerSave.saveServerController(f.getAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
+			showSaveErrorDialog();
+		}
+	}
+
+	@FXML
+	void onOpenItemClicked(ActionEvent event) {
+		FileChooser fc = new FileChooser();
+		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
+		File f = fc.showOpenDialog(Frame.primaryStage);
+		try {
+			ServerSave.loadServerController(f.getAbsolutePath());
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+			showSaveErrorDialog();
+		}
 	}
 
 	@FXML
@@ -123,6 +160,15 @@ public class FrameHandler {
 
 	private void showServerIsRunningDialog() {
 		Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
+		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.setTitle("Fehler");
+		dialog.setHeaderText("");
+		dialog.showAndWait();
+	}
+
+	private void showSaveErrorDialog() {
+		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
+				ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");

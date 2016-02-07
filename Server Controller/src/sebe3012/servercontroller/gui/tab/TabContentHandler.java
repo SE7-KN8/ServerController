@@ -15,37 +15,37 @@ import javafx.scene.input.KeyEvent;
 
 public class TabContentHandler implements Initializable {
 
-	private TabServerHandler server;
+	public TabServerHandler server;
 
 	@FXML
-	private ResourceBundle resources;
+	public ResourceBundle resources;
 
 	@FXML
-	private URL location;
+	public URL location;
 
 	@FXML
-	private TextArea cOutput;
+	public TextArea cOutput;
 
 	@FXML
-	private TextField cInput;
+	public TextField cInput;
 
 	@FXML
-	private Button btnSend;
+	public Button btnSend;
 
 	@FXML
-	private Button btnStart;
+	public Button btnStart;
 
 	@FXML
-	private Button btnEnd;
+	public Button btnEnd;
 
 	@FXML
-	private Label lblInfo;
+	public Label lblInfo;
 
 	@FXML
-	private Button btnRestart;
+	public Button btnRestart;
 
 	@FXML
-	private Button btnPro;
+	public Button btnPro;
 
 	@FXML
 	void onEndClicked(ActionEvent event) {
@@ -81,7 +81,7 @@ public class TabContentHandler implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		server = new TabServerHandler(cOutput, cInput, lblInfo);
+		server = new TabServerHandler();
 		Tabs.contents.put(Tabs.getNextID(), this);
 		Tabs.IDforContents.put(this, Tabs.getNextID());
 	}
