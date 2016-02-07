@@ -1,8 +1,6 @@
 package sebe3012.servercontroller.gui.dialog.properties;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
