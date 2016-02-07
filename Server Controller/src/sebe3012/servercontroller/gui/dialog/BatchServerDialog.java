@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import sebe3012.servercontroller.gui.Frame;
 
 public class BatchServerDialog {
 
@@ -26,6 +28,7 @@ public class BatchServerDialog {
 			scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 			stage.setScene(scene);
 			stage.setTitle("Server erstellen");
+			stage.getIcons().add(new Image(Frame.class.getResource("icon.png").toExternalForm()));
 			stage.setResizable(false);
 			stage.showAndWait();
 		} catch (IOException e) {
