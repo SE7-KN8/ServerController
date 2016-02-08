@@ -11,9 +11,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.jna.Pointer;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import sebe3012.servercontroller.jna.Kernel32;
+import sebe3012.servercontroller.jna.W32API;
 import javafx.scene.control.ButtonType;
 
 public class BatchServer implements Serializable {
@@ -206,6 +210,8 @@ public class BatchServer implements Serializable {
 		}
 	}
 
+	private int pid;
+
 	/**
 	 *
 	 * Starts the server
@@ -231,11 +237,19 @@ public class BatchServer implements Serializable {
 
 			Field id = serverProcess.getClass().getDeclaredField("handle");
 			id.setAccessible(true);
-			System.out.println("[" + name + "] Handle: " + id.getLong(serverProcess));
+
+			Kernel32 kernel = Kernel32.INSTANCE;
+			W32API.HANDLE handle = new W32API.HANDLE();
+			handle.setPointer(Pointer.createConstant(id.getLong(serverProcess)));
+			pid = kernel.GetProcessId(handle);
 		} catch (Exception e) {
 			onError(e);
 			e.printStackTrace();
 		}
+	}
+
+	public int getPID() {
+		return pid;
 	}
 
 	/**
