@@ -9,17 +9,17 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sebe3012.servercontroller.gui.Frame;
 
-public class BatchServerDialog {
+public class JarServerDialog {
 
 	public static Stage stage;
-	public static String batchPath;
+	public static String jarPath;
 	public static String propertiesPath;
 	public static String name;
 	public static boolean useDefault = true;
 
-	public BatchServerDialog(Stage stage) {
+	public JarServerDialog(Stage stage) {
 
-		BatchServerDialog.stage = stage;
+		JarServerDialog.stage = stage;
 
 		try {
 			Pane root = FXMLLoader.load(this.getClass().getResource("Dialog.fxml"));
@@ -37,12 +37,12 @@ public class BatchServerDialog {
 
 	}
 
-	public BatchServerDialog(Stage stage, String batch, String properties, String name) {
-		BatchServerDialog.useDefault = false;
-		BatchServerDialog.batchPath = batch;
-		BatchServerDialog.propertiesPath = properties;
-		BatchServerDialog.name = name;
-		new BatchServerDialog(stage);
+	public JarServerDialog(Stage stage, String jar, String properties, String name) {
+		JarServerDialog.useDefault = false;
+		JarServerDialog.jarPath = jar;
+		JarServerDialog.propertiesPath = properties;
+		JarServerDialog.name = name;
+		new JarServerDialog(stage);
 	}
 
 }

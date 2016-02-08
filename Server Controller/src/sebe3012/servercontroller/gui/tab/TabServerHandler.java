@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import sebe3012.servercontroller.gui.dialog.properties.PropertiesDialog;
-import sebe3012.servercontroller.server.BatchServer;
+import sebe3012.servercontroller.server.JarServer;
 import sebe3012.servercontroller.server.ServerListener;
 import sebe3012.servercontroller.server.Servers;
 
@@ -37,7 +37,7 @@ public class TabServerHandler implements Serializable {
 		@Override
 		public void serverStoped(int code) {
 			server.stop();
-			server = new BatchServer(batchPath, propertiesPath, serverName);
+			server = new JarServer(jarPath, propertiesPath, serverName);
 			server.registerListener(new ServerHandler());
 			if (restartServer) {
 				server.start();
@@ -51,7 +51,7 @@ public class TabServerHandler implements Serializable {
 		}
 	}
 
-	private BatchServer server;
+	private JarServer server;
 	private boolean restartServer = false;
 	private final int id;
 
@@ -67,6 +67,7 @@ public class TabServerHandler implements Serializable {
 		Tabs.contents.get(id).lblInfo
 				.setText("Server: " + server.getName() + "\nPort: " + server.getServerProperties().getServerPort()
 						+ "\nMaximale Spieler: " + server.getServerProperties().getMaxPlayers());
+		Tabs.contents.get(id).cOutput.appendText("Server \"" + serverName + "\" starts\n");
 	}
 
 	public void onEndClicked() {
@@ -113,15 +114,15 @@ public class TabServerHandler implements Serializable {
 		return server == null ? false : true;
 	}
 
-	private String batchPath;
+	private String jarPath;
 	private String propertiesPath;
 	private String serverName;
 
-	public void initServer(String batch, String properties, String id, boolean addList) {
-		this.batchPath = batch;
+	public void initServer(String jar, String properties, String id, boolean addList) {
+		this.jarPath = jar;
 		this.propertiesPath = properties;
 		this.serverName = id;
-		this.server = new BatchServer(batch, properties, id);
+		this.server = new JarServer(jar, properties, id);
 		this.server.registerListener(new ServerHandler());
 		if (addList) {
 			Servers.servers.add(server);
@@ -137,7 +138,7 @@ public class TabServerHandler implements Serializable {
 
 	}
 
-	public BatchServer getServer() {
+	public JarServer getServer() {
 		return server;
 	}
 

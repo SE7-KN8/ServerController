@@ -20,17 +20,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import sebe3012.servercontroller.gui.dialog.BatchServerDialog;
+import sebe3012.servercontroller.gui.dialog.JarServerDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.save.ServerSave;
-import sebe3012.servercontroller.server.BatchServer;
+import sebe3012.servercontroller.server.JarServer;
 import sebe3012.servercontroller.server.Servers;
 
 public class FrameHandler {
 
 	public static TabPane mainPane;
-	public static ListView<BatchServer> list;
+	public static ListView<JarServer> list;
 
 	@FXML
 	private ResourceBundle resources;
@@ -42,7 +42,7 @@ public class FrameHandler {
 	private MenuBar mBar;
 
 	@FXML
-	private ListView<BatchServer> lView;
+	private ListView<JarServer> lView;
 
 	@FXML
 	private Label credits;
@@ -77,7 +77,7 @@ public class FrameHandler {
 
 	@FXML
 	void onAddServerItemClicked(ActionEvent event) {
-		new BatchServerDialog(new Stage());
+		new JarServerDialog(new Stage());
 	}
 
 	@FXML
@@ -109,19 +109,19 @@ public class FrameHandler {
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
 		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
-		BatchServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
-		if (bs.isRunning()) {
+		JarServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		if (js.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			new BatchServerDialog(new Stage(), bs.getBatchFile().getAbsolutePath(),
-					bs.getPropertiesFile().getAbsolutePath(), bs.getName());
+			new JarServerDialog(new Stage(), js.getJarFile().getAbsolutePath(),
+					js.getPropertiesFile().getAbsolutePath(), js.getName());
 		}
 	}
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
 		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
-		BatchServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		JarServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
 		if (bs.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
@@ -145,7 +145,7 @@ public class FrameHandler {
 			return new ServerCell();
 		});
 		lView.setOnMouseClicked(event -> {
-			BatchServer bs = lView.getSelectionModel().getSelectedItem();
+			JarServer bs = lView.getSelectionModel().getSelectedItem();
 			Tabs.servers.forEach((id, server) -> {
 				if (server.getServer().equals(bs)) {
 					main.getSelectionModel().select(main.getTabs().get(id));
@@ -175,10 +175,10 @@ public class FrameHandler {
 		dialog.showAndWait();
 	}
 
-	private class ServerCell extends ListCell<BatchServer> {
+	private class ServerCell extends ListCell<JarServer> {
 
 		@Override
-		protected void updateItem(BatchServer item, boolean empty) {
+		protected void updateItem(JarServer item, boolean empty) {
 			super.updateItem(item, empty);
 			if (item == null || empty) {
 			} else {

@@ -25,7 +25,7 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.server.BatchServer;
+import sebe3012.servercontroller.server.JarServer;
 import sebe3012.servercontroller.server.Servers;
 
 /***
@@ -34,7 +34,7 @@ import sebe3012.servercontroller.server.Servers;
  *
  *         This class handle the input of a BatchServerDialog
  *
- * @see BatchServerDialog
+ * @see JarServerDialog
  *
  */
 public class InputHandler {
@@ -59,7 +59,7 @@ public class InputHandler {
 	 * The textfield with the batch file
 	 */
 	@FXML
-	private TextField txfStart;
+	private TextField txfJar;
 	/**
 	 * The textfield with the properties file
 	 */
@@ -69,7 +69,7 @@ public class InputHandler {
 	 * The button to open the batch
 	 */
 	@FXML
-	private Button btnOpenBatch;
+	private Button btnOpenJar;
 	/**
 	 * The button to open the properties
 	 */
@@ -91,24 +91,24 @@ public class InputHandler {
 
 		boolean successful = true;
 
-		if (BatchServerDialog.useDefault) {
-			System.out.println("[ServerCreateDialog] ID= " + txfID.getText() + " START= " + txfStart.getText()
+		if (JarServerDialog.useDefault) {
+			System.out.println("[ServerCreateDialog] ID= " + txfID.getText() + " START= " + txfJar.getText()
 					+ " PROPERTIES= " + txfPro.getText());
 			successful = createNewTab();
 		} else {
 			int id = ((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem()).getTabContent().getId();
-			BatchServer bs = Tabs.servers.get(id).getServer();
-			Servers.servers.remove(bs);
-			if (!bs.isRunning()) {
-				Tabs.servers.get(id).initServer(txfStart.getText(), txfPro.getText(), txfID.getText(), false);
+			JarServer js = Tabs.servers.get(id).getServer();
+			Servers.servers.remove(js);
+			if (!js.isRunning()) {
+				Tabs.servers.get(id).initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), false);
 				FrameHandler.mainPane.getSelectionModel().getSelectedItem().setText(txfID.getText());
 				Servers.servers.add(Tabs.servers.get(id).getServer());
 			}
 		}
 		if (successful) {
-			BatchServerDialog.stage.close();
+			JarServerDialog.stage.close();
 		}
-		BatchServerDialog.useDefault = true;
+		JarServerDialog.useDefault = true;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class InputHandler {
 			Tabs.servers.forEach((id, server) -> {
 				if (!init) {
 					if (!server.hasServer()) {
-						server.initServer(txfStart.getText(), txfPro.getText(), txfID.getText(), true);
+						server.initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), true);
 						init = true;
 					}
 				}
@@ -147,9 +147,9 @@ public class InputHandler {
 	 *            The action event
 	 */
 	@FXML
-	void onOpenBatch(ActionEvent event) {
+	void onOpenJar(ActionEvent event) {
 		FileChooser fc = new FileChooser();
-		ExtensionFilter shellScripte = new ExtensionFilter("CMD/BAT/SH", "*.bat", "*.cmd", "*.sh");
+		ExtensionFilter shellScripte = new ExtensionFilter("Javafile, Jar", "*.jar");
 		fc.getExtensionFilters().add(shellScripte);
 		fc.setTitle("Datei öffnen");
 		File f = fc.showOpenDialog(null);
@@ -157,7 +157,7 @@ public class InputHandler {
 			return;
 		}
 		if (f.exists()) {
-			txfStart.setText(f.getAbsolutePath());
+			txfJar.setText(f.getAbsolutePath());
 		}
 		File icon = new File(f.getParentFile().getAbsoluteFile() + "\\server-icon.png");
 		System.out.println("[ServerCreateDialog] " + icon.getAbsolutePath());
@@ -220,10 +220,10 @@ public class InputHandler {
 	}
 
 	private void init() {
-		if (!BatchServerDialog.useDefault) {
-			txfID.setText(BatchServerDialog.name);
-			txfStart.setText(BatchServerDialog.batchPath);
-			txfPro.setText(BatchServerDialog.propertiesPath);
+		if (!JarServerDialog.useDefault) {
+			txfID.setText(JarServerDialog.name);
+			txfJar.setText(JarServerDialog.jarPath);
+			txfPro.setText(JarServerDialog.propertiesPath);
 		}
 		lbl.setEffect(new DropShadow(10, 10, 10, Color.GREY));
 	}

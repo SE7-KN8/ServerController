@@ -4,5 +4,5 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Servers {
-	public static ObservableList<BatchServer> servers = FXCollections.observableArrayList();
+	public static ObservableList<JarServer> servers = FXCollections.observableArrayList();
 }

@@ -32,12 +32,12 @@
         </rowConstraints>
          <children>
             <Label contentDisplay="CENTER" text="Server ID" />
-            <Label text="Serverstart Skript" GridPane.rowIndex="1" />
+            <Label text="Server *.jar" GridPane.rowIndex="1" />
             <Label text="Serverproperties" GridPane.rowIndex="2" />
             <TextField fx:id="txfID" promptText="Server-Name" GridPane.columnIndex="1" />
-            <TextField fx:id="txfStart" promptText="z.B. start.bat, start.sh" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txfJar" promptText="z.B. server.jar" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txfPro" promptText="server.properties" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button fx:id="btnOpenBatch" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onOpenBatch" text="Auswählen" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="btnOpenJar" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onOpenJar" text="Auswählen" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Button fx:id="btnPro" mnemonicParsing="false" onAction="#onOpenPro" text="Auswählen" GridPane.columnIndex="3" GridPane.rowIndex="2" />
          </children>
       </GridPane>

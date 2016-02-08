@@ -20,7 +20,7 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import javafx.scene.control.ButtonType;
 
-public class BatchServer implements Serializable {
+public class JarServer implements Serializable {
 	/**
 	 *
 	 */
@@ -28,7 +28,7 @@ public class BatchServer implements Serializable {
 	/**
 	 * The batch file
 	 */
-	private File batchFile;
+	private File jarFile;
 	/**
 	 * The properties file
 	 */
@@ -143,8 +143,8 @@ public class BatchServer implements Serializable {
 	 * @param name
 	 *            The name of the server
 	 */
-	public BatchServer(String batch, String properties, String name) {
-		this.batchFile = new File(batch);
+	public JarServer(String batch, String properties, String name) {
+		this.jarFile = new File(batch);
 		this.propertiesFile = new File(properties);
 		this.name = name;
 		listener = new ArrayList<ServerListener>();
@@ -166,8 +166,8 @@ public class BatchServer implements Serializable {
 	 *
 	 * @see File
 	 */
-	public File getBatchFile() {
-		return batchFile;
+	public File getJarFile() {
+		return jarFile;
 	}
 
 	/**
@@ -226,8 +226,8 @@ public class BatchServer implements Serializable {
 			waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
 			properties = new PropertiesHandler(propertiesFile);
 			properties.readProperties();
-			serverBuild = new ProcessBuilder("cmd", "/c", batchFile.getName());
-			serverBuild.directory(batchFile.getParentFile());
+			serverBuild = new ProcessBuilder("java", "-jar", jarFile.getName(), "nogui");
+			serverBuild.directory(jarFile.getParentFile());
 			serverProcess = serverBuild.start();
 			batchOutputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
 			batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
@@ -278,7 +278,7 @@ public class BatchServer implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((batchFile == null) ? 0 : batchFile.hashCode());
+		result = prime * result + ((jarFile == null) ? 0 : jarFile.hashCode());
 		result = prime * result + (isRunning ? 1231 : 1237);
 		result = prime * result + ((listener == null) ? 0 : listener.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -294,11 +294,11 @@ public class BatchServer implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BatchServer other = (BatchServer) obj;
-		if (batchFile == null) {
-			if (other.batchFile != null)
+		JarServer other = (JarServer) obj;
+		if (jarFile == null) {
+			if (other.jarFile != null)
 				return false;
-		} else if (!batchFile.equals(other.batchFile))
+		} else if (!jarFile.equals(other.jarFile))
 			return false;
 		if (isRunning != other.isRunning)
 			return false;
@@ -322,7 +322,7 @@ public class BatchServer implements Serializable {
 
 	@Override
 	public String toString() {
-		return "BatchServer [batchFile=" + batchFile + ", propertiesFile=" + propertiesFile + ", serverBuild="
+		return "BatchServer [batchFile=" + jarFile + ", propertiesFile=" + propertiesFile + ", serverBuild="
 				+ serverBuild + ", serverProcess=" + serverProcess + ", batchOutputReader=" + batchOutputReader
 				+ ", batchInputWriter=" + batchInputWriter + ", listener=" + listener + ", serverReadThread="
 				+ serverReadThread + ", waitForServerExitThread=" + waitForServerExitThread + ", name=" + name

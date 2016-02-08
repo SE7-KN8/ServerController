@@ -68,7 +68,7 @@ public class ServerSave {
 						Tabs.servers.forEach((id2, server2) -> {
 							if (!init) {
 								if (!server2.hasServer()) {
-									server2.initServer(tsh.getServer().getBatchFile().getAbsolutePath(),
+									server2.initServer(tsh.getServer().getJarFile().getAbsolutePath(),
 											tsh.getServer().getPropertiesFile().getAbsolutePath(),
 											tsh.getServer().getName(), true);
 									init = true;

@@ -17,7 +17,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.control.Alert.AlertType;
 
-import sebe3012.servercontroller.gui.dialog.BatchServerDialog;
+import sebe3012.servercontroller.gui.dialog.JarServerDialog;
 import sebe3012.servercontroller.gui.tab.Tabs;
 
 public class Frame extends Application {
@@ -42,7 +42,7 @@ public class Frame extends Application {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          Alpha 0.1.2");
+		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          Alpha 0.1.3");
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
 		primaryStage.setOnCloseRequest(event -> {
@@ -73,7 +73,7 @@ public class Frame extends Application {
 			}
 			splash.close();
 			primaryStage.show();
-			new BatchServerDialog(new Stage());
+			new JarServerDialog(new Stage());
 		});
 
 	}
