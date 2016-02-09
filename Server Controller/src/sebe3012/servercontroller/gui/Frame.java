@@ -44,7 +44,7 @@ public class Frame extends Application {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          Alpha 0.1.3");
+		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          Alpha 0.1.4.1");
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
 		primaryStage.setOnCloseRequest(event -> {
