@@ -5,4 +5,7 @@ import javafx.collections.ObservableList;
 
 public class Servers {
 	public static ObservableList<JarServer> servers = FXCollections.observableArrayList();
+	static {
+		System.out.println("[ServerList] Intitialized");
+	}
 }

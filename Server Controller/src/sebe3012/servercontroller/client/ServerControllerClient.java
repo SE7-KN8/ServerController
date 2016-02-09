@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+//java -jar ServerControllerClient.jar 12345 lobby localhost
 public class ServerControllerClient {
 
 	public static void main(String[] args) {

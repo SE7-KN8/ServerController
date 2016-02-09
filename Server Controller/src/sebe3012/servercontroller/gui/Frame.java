@@ -19,6 +19,8 @@ import javafx.scene.control.Alert.AlertType;
 
 import sebe3012.servercontroller.gui.dialog.JarServerDialog;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
+import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
 
 public class Frame extends Application {
 
@@ -60,6 +62,8 @@ public class Frame extends Application {
 							server.onEndClicked();
 						}
 					});
+					ChartsUpdater.stopUpdate();
+					ServerMonitoring.stopMonitoring();
 				} else {
 					event.consume();
 				}

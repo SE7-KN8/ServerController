@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -26,6 +27,7 @@ import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.JarServer;
 import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 
 public class FrameHandler {
 
@@ -64,6 +66,8 @@ public class FrameHandler {
 
 	@FXML
 	private MenuItem openItem;
+
+	public static Thread monitoringThread = new Thread(new ChartsUpdater());
 
 	@FXML
 	void initialize() {
@@ -141,6 +145,7 @@ public class FrameHandler {
 	}
 
 	private void init() {
+		monitoringThread.setName("server-monitoring-thread-1");
 		lView.setCellFactory(e -> {
 			return new ServerCell();
 		});
@@ -155,7 +160,9 @@ public class FrameHandler {
 		mainPane = main;
 		list = lView;
 		lView.setItems(Servers.servers);
+		initCharts();
 		System.out.println("[GUI] FXML intitialize");
+		monitoringThread.start();
 	}
 
 	private void showServerIsRunningDialog() {
@@ -186,5 +193,43 @@ public class FrameHandler {
 			}
 		}
 
+	}
+
+	@FXML
+	private PieChart ramUsed;
+
+	@FXML
+	private PieChart ramTotal;
+
+	@FXML
+	private PieChart cpu;
+
+	public static PieChart cpuChart;
+	public static PieChart ramTotelChart;
+	public static PieChart ramUsedChart;
+
+	public static PieChart.Data ramUsed1 = new PieChart.Data("Genutzt", 1.0);
+	public static PieChart.Data ramUsed2 = new PieChart.Data("Genutzt", 1.0);
+	public static PieChart.Data assignedRam = new PieChart.Data("Zugewiesen", 1.0);
+	public static PieChart.Data totalRam = new PieChart.Data("Gesamt", 1.0);
+	public static PieChart.Data totelCpu = new PieChart.Data("100%", 1.0);
+	public static PieChart.Data usedCpu = new PieChart.Data("Genutzt", 1.0);
+
+	private void initCharts() {
+
+		FrameHandler.cpuChart = cpu;
+		FrameHandler.ramTotelChart = ramTotal;
+		FrameHandler.ramUsedChart = ramUsed;
+
+		ramUsed.setTitle("Genutzer RAM / Zugewiesen\n(Ungenutzt)");
+		ramTotal.setTitle("Genutzer RAM / Gesamt");
+		cpu.setTitle("Genutze CPU / 100%");
+
+		ramUsed.getData().add(ramUsed1);
+		ramUsed.getData().add(assignedRam);
+		ramTotal.getData().add(ramUsed2);
+		ramTotal.getData().add(totalRam);
+		cpu.getData().add(usedCpu);
+		cpu.getData().add(totelCpu);
 	}
 }
