@@ -118,7 +118,7 @@ public class FrameHandler {
 			showServerIsRunningDialog();
 		} else {
 			new JarServerDialog(new Stage(), js.getJarFile().getAbsolutePath(),
-					js.getPropertiesFile().getAbsolutePath(), js.getName());
+					js.getPropertiesFile().getAbsolutePath(), js.getName(), js.getRam());
 		}
 	}
 
@@ -221,7 +221,7 @@ public class FrameHandler {
 		FrameHandler.ramTotelChart = ramTotal;
 		FrameHandler.ramUsedChart = ramUsed;
 
-		ramUsed.setTitle("Genutzer RAM / Zugewiesen\n(Ungenutzt)");
+		ramUsed.setTitle("Genutzer RAM / Zugewiesen");
 		ramTotal.setTitle("Genutzer RAM / Gesamt");
 		cpu.setTitle("Genutze CPU / 100%");
 

@@ -15,10 +15,11 @@ public class ChartsUpdater extends Thread {
 			double ramUsed = ServerMonitoring.ramUsed;
 			double ramInstalled = ServerMonitoring.installedRam;
 			double cpuPercent = ServerMonitoring.cpuUsed;
+			double assignedRam = ServerMonitoring.assignedRam;
 			double passiveCpu = 10d - cpuPercent;
 
 			Platform.runLater(() -> {
-				FrameHandler.assignedRam.setPieValue(1024);
+				FrameHandler.assignedRam.setPieValue(assignedRam);
 				FrameHandler.ramUsed1.setPieValue(ramUsed);
 				FrameHandler.ramUsed2.setPieValue(ramUsed);
 				FrameHandler.totalRam.setPieValue(ramInstalled);

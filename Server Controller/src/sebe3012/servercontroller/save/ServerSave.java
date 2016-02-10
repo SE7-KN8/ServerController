@@ -70,7 +70,7 @@ public class ServerSave {
 								if (!server2.hasServer()) {
 									server2.initServer(tsh.getServer().getJarFile().getAbsolutePath(),
 											tsh.getServer().getPropertiesFile().getAbsolutePath(),
-											tsh.getServer().getName(), true);
+											tsh.getServer().getName(), tsh.getServer().getRam(), true);
 									init = true;
 								}
 							}

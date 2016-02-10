@@ -20,7 +20,7 @@
       <RowConstraints maxHeight="54.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TextArea fx:id="cOutput" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+      <TextArea fx:id="cOutput" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
       <SplitPane dividerPositions="0.8309859154929577" prefHeight="160.0" prefWidth="200.0" GridPane.rowIndex="2">
          <items>
             <GridPane>

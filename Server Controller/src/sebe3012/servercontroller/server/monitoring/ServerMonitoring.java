@@ -18,6 +18,7 @@ public class ServerMonitoring {
 	public static double ramUsed = 1;
 	public static double installedRam = 1;
 	public static double cpuUsed = 1;
+	public static double assignedRam = 1;
 
 	private final static Sigar sigar = new Sigar();
 	private static final Thread monitoringThread = new Thread(new ServerMontior());
@@ -53,6 +54,7 @@ public class ServerMonitoring {
 									ServerMonitoring.ramUsed = pm.getSize() / 1024D / 1024D;
 									Mem m = sigar.getMem();
 									ServerMonitoring.installedRam = m.getTotal() / 1024D / 1024D;
+									ServerMonitoring.assignedRam = Integer.valueOf(js.getRam());
 									ProcCpu pc = new ProcCpu();
 									pc.gather(sigar, js.getPID());
 									ServerMonitoring.cpuUsed = pc.getPercent();
@@ -85,5 +87,6 @@ public class ServerMonitoring {
 		ServerMonitoring.ramUsed = 1;
 		ServerMonitoring.cpuUsed = 1;
 		ServerMonitoring.installedRam = 1;
+		ServerMonitoring.assignedRam = 1;
 	}
 }

@@ -15,6 +15,7 @@ public class JarServerDialog {
 	public static String jarPath;
 	public static String propertiesPath;
 	public static String name;
+	public static String ram;
 	public static boolean useDefault = true;
 
 	public JarServerDialog(Stage stage) {
@@ -29,7 +30,8 @@ public class JarServerDialog {
 			stage.setScene(scene);
 			stage.setTitle("Server erstellen");
 			stage.getIcons().add(new Image(Frame.class.getResource("icon.png").toExternalForm()));
-			stage.setResizable(false);
+			stage.setMinWidth(600);
+			stage.setMinHeight(500);
 			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -37,11 +39,12 @@ public class JarServerDialog {
 
 	}
 
-	public JarServerDialog(Stage stage, String jar, String properties, String name) {
+	public JarServerDialog(Stage stage, String jar, String properties, String name, String ram) {
 		JarServerDialog.useDefault = false;
 		JarServerDialog.jarPath = jar;
 		JarServerDialog.propertiesPath = properties;
 		JarServerDialog.name = name;
+		JarServerDialog.ram = ram;
 		new JarServerDialog(stage);
 	}
 

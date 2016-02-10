@@ -21,10 +21,8 @@ import sebe3012.servercontroller.jna.W32API;
 import javafx.scene.control.ButtonType;
 
 public class JarServer implements Serializable {
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -1629588005985214485L;
+
+	private static final long serialVersionUID = 3225476460145320236L;
 	/**
 	 * The batch file
 	 */
@@ -133,6 +131,15 @@ public class JarServer implements Serializable {
 	}
 
 	/**
+	 * The server ram size
+	 */
+	private String ram;
+
+	public String getRam() {
+		return ram;
+	}
+
+	/**
 	 *
 	 * The constructer for the batch server
 	 *
@@ -142,11 +149,14 @@ public class JarServer implements Serializable {
 	 *            The location of the properties file
 	 * @param name
 	 *            The name of the server
+	 * @param ram
+	 *            The server ram
 	 */
-	public JarServer(String batch, String properties, String name) {
+	public JarServer(String batch, String properties, String name, String ram) {
 		this.jarFile = new File(batch);
 		this.propertiesFile = new File(properties);
 		this.name = name;
+		this.ram = ram;
 		listener = new ArrayList<ServerListener>();
 	}
 
@@ -226,7 +236,8 @@ public class JarServer implements Serializable {
 			waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
 			properties = new PropertiesHandler(propertiesFile);
 			properties.readProperties();
-			serverBuild = new ProcessBuilder("java", "-jar", jarFile.getName(), "nogui");
+			System.out.println();
+			serverBuild = new ProcessBuilder("java", "-Xmx" + ram + "M", "-jar", jarFile.getName(), "nogui");
 			serverBuild.directory(jarFile.getParentFile());
 			serverProcess = serverBuild.start();
 			batchOutputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
@@ -250,6 +261,11 @@ public class JarServer implements Serializable {
 		}
 	}
 
+	/**
+	 * Return the server-process id
+	 * 
+	 * @return The PID
+	 */
 	public int getPID() {
 		return pid;
 	}
@@ -276,15 +292,27 @@ public class JarServer implements Serializable {
 		return properties;
 	}
 
+	/**
+	 * Return the hash code
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((jarFile == null) ? 0 : jarFile.hashCode());
+		result = prime * result + ((batchInputWriter == null) ? 0 : batchInputWriter.hashCode());
+		result = prime * result + ((batchOutputReader == null) ? 0 : batchOutputReader.hashCode());
 		result = prime * result + (isRunning ? 1231 : 1237);
+		result = prime * result + ((jarFile == null) ? 0 : jarFile.hashCode());
 		result = prime * result + ((listener == null) ? 0 : listener.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + pid;
+		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
 		result = prime * result + ((propertiesFile == null) ? 0 : propertiesFile.hashCode());
+		result = prime * result + ((ram == null) ? 0 : ram.hashCode());
+		result = prime * result + ((serverBuild == null) ? 0 : serverBuild.hashCode());
+		result = prime * result + ((serverProcess == null) ? 0 : serverProcess.hashCode());
+		result = prime * result + ((serverReadThread == null) ? 0 : serverReadThread.hashCode());
+		result = prime * result + ((waitForServerExitThread == null) ? 0 : waitForServerExitThread.hashCode());
 		return result;
 	}
 
@@ -297,12 +325,22 @@ public class JarServer implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		JarServer other = (JarServer) obj;
+		if (batchInputWriter == null) {
+			if (other.batchInputWriter != null)
+				return false;
+		} else if (!batchInputWriter.equals(other.batchInputWriter))
+			return false;
+		if (batchOutputReader == null) {
+			if (other.batchOutputReader != null)
+				return false;
+		} else if (!batchOutputReader.equals(other.batchOutputReader))
+			return false;
+		if (isRunning != other.isRunning)
+			return false;
 		if (jarFile == null) {
 			if (other.jarFile != null)
 				return false;
 		} else if (!jarFile.equals(other.jarFile))
-			return false;
-		if (isRunning != other.isRunning)
 			return false;
 		if (listener == null) {
 			if (other.listener != null)
@@ -314,10 +352,42 @@ public class JarServer implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (pid != other.pid)
+			return false;
+		if (properties == null) {
+			if (other.properties != null)
+				return false;
+		} else if (!properties.equals(other.properties))
+			return false;
 		if (propertiesFile == null) {
 			if (other.propertiesFile != null)
 				return false;
 		} else if (!propertiesFile.equals(other.propertiesFile))
+			return false;
+		if (ram == null) {
+			if (other.ram != null)
+				return false;
+		} else if (!ram.equals(other.ram))
+			return false;
+		if (serverBuild == null) {
+			if (other.serverBuild != null)
+				return false;
+		} else if (!serverBuild.equals(other.serverBuild))
+			return false;
+		if (serverProcess == null) {
+			if (other.serverProcess != null)
+				return false;
+		} else if (!serverProcess.equals(other.serverProcess))
+			return false;
+		if (serverReadThread == null) {
+			if (other.serverReadThread != null)
+				return false;
+		} else if (!serverReadThread.equals(other.serverReadThread))
+			return false;
+		if (waitForServerExitThread == null) {
+			if (other.waitForServerExitThread != null)
+				return false;
+		} else if (!waitForServerExitThread.equals(other.waitForServerExitThread))
 			return false;
 		return true;
 	}

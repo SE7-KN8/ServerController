@@ -16,10 +16,7 @@ import sebe3012.servercontroller.server.Servers;
 
 public class TabServerHandler implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -7342140169459198230L;
+	private static final long serialVersionUID = -6964977119376149290L;
 
 	public class ServerHandler implements ServerListener, Serializable {
 
@@ -37,7 +34,7 @@ public class TabServerHandler implements Serializable {
 		@Override
 		public void serverStoped(int code) {
 			server.stop();
-			server = new JarServer(jarPath, propertiesPath, serverName);
+			server = new JarServer(jarPath, propertiesPath, serverName, serverRam);
 			server.registerListener(new ServerHandler());
 			if (restartServer) {
 				server.start();
@@ -47,6 +44,7 @@ public class TabServerHandler implements Serializable {
 				output.appendText("Server stopped with code: " + code + "\n");
 				output.appendText("------------------------------------------------------------\n");
 			});
+			restartServer = false;
 
 		}
 	}
@@ -117,12 +115,14 @@ public class TabServerHandler implements Serializable {
 	private String jarPath;
 	private String propertiesPath;
 	private String serverName;
+	private String serverRam;
 
-	public void initServer(String jar, String properties, String id, boolean addList) {
+	public void initServer(String jar, String properties, String id, String ram, boolean addList) {
 		this.jarPath = jar;
 		this.propertiesPath = properties;
 		this.serverName = id;
-		this.server = new JarServer(jar, properties, id);
+		this.serverRam = ram;
+		this.server = new JarServer(jar, properties, id, ram);
 		this.server.registerListener(new ServerHandler());
 		if (addList) {
 			Servers.servers.add(server);

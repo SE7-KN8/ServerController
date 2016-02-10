@@ -87,20 +87,24 @@ public class InputHandler {
 	private Label lbl;
 
 	@FXML
+	private TextField txfRam;
+
+	@FXML
 	void onAction(ActionEvent event) {
 
 		boolean successful = true;
 
 		if (JarServerDialog.useDefault) {
 			System.out.println("[ServerCreateDialog] ID= " + txfID.getText() + " START= " + txfJar.getText()
-					+ " PROPERTIES= " + txfPro.getText());
+					+ " PROPERTIES= " + txfPro.getText() + " RAM=" + txfRam.getText());
 			successful = createNewTab();
 		} else {
 			int id = ((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem()).getTabContent().getId();
 			JarServer js = Tabs.servers.get(id).getServer();
 			Servers.servers.remove(js);
 			if (!js.isRunning()) {
-				Tabs.servers.get(id).initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), false);
+				Tabs.servers.get(id).initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), txfRam.getText(),
+						false);
 				FrameHandler.mainPane.getSelectionModel().getSelectedItem().setText(txfID.getText());
 				Servers.servers.add(Tabs.servers.get(id).getServer());
 			}
@@ -130,7 +134,7 @@ public class InputHandler {
 			Tabs.servers.forEach((id, server) -> {
 				if (!init) {
 					if (!server.hasServer()) {
-						server.initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), true);
+						server.initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), txfRam.getText(), true);
 						init = true;
 					}
 				}
@@ -224,6 +228,7 @@ public class InputHandler {
 			txfID.setText(JarServerDialog.name);
 			txfJar.setText(JarServerDialog.jarPath);
 			txfPro.setText(JarServerDialog.propertiesPath);
+			txfRam.setText(JarServerDialog.ram);
 		}
 		lbl.setEffect(new DropShadow(10, 10, 10, Color.GREY));
 	}
