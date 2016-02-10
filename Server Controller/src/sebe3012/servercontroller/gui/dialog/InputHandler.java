@@ -111,6 +111,7 @@ public class InputHandler {
 		}
 		if (successful) {
 			JarServerDialog.stage.close();
+			JarServerDialog.isOpen = false;
 		}
 		JarServerDialog.useDefault = true;
 	}
