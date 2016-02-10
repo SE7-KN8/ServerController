@@ -231,6 +231,8 @@ public class JarServer implements Serializable {
 			serverProcess = serverBuild.start();
 			batchOutputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
 			batchInputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
+			serverReadThread.setName(getName() + "-read-thread");
+			waitForServerExitThread.setName(getName() + "-wait-for-exit-thread");
 			serverReadThread.start();
 			waitForServerExitThread.start();
 			isRunning = true;

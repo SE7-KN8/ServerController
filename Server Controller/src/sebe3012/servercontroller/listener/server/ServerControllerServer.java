@@ -60,7 +60,8 @@ public class ServerControllerServer {
 	public ServerControllerServer(int port) throws IOException {
 		this.port = port;
 		server = new ServerSocket(port);
-		new Thread(new WaitForClients()).start();
+		Thread waitForClients = new Thread(new WaitForClients());
+		waitForClients.setName("");
 	}
 
 	public int getPort() {
@@ -77,8 +78,8 @@ public class ServerControllerServer {
 
 	public void restartServer(String serverID) {
 		Tabs.servers.forEach((id, server) -> {
-			if(server.hasServer()){
-				if(server.getServer().getName().equalsIgnoreCase(serverID)){
+			if (server.hasServer()) {
+				if (server.getServer().getName().equalsIgnoreCase(serverID)) {
 					server.onRestartClicked();
 				}
 			}
