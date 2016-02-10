@@ -337,8 +337,12 @@ public class JarServer implements Serializable {
 
 	public void onError(Exception errorMessage) {
 
+		listener.forEach(serverListener -> {
+			serverListener.serverReturnMessage("Error while server start");
+		});
+
 		StringBuilder sb = new StringBuilder();
-		sb.append(errorMessage.getLocalizedMessage() + "\n");
+		sb.append("\n" + errorMessage.toString() + "\n");
 
 		int counter = 12;
 
