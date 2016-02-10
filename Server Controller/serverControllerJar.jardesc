@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="C:/Users/Sebe3012/Desktop/ServerController.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Server Controller/serverControllerJar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller{Main.java[Main" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.server"/>
+        <file path="/Server Controller/.classpath"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.gui"/>
+        <file path="/Server Controller/build.fxbuild"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.save"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.gui.dialog.properties"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.gui.tab"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.gui.dialog"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.listener.server"/>
+        <file path="/Server Controller/.project"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.jna"/>
+        <javaElement handleIdentifier="=Server Controller/src&lt;sebe3012.servercontroller.server.monitoring"/>
+    </selectedElements>
+</jardesc>
