@@ -62,6 +62,7 @@ public class Frame extends Application {
 							server.onEndClicked();
 						}
 					});
+					JarServerDialog.stage.close();
 					ChartsUpdater.stopUpdate();
 					ServerMonitoring.stopMonitoring();
 				} else {
