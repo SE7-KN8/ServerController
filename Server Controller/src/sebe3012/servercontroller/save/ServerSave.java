@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
@@ -42,7 +43,19 @@ public class ServerSave {
 	public static void loadServerController(String path) throws IOException, ClassNotFoundException {
 		FileInputStream fis = new FileInputStream(path);
 		ObjectInputStream ois = new ObjectInputStream(fis);
-		Object map = ois.readObject();
+		Object map = null;
+		try {
+			map = ois.readObject();
+		} catch (InvalidClassException e) {
+			Platform.runLater(() -> {
+				Alert wrongVersion = new Alert(AlertType.ERROR,
+						"Diese Speicher-Datei ist nicht für diese Version des ServerControllers geeignet. Bitte nehme die neuste Version",
+						ButtonType.OK);
+				wrongVersion.getDialogPane().getStylesheets()
+						.add(FrameHandler.class.getResource("style.css").toExternalForm());
+				wrongVersion.showAndWait();
+			});
+		}
 		ois.close();
 		if (map instanceof HashMap<?, ?>) {
 			HashMap<?, ?> servers = (HashMap<?, ?>) map;
