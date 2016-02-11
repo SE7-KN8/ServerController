@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -67,11 +68,41 @@ public class FrameHandler {
 	@FXML
 	private MenuItem openItem;
 
+	@FXML
+	private Button btnRestartAll;
+
+	@FXML
+	private Button btnStartAll;
+
+	@FXML
+	private Button btnStopAll;
+
 	public static Thread monitoringThread = new Thread(new ChartsUpdater());
 
 	@FXML
 	void initialize() {
 		init();
+	}
+
+	@FXML
+	void onRestartAllClicked() {
+		Tabs.servers.forEach((id, server) -> {
+			server.onRestartClicked();
+		});
+	}
+
+	@FXML
+	void onStartAllClicked() {
+		Tabs.servers.forEach((id, server) -> {
+			server.onStartClicked();
+		});
+	}
+
+	@FXML
+	void onStopAllClicked() {
+		Tabs.servers.forEach((id, server) -> {
+			server.onEndClicked();
+		});
 	}
 
 	@FXML
