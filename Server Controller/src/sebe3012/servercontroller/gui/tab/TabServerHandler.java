@@ -26,7 +26,7 @@ public class TabServerHandler implements Serializable {
 		public void serverReturnMessage(String message) {
 			Platform.runLater(() -> {
 				TextArea output = Tabs.contents.get(id).cOutput;
-				output.appendText(message + "\n");
+				output.appendText("[" + serverName + "] " + message + "\n");
 			});
 
 		}
@@ -42,7 +42,8 @@ public class TabServerHandler implements Serializable {
 			Platform.runLater(() -> {
 				TextArea output = Tabs.contents.get(id).cOutput;
 				output.appendText("Server stopped with code: " + code + "\n");
-				output.appendText("------------------------------------------------------------\n");
+				output.appendText(
+						"[" + serverName + "] " + "------------------------------------------------------------\n");
 			});
 			restartServer = false;
 
@@ -65,7 +66,7 @@ public class TabServerHandler implements Serializable {
 		Tabs.contents.get(id).lblInfo
 				.setText("Server: " + server.getName() + "\nPort: " + server.getServerProperties().getServerPort()
 						+ "\nMaximale Spieler: " + server.getServerProperties().getMaxPlayers());
-		Tabs.contents.get(id).cOutput.appendText("Server \"" + serverName + "\" starts\n");
+		Tabs.contents.get(id).cOutput.appendText("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
 	}
 
 	public void onEndClicked() {
