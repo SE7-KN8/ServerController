@@ -38,7 +38,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <Label fx:id="credits" alignment="CENTER" text="Alpha 0.1.6.2" BorderPane.alignment="CENTER" />
+      <Label fx:id="credits" alignment="CENTER" text="Alpha 0.1.6.3" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
       <VBox fx:id="vBox" prefHeight="697.0" prefWidth="175.0" BorderPane.alignment="CENTER">
