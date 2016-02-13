@@ -177,17 +177,18 @@ public class FrameHandler {
 
 	private void init() {
 		monitoringThread.setName("server-monitoring-thread-1");
+
+		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
+			FrameHandler.mainPane.getSelectionModel().select(lView.getSelectionModel().getSelectedIndex());
+		});
+		main.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
+			FrameHandler.list.getSelectionModel().select(main.getSelectionModel().getSelectedIndex());
+		});
+
 		lView.setCellFactory(e -> {
 			return new ServerCell();
 		});
-		lView.setOnMouseClicked(event -> {
-			JarServer bs = lView.getSelectionModel().getSelectedItem();
-			Tabs.servers.forEach((id, server) -> {
-				if (server.getServer().equals(bs)) {
-					main.getSelectionModel().select(main.getTabs().get(id));
-				}
-			});
-		});
+
 		mainPane = main;
 		list = lView;
 		lView.setItems(Servers.servers);
