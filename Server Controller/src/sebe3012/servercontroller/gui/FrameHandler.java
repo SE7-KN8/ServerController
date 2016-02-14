@@ -155,13 +155,16 @@ public class FrameHandler {
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
-		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
-		JarServer bs = Tabs.servers.get(tab.getTabContent().getId()).getServer();
-		if (bs.isRunning()) {
+		ServerTab tab = (ServerTab) main.getSelectionModel().getSelectedItem();
+		JarServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		if (js.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			Servers.servers.remove(bs);
-			mainPane.getTabs().remove(mainPane.getSelectionModel().getSelectedItem());
+			lView.getItems().remove(js);
+			lView.setItems(null);
+			lView.setItems(Servers.servers);
+			main.getTabs().remove(tab);
+			Tabs.servers.remove(tab.getTabContent().getId());
 		}
 
 	}
@@ -220,7 +223,10 @@ public class FrameHandler {
 		protected void updateItem(JarServer item, boolean empty) {
 			super.updateItem(item, empty);
 			if (item == null || empty) {
+				setText("");
+				setGraphic(null);
 			} else {
+				setGraphic(null);
 				setText(item.getName());
 			}
 		}
