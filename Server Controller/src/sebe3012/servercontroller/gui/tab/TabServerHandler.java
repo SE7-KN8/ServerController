@@ -41,7 +41,6 @@ public class TabServerHandler implements Serializable {
 			}
 			Platform.runLater(() -> {
 				TextArea output = Tabs.contents.get(id).cOutput;
-				output.appendText("Server stopped with code: " + code + "\n");
 				output.appendText(
 						"[" + serverName + "] " + "------------------------------------------------------------\n");
 			});
