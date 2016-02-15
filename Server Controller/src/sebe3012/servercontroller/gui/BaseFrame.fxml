@@ -41,13 +41,13 @@
       <Label fx:id="credits" alignment="CENTER" text="Alpha 0.1.6.4" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <VBox fx:id="vBox" prefHeight="697.0" prefWidth="175.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="vBox" prefHeight="697.0" prefWidth="175.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnStartAll" mnemonicParsing="false" onAction="#onStartAllClicked" text="Alle Server starten" />
+            <Button fx:id="btnStartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStartAllClicked" text="Alle Server starten" />
             <Separator prefWidth="200.0" />
-            <Button fx:id="btnStopAll" mnemonicParsing="false" onAction="#onStopAllClicked" text="Alle Server beenden" />
+            <Button fx:id="btnStopAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopAllClicked" text="Alle Server beenden" />
             <Separator prefWidth="200.0" />
-            <Button fx:id="btnRestartAll" mnemonicParsing="false" onAction="#onRestartAllClicked" text="Alle Server neustarten" />
+            <Button fx:id="btnRestartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRestartAllClicked" text="Alle Server neustarten" />
          </children>
       </VBox>
    </right>
@@ -55,7 +55,7 @@
       <TabPane fx:id="main" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
    </center>
    <left>
-      <VBox prefHeight="697.0" prefWidth="272.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="697.0" prefWidth="272.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
             <ListView fx:id="lView" prefHeight="662.0" prefWidth="209.0" />
             <PieChart fx:id="ramUsed" />
