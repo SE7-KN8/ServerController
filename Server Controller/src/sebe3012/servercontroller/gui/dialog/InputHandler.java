@@ -101,12 +101,13 @@ public class InputHandler {
 		} else {
 			int id = ((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem()).getTabContent().getId();
 			JarServer js = Tabs.servers.get(id).getServer();
+			int tab = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
 			Servers.servers.remove(js);
 			if (!js.isRunning()) {
 				Tabs.servers.get(id).initServer(txfJar.getText(), txfPro.getText(), txfID.getText(), txfRam.getText(),
-						false);
+						true);
+				FrameHandler.mainPane.getSelectionModel().select(tab);
 				FrameHandler.mainPane.getSelectionModel().getSelectedItem().setText(txfID.getText());
-				Servers.servers.add(Tabs.servers.get(id).getServer());
 			}
 		}
 		if (successful) {
@@ -146,7 +147,7 @@ public class InputHandler {
 
 	/**
 	 *
-	 * This method is called when the user selects the batch file
+	 * This method is called when the user selects the jar file
 	 *
 	 * @param event
 	 *            The action event
