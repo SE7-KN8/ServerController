@@ -120,6 +120,9 @@ public class FrameHandler {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
 		File f = fc.showSaveDialog(Frame.primaryStage);
+		if (f == null) {
+			return;
+		}
 		try {
 			ServerSave.saveServerController(f.getAbsolutePath());
 		} catch (IOException e) {
@@ -133,6 +136,9 @@ public class FrameHandler {
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
 		File f = fc.showOpenDialog(Frame.primaryStage);
+		if (f == null) {
+			return;
+		}
 		try {
 			ServerSave.loadServerController(f.getAbsolutePath());
 		} catch (ClassNotFoundException | IOException e) {

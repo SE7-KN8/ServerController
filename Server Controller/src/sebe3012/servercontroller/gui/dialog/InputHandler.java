@@ -32,7 +32,7 @@ import sebe3012.servercontroller.server.Servers;
  *
  * @author Sebe3012
  *
- *         This class handle the input of a BatchServerDialog
+ *         This class handle the input of a JarServerDialog
  *
  * @see JarServerDialog
  *
