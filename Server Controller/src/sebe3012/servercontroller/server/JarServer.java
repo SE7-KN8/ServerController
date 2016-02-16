@@ -153,11 +153,18 @@ public class JarServer implements Serializable {
 	 *            The server ram
 	 */
 	public JarServer(String batch, String properties, String name, String ram) {
-		this.jarFile = new File(batch);
-		this.propertiesFile = new File(properties);
-		this.name = name;
-		this.ram = ram;
-		listener = new ArrayList<ServerListener>();
+		try {
+			this.jarFile = new File(batch);
+			this.propertiesFile = new File(properties);
+			this.name = name;
+			this.ram = ram;
+			this.properties = new PropertiesHandler(propertiesFile);
+			this.properties.readProperties();
+			listener = new ArrayList<ServerListener>();
+		} catch (Exception e) {
+			onError(e);
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -234,8 +241,6 @@ public class JarServer implements Serializable {
 		try {
 			serverReadThread = new ReadThread(serverReadThread);
 			waitForServerExitThread = new WaitForExitThread(waitForServerExitThread);
-			properties = new PropertiesHandler(propertiesFile);
-			properties.readProperties();
 			System.out.println();
 			serverBuild = new ProcessBuilder("java", "-Xmx" + ram + "M", "-jar", jarFile.getName(), "nogui");
 			serverBuild.directory(jarFile.getParentFile());

@@ -156,12 +156,8 @@ public class TabServerHandler implements Serializable {
 
 	public void onPropertiesClicked() {
 		if (server != null) {
-			if (server.isRunning()) {
-				PropertiesDialog.properties = server.getServerProperties();
-				new PropertiesDialog(new Stage());
-			} else {
-				showServerNotRunningDialog();
-			}
+			PropertiesDialog.properties = server.getServerProperties();
+			new PropertiesDialog(new Stage());
 		} else {
 			showNoServerDialog();
 		}
