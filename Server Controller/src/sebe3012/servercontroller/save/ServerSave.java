@@ -13,6 +13,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import sebe3012.servercontroller.event.ServerCreateEvent;
+import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
@@ -46,7 +48,7 @@ public class ServerSave {
 		Object map = null;
 		try {
 			map = ois.readObject();
-		} catch (InvalidClassException e) {
+		} catch (InvalidClassException | ClassNotFoundException e) {
 			Platform.runLater(() -> {
 				Alert wrongVersion = new Alert(AlertType.ERROR,
 						"Diese Speicher-Datei ist nicht für diese Version des ServerControllers geeignet. Bitte nehme die neuste Version",
@@ -81,9 +83,7 @@ public class ServerSave {
 						Tabs.servers.forEach((id2, server2) -> {
 							if (!init) {
 								if (!server2.hasServer()) {
-									server2.initServer(tsh.getServer().getJarFile().getAbsolutePath(),
-											tsh.getServer().getPropertiesFile().getAbsolutePath(),
-											tsh.getServer().getName(), tsh.getServer().getRam(), true);
+									EventHandler.EVENT_BUS.post(new ServerCreateEvent(tsh.getServer().createNew()));
 									init = true;
 								}
 							}

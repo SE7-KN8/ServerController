@@ -21,19 +21,19 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
-import sebe3012.servercontroller.gui.dialog.JarServerDialog;
+
+import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.save.ServerSave;
-import sebe3012.servercontroller.server.JarServer;
+import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 
 public class FrameHandler {
 
 	public static TabPane mainPane;
-	public static ListView<JarServer> list;
+	public static ListView<BasicServer> list;
 
 	@FXML
 	private ResourceBundle resources;
@@ -45,7 +45,7 @@ public class FrameHandler {
 	private MenuBar mBar;
 
 	@FXML
-	private ListView<JarServer> lView;
+	private ListView<BasicServer> lView;
 
 	@FXML
 	private Label credits;
@@ -112,7 +112,7 @@ public class FrameHandler {
 
 	@FXML
 	void onAddServerItemClicked(ActionEvent event) {
-		new JarServerDialog(new Stage());
+		ServerDialog.loadDialog();
 	}
 
 	@FXML
@@ -150,19 +150,18 @@ public class FrameHandler {
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
 		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
-		JarServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		BasicServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
 		if (js.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			new JarServerDialog(new Stage(), js.getJarFile().getAbsolutePath(),
-					js.getPropertiesFile().getAbsolutePath(), js.getName(), js.getRam());
+			// TODO Use new dialog
 		}
 	}
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
 		ServerTab tab = (ServerTab) main.getSelectionModel().getSelectedItem();
-		JarServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
+		BasicServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
 		if (js.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
@@ -223,10 +222,10 @@ public class FrameHandler {
 		dialog.showAndWait();
 	}
 
-	private class ServerCell extends ListCell<JarServer> {
+	private class ServerCell extends ListCell<BasicServer> {
 
 		@Override
-		protected void updateItem(JarServer item, boolean empty) {
+		protected void updateItem(BasicServer item, boolean empty) {
 			super.updateItem(item, empty);
 			if (item == null || empty) {
 				setText("");

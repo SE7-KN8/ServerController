@@ -17,7 +17,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.control.Alert.AlertType;
 
-import sebe3012.servercontroller.gui.dialog.JarServerDialog;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
@@ -62,9 +61,9 @@ public class Frame extends Application {
 							server.onEndClicked();
 						}
 					});
-					JarServerDialog.stage.close();
 					ChartsUpdater.stopUpdate();
 					ServerMonitoring.stopMonitoring();
+					Platform.exit();
 				} else {
 					event.consume();
 				}
@@ -72,13 +71,12 @@ public class Frame extends Application {
 		});
 		Platform.runLater(() -> {
 			try {
-				Thread.sleep(2500);
+				Thread.sleep(0);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			splash.close();
 			primaryStage.show();
-			new JarServerDialog(new Stage());
 		});
 
 	}

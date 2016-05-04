@@ -9,7 +9,7 @@ import org.hyperic.sigar.SigarException;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.server.JarServer;
+import sebe3012.servercontroller.server.BasicServer;
 
 public class ServerMonitoring {
 
@@ -43,10 +43,11 @@ public class ServerMonitoring {
 							.getTabContent().getId()) != null) {
 						if (Tabs.servers.get(((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem())
 								.getTabContent().getId()).hasServer()) {
-							JarServer js = Tabs.servers
+							BasicServer js = Tabs.servers
 									.get(((ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem())
 											.getTabContent().getId())
 									.getServer();
+
 							if (js.isRunning()) {
 								try {
 									ProcMem pm = new ProcMem();
@@ -54,7 +55,8 @@ public class ServerMonitoring {
 									ServerMonitoring.ramUsed = pm.getSize() / 1024D / 1024D;
 									Mem m = sigar.getMem();
 									ServerMonitoring.installedRam = m.getTotal() / 1024D / 1024D;
-									ServerMonitoring.assignedRam = Integer.valueOf(js.getRam());
+									ServerMonitoring.assignedRam = Integer.valueOf(
+											/* TODO Use runtime value */1);
 									ProcCpu pc = new ProcCpu();
 									pc.gather(sigar, js.getPID());
 									ServerMonitoring.cpuUsed = pc.getPercent();

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 public class Tabs {
 
+	//TODO Remove map system
 	public static HashMap<Integer, TabServerHandler> servers = new HashMap<>();
 	public static HashMap<Integer, TabContentHandler> contents = new HashMap<>();
 	public static HashMap<TabServerHandler, Integer> IDforServers = new HashMap<>();

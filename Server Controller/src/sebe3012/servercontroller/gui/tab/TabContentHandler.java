@@ -74,11 +74,6 @@ public class TabContentHandler implements Initializable {
 		server.onRestartClicked();
 	}
 
-	@FXML
-	void onPropertiesClicked(ActionEvent event) {
-		server.onPropertiesClicked();
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		server = new TabServerHandler();

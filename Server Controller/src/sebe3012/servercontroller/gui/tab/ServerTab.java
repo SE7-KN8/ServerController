@@ -26,7 +26,8 @@ public class ServerTab extends Tab {
 	public void setTabContent(TabContent tabContent) {
 		tabContentProperty.set(tabContent);
 	}
-	public TabContent getTabContent(){
+
+	public TabContent getTabContent() {
 		return tabContentProperty.get();
 	}
 

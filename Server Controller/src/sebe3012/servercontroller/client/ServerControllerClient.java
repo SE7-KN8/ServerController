@@ -11,7 +11,7 @@ public class ServerControllerClient {
 
 		String ip = "localhost";
 
-		if(args[2] != null){
+		if (args[2] != null) {
 			ip = args[2];
 		}
 
