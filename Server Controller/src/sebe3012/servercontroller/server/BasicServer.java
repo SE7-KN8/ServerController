@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import com.sun.jna.Pointer;
 
@@ -23,7 +24,7 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 
 public abstract class BasicServer implements Serializable {
-	private static final long serialVersionUID = 1335983502140714867L;
+	private static final long serialVersionUID = -6581065154916341314L;
 	protected boolean running = false;
 	private boolean started = false;
 	protected BufferedReader inputReader;
@@ -50,7 +51,7 @@ public abstract class BasicServer implements Serializable {
 	public void start() {
 		if (!started) {
 			try {
-				
+
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
 						"nogui");
 
@@ -121,7 +122,7 @@ public abstract class BasicServer implements Serializable {
 			while (!interrupted()) {
 				try {
 					String line = inputReader.readLine();
-					
+
 					if (line != null) {
 						EventHandler.EVENT_BUS.post(new ServerMessageEvent(server, line));
 					}
@@ -221,4 +222,6 @@ public abstract class BasicServer implements Serializable {
 	}
 
 	public abstract BasicServer createNew();
+
+	public abstract HashMap<String, Runnable> getExtraButtons();
 }

@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
@@ -116,6 +117,9 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		this.server = event.getServer();
 		this.serverName = server.getName();
 		Servers.servers.add(this.server);
+
+		EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
+
 	}
 
 	@Subscribe

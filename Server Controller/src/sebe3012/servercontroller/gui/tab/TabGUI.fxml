@@ -108,11 +108,6 @@
               </rowConstraints>
                <children>
                   <Label fx:id="lblInfo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                  <Button fx:id="btnPro" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPropertiesClicked" text="Properties" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
                </children>
             </GridPane>
          </items>

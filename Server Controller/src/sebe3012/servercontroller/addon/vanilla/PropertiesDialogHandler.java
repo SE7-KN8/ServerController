@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.gui.dialog;
+package sebe3012.servercontroller.addon.vanilla;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +22,12 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
 
 public class PropertiesDialogHandler {
+
+	private PropertiesHandler handler;
+
+	public PropertiesDialogHandler(PropertiesHandler handler) {
+		this.handler = handler;
+	}
 
 	@FXML
 	private ResourceBundle resources;
@@ -56,10 +62,8 @@ public class PropertiesDialogHandler {
 				}
 			});
 		});
-		ObservableList<String> keys = FXCollections
-				.observableArrayList(PropertiesDialog.properties.getAllValues().keySet());
-		ObservableList<String> values = FXCollections
-				.observableArrayList(PropertiesDialog.properties.getAllValues().values());
+		ObservableList<String> keys = FXCollections.observableArrayList(handler.getAllValues().keySet());
+		ObservableList<String> values = FXCollections.observableArrayList(handler.getAllValues().values());
 		lProperties.setItems(keys);
 		rProperties.setItems(values);
 	}
@@ -77,7 +81,7 @@ public class PropertiesDialogHandler {
 	@FXML
 	void onSaveClicked() {
 		try {
-			Path file = Paths.get(PropertiesDialog.properties.getProperitesFile().toURI());
+			Path file = Paths.get(handler.getProperitesFile().toURI());
 			List<String> lines = new ArrayList<>();
 			for (int i = 0; i < lProperties.getItems().size(); i++) {
 				lines.add(lProperties.getItems().get(i) + "=" + rProperties.getItems().get(i));

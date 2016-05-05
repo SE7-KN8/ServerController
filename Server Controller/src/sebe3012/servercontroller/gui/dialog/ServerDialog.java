@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.gui.Frame;
 
 public class ServerDialog {
 
@@ -18,7 +19,7 @@ public class ServerDialog {
 
 		Alert dialog = new Alert(AlertType.NONE);
 		DialogPane rootPane = new DialogPane();
-		rootPane.getStylesheets().add(ServerDialog.class.getResource("style.css").toExternalForm());
+		rootPane.getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
 
 		GridPane root = null;
 
@@ -26,7 +27,7 @@ public class ServerDialog {
 		box.setItems(FXCollections.observableArrayList(ServerController.serverAddon));
 		box.setPrefWidth(300);
 		box.setPrefHeight(50);
-		box.setStyle("-fx-font: 30px \"Serif\";");
+		box.setStyle("-fx-font: 30px \"Arial\";");
 
 		Button b = new Button("Fertig");
 		b.setOnAction(event -> {

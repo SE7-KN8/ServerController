@@ -133,3 +133,25 @@
     -fx-background-radius: 0.0 6.0 6.0 6.0, 0.0 5.0 5.0 5.0, 0.0 4.0 4.0 4.0;
     -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em;
 }
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: rgb(40.0,190.0,31.0);
+    -fx-text-fill: white;
+}
+
+.list-cell {
+	-fx-text-fill: black;
+}
+
+.list-cell:odd {
+	-fx-background-color: white;
+}
+
+.list-cell:even {
+	-fx-background-color: lightgray;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: rgb(140.0,190.0,31.0);
+    -fx-text-fill: white;
+}

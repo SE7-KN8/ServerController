@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.google.common.eventbus.Subscribe;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
@@ -21,7 +24,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
+import sebe3012.servercontroller.event.ChangeButtonsEvent;
+import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.Tabs;
@@ -30,10 +35,11 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 
-public class FrameHandler {
+public class FrameHandler implements IEventHandler {
 
 	public static TabPane mainPane;
 	public static ListView<BasicServer> list;
+	public static VBox buttonList;
 
 	@FXML
 	private ResourceBundle resources;
@@ -184,6 +190,9 @@ public class FrameHandler {
 	}
 
 	private void init() {
+
+		EventHandler.EVENT_BUS.registerEventListener(this);
+
 		monitoringThread.setName("server-monitoring-thread-1");
 
 		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
@@ -199,9 +208,10 @@ public class FrameHandler {
 
 		mainPane = main;
 		list = lView;
+		buttonList = vBox;
 		lView.setItems(Servers.servers);
 		initCharts();
-		System.out.println("[GUI] FXML intitialize");
+		System.out.println("[GUI] FXML intitialized");
 		monitoringThread.start();
 	}
 
@@ -235,6 +245,29 @@ public class FrameHandler {
 				setText(item.getName());
 			}
 		}
+
+	}
+
+	@Subscribe
+	public void changeExtraButton(ChangeButtonsEvent event) {
+
+		Platform.runLater(() -> {
+
+			for (int i = 3; i < vBox.getChildren().size(); i++) {
+				vBox.getChildren().remove(i);
+			}
+
+			event.getNewButtons().forEach((name, action) -> {
+
+				Button newButton = new Button(name);
+				newButton.setOnAction(e -> {
+					action.run();
+				});
+
+				vBox.getChildren().add(newButton);
+			});
+
+		});
 
 	}
 
