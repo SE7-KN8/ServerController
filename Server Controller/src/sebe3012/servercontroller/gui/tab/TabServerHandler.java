@@ -43,7 +43,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		restartServer = false;
 		if (server != null) {
 			if (server.isRunning()) {
-				server.sendCommand("stop");
+				server.sendCommand(server.getStopCommand());
 			} else {
 				showServerNotRunningDialog();
 			}
@@ -70,7 +70,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		if (server != null) {
 			if (server.isRunning()) {
 				restartServer = true;
-				server.sendCommand("stop");
+				server.sendCommand(server.getStopCommand());
 			} else {
 				showServerNotRunningDialog();
 			}
@@ -115,9 +115,9 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		this.server = event.getServer();
 		this.serverName = server.getName();
 		Servers.servers.add(this.server);
-		
+
 		Tabs.contents.get(id).lblInfo.setText(this.server.getServerInfo());
-		
+
 		EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
 
 	}
