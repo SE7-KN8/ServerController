@@ -43,8 +43,8 @@ public abstract class BasicServer implements Serializable {
 		this.jarFile = new File(jarFilePath);
 		this.messageReaderThread = new MessageReader(new MessageReader(), this);
 		this.waitForExitThread = new WaitForExit(new WaitForExit(), this);
-		this.messageReaderThread.setName(name + "-message-reader-thread");
-		this.waitForExitThread.setName(name + "-waitForExitThread");
+		this.messageReaderThread.setName(name + "-Server reader");
+		this.waitForExitThread.setName(name + "-Server stop listener");
 		this.args = args;
 	}
 
@@ -167,6 +167,10 @@ public abstract class BasicServer implements Serializable {
 
 	public String getServerInfo() {
 		return "Server-Name: " + name;
+	}
+
+	public String getStopCommand() {
+		return "stop";
 	}
 
 	public void onError(Exception errorMessage) {
