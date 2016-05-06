@@ -13,9 +13,9 @@ public class ServerController {
 
 	public static void main(String[] args) {
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
-
+		
 		VanillaAddon.loadAddon();
-
+		
 		System.out.println("[Main] ServerController started!");
 		Frame.load(args);
 	}

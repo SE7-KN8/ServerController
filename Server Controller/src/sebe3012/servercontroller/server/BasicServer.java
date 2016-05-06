@@ -165,6 +165,10 @@ public abstract class BasicServer implements Serializable {
 		}
 	}
 
+	public String getServerInfo() {
+		return "Server-Name: " + name;
+	}
+
 	public void onError(Exception errorMessage) {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
@@ -224,4 +228,5 @@ public abstract class BasicServer implements Serializable {
 	public abstract BasicServer createNew();
 
 	public abstract HashMap<String, Runnable> getExtraButtons();
+
 }

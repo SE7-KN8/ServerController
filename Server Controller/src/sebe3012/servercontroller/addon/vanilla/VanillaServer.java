@@ -2,6 +2,7 @@ package sebe3012.servercontroller.addon.vanilla;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import com.google.common.eventbus.Subscribe;
@@ -33,10 +34,16 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 			e.printStackTrace();
 		}
 
-		extraButtons.put("Properties", () -> {
+		extraButtons.put("Properties", (Runnable & Serializable) () -> {
 			new PropertiesDialog(new Stage(), handler);
 		});
 
+	}
+
+	@Override
+	public String getServerInfo() {
+		return "Port: " + handler.getServerPort() + " World-Name: " + handler.getLevelName() + "\nDifficulty: "
+				+ handler.getDifficulty() + " Seed: " + handler.getLevelSeed();
 	}
 
 	public String getPropertiesFile() {

@@ -36,8 +36,6 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	public void onStartClicked() {
 		restartServer = false;
 		startServer();
-		Tabs.contents.get(id).lblInfo.setText("Server: " + server.getName());
-		// TODO Add more information
 		Tabs.contents.get(id).cOutput.appendText("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
 	}
 
@@ -117,7 +115,9 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		this.server = event.getServer();
 		this.serverName = server.getName();
 		Servers.servers.add(this.server);
-
+		
+		Tabs.contents.get(id).lblInfo.setText(this.server.getServerInfo());
+		
 		EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
 
 	}
