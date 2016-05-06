@@ -55,7 +55,7 @@ public class Frame extends Application {
 			Optional<ButtonType> result = dialog.showAndWait();
 			if (result.isPresent()) {
 				if (result.get().equals(ButtonType.OK)) {
-					System.out.println("[Main] Stop Servercontroller");
+					System.out.println("Stop Servercontroller");
 					Tabs.servers.forEach((id, server) -> {
 						if (server.getServer().isRunning()) {
 							server.onEndClicked();

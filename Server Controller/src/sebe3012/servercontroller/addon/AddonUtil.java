@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon;
 
+import java.io.File;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -43,7 +45,13 @@ public class AddonUtil {
 
 		fc.getExtensionFilters().add(new ExtensionFilter(fileName, fileType));
 
-		return fc.showOpenDialog(null).getAbsolutePath();
+		File f = fc.showOpenDialog(null);
+
+		if (f != null) {
+			return f.getAbsolutePath();
+		}
+
+		return "";
 
 	}
 
