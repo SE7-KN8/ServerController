@@ -6,6 +6,6 @@ import javafx.collections.ObservableList;
 public class Servers {
 	public static ObservableList<BasicServer> servers = FXCollections.observableArrayList();
 	static {
-		System.out.println("[ServerList] Intitialized");
+		System.out.println("Intitialized");
 	}
 }

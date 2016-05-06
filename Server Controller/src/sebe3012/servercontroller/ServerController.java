@@ -13,11 +13,14 @@ public class ServerController {
 	public static List<String> serverAddon = new ArrayList<>();
 
 	public static void main(String[] args) {
+
+		System.setOut(new ServerControllerOutput(System.out));
+
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
 
 		VanillaAddon.loadAddon();
 		CraftbukkitAddon.loadAddon();
-		System.out.println("[Main] ServerController started!");
+		System.out.println("ServerController started!");
 		Frame.load(args);
 	}
 

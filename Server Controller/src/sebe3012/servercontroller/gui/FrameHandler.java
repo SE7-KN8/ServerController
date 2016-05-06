@@ -211,7 +211,7 @@ public class FrameHandler implements IEventHandler {
 		buttonList = vBox;
 		lView.setItems(Servers.servers);
 		initCharts();
-		System.out.println("[GUI] FXML intitialized");
+		System.out.println("FXML intitialized");
 		monitoringThread.start();
 	}
 

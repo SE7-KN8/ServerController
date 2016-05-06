@@ -13,17 +13,17 @@ public class EventHandler {
 	}
 
 	public void registerEventListener(IEventHandler handler) {
-		System.out.println("[EventHandler] Register " + handler.getClass().getSimpleName());
+		System.out.println("Register: " + handler.getClass().getSimpleName());
 		eventBus.register(handler);
 	}
 
 	public void unregisterEventListener(IEventHandler handler) {
-		System.out.println("[EventHandler] Unregister " + handler.getClass().getSimpleName());
+		System.out.println("Unregister: " + handler.getClass().getSimpleName());
 		eventBus.unregister(handler);
 	}
 
 	public void post(IEvent event) {
-		System.out.println("[EventHandler] Post " + event.getClass().getSimpleName());
+		System.out.println("Post: " + event.getClass().getSimpleName());
 		eventBus.post(event);
 	}
 
