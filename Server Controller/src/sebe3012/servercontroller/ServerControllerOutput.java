@@ -18,7 +18,7 @@ public class ServerControllerOutput extends PrintStream {
 
 		StackTraceElement caller = stack[2];
 		super.println(
-				new SimpleDateFormat("HH:mm:ss").format(cal.getTime()) + "  " + caller.getClassName() + ": " + line);
+				new SimpleDateFormat("HH:mm:ss").format(cal.getTime()) + "  " + caller.toString() + ": " + line);
 	}
 
 }
