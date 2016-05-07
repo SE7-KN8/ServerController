@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon.craftbukkit;
+package sebe3012.servercontroller.addon.spigot;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 
 import sebe3012.servercontroller.addon.AddonUtil;
 
-public class CraftbukkitDialogController {
+public class SpigotDialogController {
 
 	@FXML
 	private GridPane IdLabel;
@@ -58,6 +58,12 @@ public class CraftbukkitDialogController {
 	@FXML
 	private Button buttonBukkit;
 
+	@FXML
+	private TextField idSpigot;
+
+	@FXML
+	private Button spigotButton;
+
 	private Alert dialog;
 
 	@FXML
@@ -76,19 +82,27 @@ public class CraftbukkitDialogController {
 	}
 
 	@FXML
-	void onConfirmClicked(ActionEvent event) {
+	void onSpigotClicked(ActionEvent event) {
+		idSpigot.setText(AddonUtil.openFileChooser("*.yml", "Spigot-Config"));
+	}
 
+	@FXML
+	void onConfirmClicked(ActionEvent event) {
 		if (AddonUtil.checkUserInput(idTextfield.getText())) {
 			if (AddonUtil.checkUserInput(jarPathTextfield.getText())) {
 				if (AddonUtil.checkUserInput(propertiesTextfield.getText())) {
 					if (AddonUtil.checkUserInput(idBukkit.getText())) {
-						dialog.close();
+						if (AddonUtil.checkUserInput(idSpigot.getText())) {
+							dialog.close();
 
-						CraftbukkitServer server = new CraftbukkitServer(idTextfield.getText(),
-								jarPathTextfield.getText(), propertiesTextfield.getText(), argsTextfield.getText(),
-								idBukkit.getText());
+							SpigotServer server = new SpigotServer(idTextfield.getText(), jarPathTextfield.getText(),
+									propertiesTextfield.getText(), argsTextfield.getText(), idBukkit.getText(),
+									idSpigot.getText());
 
-						AddonUtil.addServer(server);
+							AddonUtil.addServer(server);
+						} else {
+							AddonUtil.openAlert("Fehler", "Spigot-Datei ist nicht ausgewählt", AlertType.WARNING);
+						}
 					} else {
 						AddonUtil.openAlert("Fehler", "Bukkit-Datei ist nicht ausgewählt", AlertType.WARNING);
 					}
@@ -105,10 +119,10 @@ public class CraftbukkitDialogController {
 
 	@FXML
 	void initialize() {
-
+		
 	}
 
-	public CraftbukkitDialogController(Alert dialog) {
+	public SpigotDialogController(Alert dialog) {
 		this.dialog = dialog;
 	}
 

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="IdLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1006.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="IdLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="1010.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -23,9 +23,10 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="headerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="750.0" text="Craftbukkit-Server erstellen" GridPane.columnSpan="3">
+      <Label fx:id="headerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="750.0" text="Spigot-Server erstellen" GridPane.columnSpan="3">
          <font>
             <Font size="50.0" />
          </font>
@@ -38,7 +39,7 @@
       <TextField fx:id="idTextfield" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <TextField fx:id="jarPathTextfield" editable="false" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <TextField fx:id="propertiesTextfield" editable="false" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="argsTextfield" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <TextField fx:id="argsTextfield" maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="235.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <Label fx:id="idJar" text="Server-Datei" GridPane.rowIndex="2">
          <font>
             <Font size="37.0" />
@@ -49,14 +50,14 @@
             <Font size="37.0" />
          </font>
       </Label>
-      <Label fx:id="idArgs" text="Startargumente" GridPane.rowIndex="5">
+      <Label fx:id="idArgs" text="Startargumente" GridPane.rowIndex="6">
          <font>
             <Font size="37.0" />
          </font>
       </Label>
       <Button fx:id="jarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onJarClicked" prefHeight="53.0" prefWidth="52.0" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       <Button fx:id="propertiesButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPropertiesClicked" prefHeight="53.0" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#onConfirmClicked" prefHeight="50.0" prefWidth="100.0" text="Fertig" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+      <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#onConfirmClicked" prefHeight="50.0" prefWidth="100.0" text="Fertig" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
       <ImageView fitHeight="188.0" fitWidth="229.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <Label text="Bukkit-Datei" GridPane.rowIndex="4">
          <font>
@@ -65,5 +66,12 @@
       </Label>
       <TextField fx:id="idBukkit" editable="false" maxWidth="1.7976931348623157E308" prefHeight="53.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Button fx:id="bukkitButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBukkitClicked" prefHeight="53.0" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Label text="Spigot-Datei" GridPane.rowIndex="5">
+         <font>
+            <Font size="37.0" />
+         </font>
+      </Label>
+      <TextField fx:id="idSpigot" editable="false" maxWidth="1.7976931348623157E308" prefHeight="53.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Button fx:id="spigotButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSpigotClicked" prefHeight="53.0" text="Auswählen" GridPane.columnIndex="2" GridPane.rowIndex="5" />
    </children>
 </GridPane>
