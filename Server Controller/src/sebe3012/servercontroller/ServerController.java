@@ -3,6 +3,7 @@ package sebe3012.servercontroller;
 import java.util.ArrayList;
 import java.util.List;
 
+import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
 import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
@@ -22,6 +23,7 @@ public class ServerController {
 		VanillaAddon.loadAddon();
 		CraftbukkitAddon.loadAddon();
 		SpigotAddon.loadAddon();
+		BungeeCordAddon.loadAddon();
 
 		System.out.println("ServerController started!");
 		Frame.load(args);

@@ -1,0 +1,69 @@
+package sebe3012.servercontroller.addon.bungeecord;
+
+import java.util.HashMap;
+
+import com.google.common.eventbus.Subscribe;
+
+import sebe3012.servercontroller.event.ServerStopEvent;
+import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.eventbus.IEventHandler;
+import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.ServerTypes;
+
+public class BungeeCordServer extends BasicServer implements IEventHandler {
+
+	private static final long serialVersionUID = 5283403326325684583L;
+
+	private String configFile;
+
+	private HashMap<String, Runnable> extraButtons = new HashMap<>();
+
+	public BungeeCordServer(String name, String jarFilePath, String configFile, String args) {
+		super(name, jarFilePath, "-Djline.terminal=jline.UnsupportedTerminal" + args);
+		this.configFile = configFile;
+		EventHandler.EVENT_BUS.registerEventListener(this);
+	}
+
+	@Override
+	public String getServerInfo() {
+		return "";
+	}
+
+	public String getConfigFile() {
+		return configFile;
+	}
+
+	@Override
+	public ServerTypes getServerType() {
+		return ServerTypes.BUNGEE;
+	}
+
+	@Subscribe
+	public void serverStoped(ServerStopEvent event) {
+		if (event.getServer() == this) {
+			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
+		}
+		EventHandler.EVENT_BUS.unregisterEventListener(this);
+	}
+
+	@Override
+	public String getPluginName() {
+		return BungeeCordAddon.ADDON_NAME;
+	}
+
+	@Override
+	public BasicServer createNew() {
+		return new BungeeCordServer(name, jarFile.getAbsolutePath(), configFile, args);
+	}
+
+	@Override
+	public HashMap<String, Runnable> getExtraButtons() {
+		return extraButtons;
+	}
+
+	@Override
+	public String getStopCommand() {
+		return "end";
+	}
+
+}

@@ -60,6 +60,7 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		if (event.getServer() == this) {
 			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
 		}
+		EventHandler.EVENT_BUS.unregisterEventListener(this);
 	}
 
 	@Override
