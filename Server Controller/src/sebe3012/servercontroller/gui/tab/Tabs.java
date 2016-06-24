@@ -2,13 +2,24 @@ package sebe3012.servercontroller.gui.tab;
 
 import java.util.HashMap;
 
+import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.server.BasicServer;
+
 public class Tabs {
 
-	//TODO Remove map system
+	// TODO Remove map system
 	public static HashMap<Integer, TabServerHandler> servers = new HashMap<>();
 	public static HashMap<Integer, TabContentHandler> contents = new HashMap<>();
 	public static HashMap<TabServerHandler, Integer> IDforServers = new HashMap<>();
 	public static HashMap<TabContentHandler, Integer> IDforContents = new HashMap<>();
+
+	public static ServerTab getCurrentTab() {
+		return (ServerTab) (FrameHandler.mainPane.getSelectionModel().getSelectedItem());
+	}
+
+	public static BasicServer getCurrentServer() {
+		return servers.get(getCurrentTab().getTabContent().getId()).getServer();
+	}
 
 	private static int nextID = 0;
 	private static boolean value1 = false;
