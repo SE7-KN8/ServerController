@@ -21,8 +21,18 @@ import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
 
+/**
+ * 
+ * The class contruct the basic frame and starts the splashscreen
+ * 
+ * @author Sebastian Knackstedt
+ *
+ */
 public class Frame extends Application {
 
+	/**
+	 * The basic frame for the programm
+	 */
 	public static Stage primaryStage;
 
 	@Override
@@ -53,6 +63,7 @@ public class Frame extends Application {
 			dialog.setHeaderText("Beenden?");
 			dialog.setTitle("");
 			Optional<ButtonType> result = dialog.showAndWait();
+
 			if (result.isPresent()) {
 				if (result.get().equals(ButtonType.OK)) {
 					System.out.println("Stop Servercontroller");
@@ -69,6 +80,7 @@ public class Frame extends Application {
 				}
 			}
 		});
+
 		Platform.runLater(() -> {
 			try {
 				Thread.sleep(0);
@@ -81,6 +93,12 @@ public class Frame extends Application {
 
 	}
 
+	/**
+	 * This method load the frame and starts the splashscreen
+	 * 
+	 * @param args
+	 *            The start arguments
+	 */
 	public static void load(String... args) {
 		launch(args);
 	}
