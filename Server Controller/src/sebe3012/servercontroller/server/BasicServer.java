@@ -97,8 +97,6 @@ public abstract class BasicServer implements Serializable {
 		}
 	}
 
-	public abstract ServerTypes getServerType();
-
 	public String getArgs() {
 		return args;
 	}

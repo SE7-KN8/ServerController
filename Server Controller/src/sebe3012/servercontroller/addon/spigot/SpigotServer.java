@@ -2,7 +2,6 @@ package sebe3012.servercontroller.addon.spigot;
 
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.ServerTypes;
 
 public class SpigotServer extends CraftbukkitServer {
 
@@ -27,11 +26,6 @@ public class SpigotServer extends CraftbukkitServer {
 	@Override
 	public String getPluginName() {
 		return SpigotAddon.ADDON_NAME;
-	}
-
-	@Override
-	public ServerTypes getServerType() {
-		return ServerTypes.SPIGOT;
 	}
 
 	@Override

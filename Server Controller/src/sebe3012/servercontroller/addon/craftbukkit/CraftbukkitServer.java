@@ -2,7 +2,6 @@ package sebe3012.servercontroller.addon.craftbukkit;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.ServerTypes;
 
 public class CraftbukkitServer extends VanillaServer {
 
@@ -26,11 +25,6 @@ public class CraftbukkitServer extends VanillaServer {
 	@Override
 	public String getPluginName() {
 		return CraftbukkitAddon.ADDON_NAME;
-	}
-
-	@Override
-	public ServerTypes getServerType() {
-		return ServerTypes.CRAFTBUKKIT;
 	}
 
 	@Override

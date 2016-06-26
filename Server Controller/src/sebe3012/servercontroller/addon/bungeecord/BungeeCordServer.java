@@ -8,7 +8,6 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.ServerTypes;
 
 public class BungeeCordServer extends BasicServer implements IEventHandler {
 
@@ -31,11 +30,6 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 
 	public String getConfigFile() {
 		return configFile;
-	}
-
-	@Override
-	public ServerTypes getServerType() {
-		return ServerTypes.BUNGEE;
 	}
 
 	@Subscribe

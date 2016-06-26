@@ -12,7 +12,6 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.ServerTypes;
 
 public class VanillaServer extends BasicServer implements IEventHandler {
 
@@ -48,11 +47,6 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 
 	public String getPropertiesFile() {
 		return propertiesFile;
-	}
-
-	@Override
-	public ServerTypes getServerType() {
-		return ServerTypes.VANILLA;
 	}
 
 	@Subscribe
