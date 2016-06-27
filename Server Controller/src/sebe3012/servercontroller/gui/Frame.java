@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.gui;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -35,20 +36,48 @@ public class Frame extends Application {
 	 */
 	public static Stage primaryStage;
 
+	private Stage splash;
+
+	private int splashTimeInMillis = 5000;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Frame.primaryStage = primaryStage;
 
-		Stage splash = new Stage(StageStyle.UNDECORATED);
-		Group sRoot = new Group();
-		sRoot.resize(800, 600);
-		Rectangle image = new Rectangle(800, 600);
-		image.setFill(new ImagePattern(new Image(this.getClass().getResource("splash.png").toExternalForm())));
-		sRoot.getChildren().add(image);
-		splash.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
-		splash.setScene(new Scene(sRoot));
-		splash.show();
+		createSpashScreen();
+		createPrimaryStage();
 
+		Platform.runLater(() -> {
+			try {
+				Thread.sleep(splashTimeInMillis);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			splash.close();
+			primaryStage.show();
+		});
+
+	}
+
+	private void createSpashScreen() {
+		Stage splash = new Stage(StageStyle.UNDECORATED);
+		this.splash = splash;
+		Group root = new Group();
+
+		root.resize(800, 600);
+
+		Rectangle image = new Rectangle(800, 600);
+
+		image.setFill(new ImagePattern(new Image(this.getClass().getResource("splash.png").toExternalForm())));
+
+		root.getChildren().add(image);
+
+		splash.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
+		splash.setScene(new Scene(root));
+		splash.show();
+	}
+
+	private void createPrimaryStage() throws IOException {
 		BorderPane root = FXMLLoader.load(this.getClass().getResource("BaseFrame.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
@@ -57,6 +86,8 @@ public class Frame extends Application {
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
 		primaryStage.setOnCloseRequest(event -> {
+
+			// Close Dialog
 			Alert dialog = new Alert(AlertType.CONFIRMATION, "Wollen sie wirklich beenden?", ButtonType.OK,
 					ButtonType.CANCEL);
 			dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
@@ -80,17 +111,6 @@ public class Frame extends Application {
 				}
 			}
 		});
-
-		Platform.runLater(() -> {
-			try {
-				Thread.sleep(0);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			splash.close();
-			primaryStage.show();
-		});
-
 	}
 
 	/**
