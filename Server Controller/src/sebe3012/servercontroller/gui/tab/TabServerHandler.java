@@ -4,12 +4,6 @@ import java.io.Serializable;
 
 import com.google.common.eventbus.Subscribe;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
@@ -25,12 +19,26 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	private BasicServer server;
 	private boolean restartServer = false;
 	private final int id;
+	private TabContentHandler handler;
 
-	public TabServerHandler() {
+	public TabServerHandler(TabContentHandler handler) {
 		this.id = Tabs.getNextID();
+		this.handler = handler;
 		EventHandler.EVENT_BUS.registerEventListener(this);
 		Tabs.servers.put(id, this);
 		Tabs.IDforServers.put(this, Tabs.getNextID());
+	}
+
+	public void sendCommand(String command) {
+		if (server != null) {
+			if (server.isRunning()) {
+				server.sendCommand(command);
+			} else {
+				showServerNotRunningDialog();
+			}
+		} else {
+			showNoServerDialog();
+		}
 	}
 
 	public void onStartClicked() {
@@ -44,20 +52,6 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		if (server != null) {
 			if (server.isRunning()) {
 				server.sendCommand(server.getStopCommand());
-			} else {
-				showServerNotRunningDialog();
-			}
-		} else {
-			showNoServerDialog();
-		}
-	}
-
-	public void onSendClicked() {
-		if (server != null) {
-			if (server.isRunning()) {
-				TextField input = Tabs.contents.get(id).cInput;
-				server.sendCommand(input.getText());
-				input.setText("");
 			} else {
 				showServerNotRunningDialog();
 			}
@@ -99,15 +93,11 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	private void showNoServerDialog() {
-		Alert a = new Alert(AlertType.ERROR, "Kein Server ausgewählt", ButtonType.OK);
-		a.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-		a.showAndWait();
+		handler.showErrorAlert("Fehler", "", "Kein Server ausgewählt");
 	}
 
 	private void showServerNotRunningDialog() {
-		Alert a = new Alert(AlertType.WARNING, "Der Server läuft noch nicht", ButtonType.OK);
-		a.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-		a.showAndWait();
+		handler.showErrorAlert("Fehler", "", "Der Server muß erst gestartet werden");
 	}
 
 	@Subscribe
@@ -126,11 +116,8 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	public void serverReturnMessage(ServerMessageEvent event) {
 		if (event.getServer() == server) {
 
-			Platform.runLater(() -> {
+			handler.addTextToOutput("[" + serverName + "] " + event.getMessage());
 
-				TextArea output = Tabs.contents.get(id).cOutput;
-				output.appendText("[" + serverName + "] " + event.getMessage() + "\n");
-			});
 		}
 	}
 
@@ -145,11 +132,10 @@ public class TabServerHandler implements Serializable, IEventHandler {
 			if (restartServer) {
 				server.start();
 			}
-			Platform.runLater(() -> {
-				TextArea output = Tabs.contents.get(id).cOutput;
-				output.appendText(
-						"[" + serverName + "] " + "------------------------------------------------------------\n");
-			});
+
+			handler.addTextToOutput(
+					"[" + serverName + "] " + "------------------------------------------------------------");
+
 			restartServer = false;
 		}
 
