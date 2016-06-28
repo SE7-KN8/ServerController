@@ -12,15 +12,21 @@ public class ServerControllerOutput extends PrintStream {
 
 	@Override
 	public void println(String line) {
-		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		
+		if(ServerController.DEBUG){
+			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 
-		Calendar cal = Calendar.getInstance();
+			Calendar cal = Calendar.getInstance();
 
-		StackTraceElement caller = stack[2];
+			StackTraceElement caller = stack[2];
 
-		String callerString = "(" + caller.getFileName() + ":" + caller.getLineNumber() + ")";
+			String callerString = "(" + caller.getFileName() + ":" + caller.getLineNumber() + ")";
 
-		super.println(new SimpleDateFormat("HH:mm:ss").format(cal.getTime()) + "  " + callerString + " : " + line);
+			super.println(new SimpleDateFormat("HH:mm:ss").format(cal.getTime()) + "  " + callerString + " : " + line);
+		}else{
+			super.println(line);
+		}
+		
 	}
 
 }

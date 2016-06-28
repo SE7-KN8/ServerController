@@ -2,6 +2,8 @@ package sebe3012.servercontroller.eventbus;
 
 import com.google.common.eventbus.EventBus;
 
+import sebe3012.servercontroller.ServerController;
+
 public class EventHandler {
 
 	private static EventBus eventBus;
@@ -13,17 +15,23 @@ public class EventHandler {
 	}
 
 	public void registerEventListener(IEventHandler handler) {
-		System.out.println("Register: " + handler.getClass().getSimpleName());
+		if (ServerController.DEBUG) {
+			System.out.println("Register: " + handler.getClass().getSimpleName());
+		}
 		eventBus.register(handler);
 	}
 
 	public void unregisterEventListener(IEventHandler handler) {
-		System.out.println("Unregister: " + handler.getClass().getSimpleName());
+		if (ServerController.DEBUG) {
+			System.out.println("Unregister: " + handler.getClass().getSimpleName());
+		}
 		eventBus.unregister(handler);
 	}
 
 	public void post(IEvent event) {
-		System.out.println("Post: " + event.getClass().getSimpleName());
+		if (ServerController.DEBUG) {
+			System.out.println("Post: " + event.getClass().getSimpleName());
+		}
 		eventBus.post(event);
 	}
 

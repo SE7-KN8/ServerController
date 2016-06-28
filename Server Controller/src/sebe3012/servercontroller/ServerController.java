@@ -27,6 +27,8 @@ public class ServerController {
 	 */
 	public static List<String> serverAddon = new ArrayList<>();
 
+	public static boolean DEBUG = false;
+
 	/**
 	 * 
 	 * The main method
@@ -34,8 +36,14 @@ public class ServerController {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
 		System.setOut(new ServerControllerOutput(System.out));
+
+		for (int i = 0; i < args.length; i++) {
+			System.out.println("Start-Argument-" + i + " :" + args[i]);
+			if(args[i].equals("-debug")){
+				ServerController.DEBUG = true;
+			}
+		}
 
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
 
