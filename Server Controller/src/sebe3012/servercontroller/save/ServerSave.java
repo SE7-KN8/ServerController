@@ -1,5 +1,5 @@
 package sebe3012.servercontroller.save;
-
+/*
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,12 +19,12 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.gui.tab.Tabs;*/
 
 public class ServerSave {
 
-	public static void saveServerController(String path) throws IOException {
-		boolean canContinue = true;
+	public static void saveServerController(String path)/* throws IOException */{
+		/*boolean canContinue = true;
 		for (int i = 0; i < Tabs.servers.size(); i++) {
 			if (Tabs.servers.get(i).getServer().isRunning()) {
 				showServerIsRunningDialog();
@@ -37,13 +37,13 @@ public class ServerSave {
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(Tabs.servers);
 			oos.close();
-		}
+		}*/
 	}
 
-	private static boolean init = false;
+	//private static boolean init = false;
 
-	public static void loadServerController(String path) throws IOException, ClassNotFoundException {
-		FileInputStream fis = new FileInputStream(path);
+	public static void loadServerController(String path) /*throws IOException, ClassNotFoundException */{
+		/*FileInputStream fis = new FileInputStream(path);
 		ObjectInputStream ois = new ObjectInputStream(fis);
 		Object map = null;
 		try {
@@ -91,14 +91,14 @@ public class ServerSave {
 					});
 				}
 			});
-		}
+		}*/
 	}
-
+/*
 	private static void showServerIsRunningDialog() {
 		Alert dialog = new Alert(AlertType.WARNING, "Es müssen erst alle Server beendet werden", ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Warnung");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
-	}
+	}*/
 }

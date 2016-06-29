@@ -19,7 +19,8 @@ import javafx.scene.input.KeyEvent;
 
 public class TabContentHandler implements Initializable {
 
-	public TabServerHandler server;
+	private TabServerHandler server;
+	private TabContent content;
 
 	@FXML
 	public ResourceBundle resources;
@@ -78,11 +79,13 @@ public class TabContentHandler implements Initializable {
 		server.onRestartClicked();
 	}
 
+	public TabContentHandler(TabContent content) {
+		this.content = content;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		server = new TabServerHandler(this);
-		Tabs.contents.put(Tabs.getNextID(), this);
-		Tabs.IDforContents.put(this, Tabs.getNextID());
 	}
 
 	protected void showErrorAlert(String title, String header, String content) {
@@ -120,6 +123,14 @@ public class TabContentHandler implements Initializable {
 			server.sendCommand(command.trim());
 			cInput.setText("");
 		}
+	}
+
+	public TabServerHandler getServerHandler() {
+		return server;
+	}
+
+	public TabContent getContent() {
+		return content;
 	}
 
 }

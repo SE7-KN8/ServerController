@@ -17,8 +17,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.control.Alert.AlertType;
-
-import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.gui.tab.ServerTab;
+import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
 
@@ -42,6 +43,11 @@ public class Frame extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
+		if (ServerController.DEBUG) {
+			splashTimeInMillis = 0;
+		}
+
 		Frame.primaryStage = primaryStage;
 
 		createSpashScreen();
@@ -98,9 +104,15 @@ public class Frame extends Application {
 			if (result.isPresent()) {
 				if (result.get().equals(ButtonType.OK)) {
 					System.out.println("Stop Servercontroller");
-					Tabs.servers.forEach((id, server) -> {
-						if (server.getServer().isRunning()) {
-							server.onEndClicked();
+					FrameHandler.mainPane.getTabs().forEach(tab -> {
+						if (tab instanceof ServerTab) {
+
+							TabServerHandler handler = ((ServerTab) tab).getTabContent().getContentHandler()
+									.getServerHandler();
+
+							if(handler.getServer().isRunning()){
+								handler.onEndClicked();
+							}
 						}
 					});
 					ChartsUpdater.stopUpdate();

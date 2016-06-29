@@ -18,15 +18,11 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	private static final long serialVersionUID = -3676312859798447613L;
 	private BasicServer server;
 	private boolean restartServer = false;
-	private final int id;
 	private TabContentHandler handler;
 
 	public TabServerHandler(TabContentHandler handler) {
-		this.id = Tabs.getNextID();
 		this.handler = handler;
 		EventHandler.EVENT_BUS.registerEventListener(this);
-		Tabs.servers.put(id, this);
-		Tabs.IDforServers.put(this, Tabs.getNextID());
 	}
 
 	public void sendCommand(String command) {
@@ -44,7 +40,8 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	public void onStartClicked() {
 		restartServer = false;
 		startServer();
-		Tabs.contents.get(id).cOutput.appendText("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
+
+		getContentHandler().cOutput.appendText("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
 	}
 
 	public void onEndClicked() {
@@ -74,7 +71,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	public boolean hasServer() {
-		return server == null ? false : true;
+		return server != null;
 	}
 
 	private String serverName;
@@ -86,6 +83,10 @@ public class TabServerHandler implements Serializable, IEventHandler {
 			showNoServerDialog();
 		}
 
+	}
+
+	public TabContentHandler getContentHandler() {
+		return handler;
 	}
 
 	public BasicServer getServer() {
@@ -106,7 +107,12 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		this.serverName = server.getName();
 		Servers.servers.add(this.server);
 
-		Tabs.contents.get(id).lblInfo.setText(this.server.getServerInfo());
+		if(!this.server.hasServerHandler()){
+			server.setServerHandler(this);
+		}
+		
+		getContentHandler().lblInfo.setText(this.server.getServerInfo());
+		
 
 		EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
 

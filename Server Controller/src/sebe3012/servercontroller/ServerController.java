@@ -39,10 +39,10 @@ public class ServerController {
 		System.setOut(new ServerControllerOutput(System.out));
 
 		for (int i = 0; i < args.length; i++) {
-			System.out.println("Start-Argument-" + i + " :" + args[i]);
 			if(args[i].equals("-debug")){
 				ServerController.DEBUG = true;
 			}
+			System.out.println("Start-Argument-" + i + " :" + args[i]);
 		}
 
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");

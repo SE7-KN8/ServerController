@@ -20,6 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 
@@ -37,6 +38,7 @@ public abstract class BasicServer implements Serializable {
 	protected File jarFile;
 	protected String name;
 	protected String args;
+	protected TabServerHandler handler;
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -207,6 +209,18 @@ public abstract class BasicServer implements Serializable {
 			onError(e);
 			e.printStackTrace();
 		}
+	}
+	
+	public void setServerHandler(TabServerHandler handler) {
+		this.handler = handler;
+	}
+	
+	public TabServerHandler getServerHandler() {
+		return handler;
+	}
+	
+	public boolean hasServerHandler(){
+		return handler != null;
 	}
 
 	public abstract String getPluginName();

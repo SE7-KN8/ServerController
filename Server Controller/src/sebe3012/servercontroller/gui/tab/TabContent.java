@@ -8,12 +8,14 @@ import javafx.scene.layout.GridPane;
 public class TabContent {
 
 	private GridPane root;
-	private int id;
+	private TabContentHandler handler;
 
 	public TabContent() {
-		id = Tabs.getNextID();
 		try {
-			root = FXMLLoader.load(this.getClass().getResource("TabGUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("TabGUI.fxml"));
+			this.handler = new TabContentHandler(this);
+			loader.setController(handler);
+			root = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -23,8 +25,8 @@ public class TabContent {
 		return root;
 	}
 
-	public int getId() {
-		return id;
+	public TabContentHandler getContentHandler() {
+		return handler;
 	}
 
 }

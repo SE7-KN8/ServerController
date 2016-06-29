@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.gui;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -92,23 +91,29 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onRestartAllClicked() {
-		Tabs.servers.forEach((id, server) -> {
-			server.onRestartClicked();
+		FrameHandler.mainPane.getTabs().forEach(tab->{
+			if(tab instanceof ServerTab){
+				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onRestartClicked();
+			}
 		});
 	}
 
 	@FXML
 	void onStartAllClicked() {
-		Tabs.servers.forEach((id, server) -> {
-			server.onStartClicked();
+		FrameHandler.mainPane.getTabs().forEach(tab->{
+			if(tab instanceof ServerTab){
+				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onStartClicked();
+			}
 		});
 	}
 
 	@FXML
 	void onStopAllClicked() {
-		Tabs.servers.forEach((id, server) -> {
-			server.onEndClicked();
-		});
+		FrameHandler.mainPane.getTabs().forEach(tab->{
+			if(tab instanceof ServerTab){
+				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onEndClicked();
+			}
+		});;
 	}
 
 	@FXML
@@ -129,12 +134,12 @@ public class FrameHandler implements IEventHandler {
 		if (f == null) {
 			return;
 		}
-		try {
+		/*try {*/
 			ServerSave.saveServerController(f.getAbsolutePath());
-		} catch (IOException e) {
+		/*} catch (IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
-		}
+		}*/
 	}
 
 	@FXML
@@ -145,19 +150,18 @@ public class FrameHandler implements IEventHandler {
 		if (f == null) {
 			return;
 		}
-		try {
+		/*try {*/
 			ServerSave.loadServerController(f.getAbsolutePath());
-		} catch (ClassNotFoundException | IOException e) {
+		/*} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
-		}
+		}*/
 	}
 
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
-		ServerTab tab = (ServerTab) mainPane.getSelectionModel().getSelectedItem();
-		BasicServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
-		if (js.isRunning()) {
+		BasicServer server = Tabs.getCurrentServer();
+		if (server.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
 			// TODO Use new dialog
@@ -166,16 +170,15 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
-		ServerTab tab = (ServerTab) main.getSelectionModel().getSelectedItem();
-		BasicServer js = Tabs.servers.get(tab.getTabContent().getId()).getServer();
-		if (js.isRunning()) {
+		BasicServer server = Tabs.getCurrentServer();
+		if (server.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			lView.getItems().remove(js);
+			lView.getItems().remove(server);
 			lView.setItems(null);
 			lView.setItems(Servers.servers);
-			main.getTabs().remove(tab);
-			Tabs.servers.remove(tab.getTabContent().getId());
+			main.getTabs().remove(Tabs.getCurrentTab());
+			//TODO Tabs.servers.remove(tab.getTabContent().getId());
 		}
 
 	}
@@ -223,14 +226,14 @@ public class FrameHandler implements IEventHandler {
 		dialog.showAndWait();
 	}
 
-	private void showSaveErrorDialog() {
+	/*private void showSaveErrorDialog() {
 		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
 				ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
-	}
+	}*/
 
 	private class ServerCell extends ListCell<BasicServer> {
 
