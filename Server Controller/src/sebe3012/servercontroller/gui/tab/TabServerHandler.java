@@ -103,19 +103,19 @@ public class TabServerHandler implements Serializable, IEventHandler {
 
 	@Subscribe
 	public void serverCreateEvent(ServerCreateEvent event) {
-		this.server = event.getServer();
-		this.serverName = server.getName();
-		Servers.servers.add(this.server);
+		if (!this.hasServer()) {
+			this.server = event.getServer();
+			this.serverName = server.getName();
+			Servers.serversList.add(this.server);
 
-		if(!this.server.hasServerHandler()){
-			server.setServerHandler(this);
+			if (!this.server.hasServerHandler()) {
+				server.setServerHandler(this);
+			}
+
+			getContentHandler().lblInfo.setText(this.server.getServerInfo());
+
+			EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
 		}
-		
-		getContentHandler().lblInfo.setText(this.server.getServerInfo());
-		
-
-		EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
-
 	}
 
 	@Subscribe

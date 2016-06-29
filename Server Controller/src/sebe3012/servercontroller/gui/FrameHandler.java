@@ -174,11 +174,12 @@ public class FrameHandler implements IEventHandler {
 		if (server.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			lView.getItems().remove(server);
+			
+			Servers.serversList.remove(Tabs.getCurrentServer());
+			
 			lView.setItems(null);
-			lView.setItems(Servers.servers);
+			lView.setItems(Servers.serversList);
 			main.getTabs().remove(Tabs.getCurrentTab());
-			//TODO Tabs.servers.remove(tab.getTabContent().getId());
 		}
 
 	}
@@ -212,7 +213,7 @@ public class FrameHandler implements IEventHandler {
 		mainPane = main;
 		list = lView;
 		buttonList = vBox;
-		lView.setItems(Servers.servers);
+		lView.setItems(Servers.serversList);
 		initCharts();
 		System.out.println("FXML intitialized");
 		monitoringThread.start();
