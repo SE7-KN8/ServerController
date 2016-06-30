@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.spigot;
 
+import java.util.HashMap;
+
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
 import sebe3012.servercontroller.server.BasicServer;
 
@@ -12,6 +14,13 @@ public class SpigotServer extends CraftbukkitServer {
 			String spigotConfig) {
 		super(name, jarFile, propertiesFile, args, bukkitConfig);
 		this.spigotConfig = spigotConfig;
+	}
+
+	public SpigotServer(HashMap<String, Object> externalForm) {
+		super(externalForm);
+		
+		fromExternalForm(externalForm);
+		
 	}
 
 	@Override
@@ -32,6 +41,23 @@ public class SpigotServer extends CraftbukkitServer {
 	public BasicServer createNew() {
 		return new SpigotServer(name, jarFile.getAbsolutePath(), super.getPropertiesFile(), spigotConfig,
 				super.getBukkitConfig(), spigotConfig);
+	}
+
+	@Override
+	public void fromExternalForm(HashMap<String, Object> externalForm) {
+		
+		spigotConfig = (String) externalForm.get("spigot");
+		
+	}
+
+	@Override
+	public HashMap<String, Object> toExteralForm() {
+
+		HashMap<String, Object> map = super.toExteralForm();
+
+		map.put("spigot", spigotConfig);
+
+		return map;
 	}
 
 }

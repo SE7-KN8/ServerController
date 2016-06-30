@@ -23,6 +23,13 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 		EventHandler.EVENT_BUS.registerEventListener(this);
 	}
 
+	public BungeeCordServer(HashMap<String, Object> externalForm) {
+		super(externalForm);
+
+		fromExternalForm(externalForm);
+
+	}
+
 	@Override
 	public String getServerInfo() {
 		return "";
@@ -58,6 +65,23 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	@Override
 	public String getStopCommand() {
 		return "end";
+	}
+
+	@Override
+	public void fromExternalForm(HashMap<String, Object> externalForm) {
+
+		configFile = (String) externalForm.get("bungeecord");
+
+	}
+
+	@Override
+	public HashMap<String, Object> toExteralForm() {
+
+		HashMap<String, Object> map = super.toExteralForm();
+
+		map.put("bungeecord", configFile);
+
+		return map;
 	}
 
 }

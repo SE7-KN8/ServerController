@@ -43,16 +43,21 @@ public abstract class BasicServer implements Serializable {
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
 		this.jarFile = new File(jarFilePath);
-		this.messageReaderThread = new MessageReader(new MessageReader(), this);
-		this.waitForExitThread = new WaitForExit(new WaitForExit(), this);
-		this.messageReaderThread.setName(name + "-Server reader");
-		this.waitForExitThread.setName(name + "-Server stop listener");
 		this.args = args;
+	}
+
+	public BasicServer(HashMap<String, Object> externalForm) {
+		fromExternalForm(externalForm);
 	}
 
 	public void start() {
 		if (!started) {
 			try {
+
+				messageReaderThread = new MessageReader(new MessageReader(), this);
+				waitForExitThread = new WaitForExit(new WaitForExit(), this);
+				messageReaderThread.setName(name + "-Server reader");
+				waitForExitThread.setName(name + "-Server stop listener");
 
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
 						"nogui");
@@ -210,16 +215,16 @@ public abstract class BasicServer implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setServerHandler(TabServerHandler handler) {
 		this.handler = handler;
 	}
-	
+
 	public TabServerHandler getServerHandler() {
 		return handler;
 	}
-	
-	public boolean hasServerHandler(){
+
+	public boolean hasServerHandler() {
 		return handler != null;
 	}
 
@@ -239,6 +244,24 @@ public abstract class BasicServer implements Serializable {
 
 	public File getJarFile() {
 		return jarFile;
+	}
+
+	public HashMap<String, Object> toExteralForm() {
+		HashMap<String, Object> map = new HashMap<>();
+
+		map.put("name", name);
+		map.put("jarfile", jarFile.getAbsolutePath());
+		map.put("args", args);
+
+		return map;
+	}
+
+	public void fromExternalForm(HashMap<String, Object> externalForm) {
+
+		name = (String) externalForm.get("name");
+		jarFile = new File((String) externalForm.get("jarfile"));
+		args = (String) externalForm.get("args");
+
 	}
 
 	public abstract BasicServer createNew();

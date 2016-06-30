@@ -25,8 +25,18 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	public VanillaServer(String name, String jarFilePath, String properties, String args) {
 		super(name, jarFilePath, args);
 		this.propertiesFile = properties;
+		init();
+	}
+
+	public VanillaServer(HashMap<String, Object> externalForm) {
+		super(externalForm);
+		fromExternalForm(externalForm);
+		init();
+	}
+
+	private void init() {
 		EventHandler.EVENT_BUS.registerEventListener(this);
-		handler = new PropertiesHandler(new File(properties));
+		handler = new PropertiesHandler(new File(propertiesFile));
 		try {
 			handler.readProperties();
 		} catch (FileNotFoundException e) {
@@ -36,7 +46,6 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		extraButtons.put("Properties", (Runnable & Serializable) () -> {
 			new PropertiesDialog(new Stage(), handler);
 		});
-
 	}
 
 	@Override
@@ -70,6 +79,21 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	@Override
 	public HashMap<String, Runnable> getExtraButtons() {
 		return extraButtons;
+	}
+
+	@Override
+	public HashMap<String, Object> toExteralForm() {
+		HashMap<String, Object> map = super.toExteralForm();
+
+		map.put("properties", propertiesFile);
+
+		return map;
+
+	}
+
+	@Override
+	public void fromExternalForm(HashMap<String, Object> externalForm) {
+		propertiesFile = (String) externalForm.get("properties");
 	}
 
 }
