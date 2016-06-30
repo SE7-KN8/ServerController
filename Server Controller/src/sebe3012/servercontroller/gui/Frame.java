@@ -88,7 +88,7 @@ public class Frame extends Application {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          Alpha 0.1.6.7");
+		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          " + ServerController.VERSION);
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
 		primaryStage.setOnCloseRequest(event -> {
@@ -110,7 +110,7 @@ public class Frame extends Application {
 							TabServerHandler handler = ((ServerTab) tab).getTabContent().getContentHandler()
 									.getServerHandler();
 
-							if(handler.getServer().isRunning()){
+							if (handler.getServer().isRunning()) {
 								handler.onEndClicked();
 							}
 						}

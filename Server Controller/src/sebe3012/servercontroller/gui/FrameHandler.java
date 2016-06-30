@@ -23,6 +23,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -197,6 +198,8 @@ public class FrameHandler implements IEventHandler {
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
+		credits.setText(ServerController.VERSION);
+		
 		monitoringThread.setName("server-monitoring-thread-1");
 
 		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {

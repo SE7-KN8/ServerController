@@ -28,6 +28,8 @@ public class ServerController {
 	public static List<String> serverAddon = new ArrayList<>();
 
 	public static boolean DEBUG = false;
+	
+	public static final String VERSION = "Alpha 0.1.6.7";
 
 	/**
 	 * 
