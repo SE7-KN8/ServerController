@@ -22,7 +22,7 @@ public class VanillaAddon implements IEventHandler {
 
 	public static void loadAddon() {
 
-		ServerController.serverAddon.add(VanillaAddon.ADDON_NAME);
+		ServerController.serverAddon.put(VanillaAddon.ADDON_NAME, VanillaServer.class);
 		EventHandler.EVENT_BUS.registerEventListener(new VanillaAddon());
 
 	}

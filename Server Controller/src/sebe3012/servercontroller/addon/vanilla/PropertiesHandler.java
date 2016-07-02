@@ -6,13 +6,21 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class PropertiesHandler implements Serializable{
+public class PropertiesHandler implements Serializable {
 
 	private static final long serialVersionUID = 3393641812130248260L;
 	private File properitesFile;
 
 	public PropertiesHandler(File propertiesFile) {
 		this.properitesFile = propertiesFile;
+	}
+
+	public PropertiesHandler() {
+
+	}
+
+	public void setProperitesFile(File properitesFile) {
+		this.properitesFile = properitesFile;
 	}
 
 	public void readProperties() throws FileNotFoundException {

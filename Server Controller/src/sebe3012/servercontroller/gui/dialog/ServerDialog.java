@@ -24,7 +24,7 @@ public class ServerDialog {
 		GridPane root = null;
 
 		ComboBox<String> box = new ComboBox<>();
-		box.setItems(FXCollections.observableArrayList(ServerController.serverAddon));
+		box.setItems(FXCollections.observableArrayList(ServerController.serverAddon.keySet()));
 		box.setPrefWidth(300);
 		box.setPrefHeight(50);
 		box.setStyle("-fx-font: 30px \"Arial\";");

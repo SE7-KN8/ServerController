@@ -22,7 +22,7 @@ public class SpigotAddon implements IEventHandler {
 
 	public static void loadAddon() {
 
-		ServerController.serverAddon.add(SpigotAddon.ADDON_NAME);
+		ServerController.serverAddon.put(SpigotAddon.ADDON_NAME, SpigotServer.class);
 		EventHandler.EVENT_BUS.registerEventListener(new SpigotAddon());
 
 	}

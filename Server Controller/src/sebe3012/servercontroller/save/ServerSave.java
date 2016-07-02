@@ -1,104 +1,146 @@
 package sebe3012.servercontroller.save;
-/*
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import sebe3012.servercontroller.event.ServerCreateEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.AddonUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.ServerTab;
-import sebe3012.servercontroller.gui.tab.TabContent;
-import sebe3012.servercontroller.gui.tab.TabServerHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;*/
+import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.Servers;
 
 public class ServerSave {
 
-	public static void saveServerController(String path)/* throws IOException */{
-		/*boolean canContinue = true;
-		for (int i = 0; i < Tabs.servers.size(); i++) {
-			if (Tabs.servers.get(i).getServer().isRunning()) {
+	public static void saveServerController(String path) throws IOException {
+
+		Servers.serversList.forEach(server -> {
+			if (server.isRunning()) {
 				showServerIsRunningDialog();
-				canContinue = false;
-				break;
+				return;
 			}
-		}
-		if (canContinue) {
-			FileOutputStream fos = new FileOutputStream(new File(path));
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(Tabs.servers);
-			oos.close();
-		}*/
+		});
+
+		FileOutputStream fos = new FileOutputStream(new File(path));
+
+		final Element rootElement = new Element("servercontroller");
+		rootElement.setAttribute("servercontroller", ServerController.VERSION);
+
+		Document xml = new Document(rootElement);
+
+		Servers.serversList.forEach(server -> {
+
+			final Element serverElement = new Element("server");
+
+			serverElement.setAttribute("addon", server.getPluginName());
+			try {
+				Field serUID = server.getClass().getDeclaredField("serialVersionUID");
+				serUID.setAccessible(true);
+				long uid = serUID.getLong(server);
+				serverElement.setAttribute("serialVersionUID", String.valueOf(uid));
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+
+			server.toExteralForm().forEach((key, value) -> {
+
+				Element keyElement = new Element(key);
+				keyElement.setText(value.toString());
+				serverElement.addContent(keyElement);
+
+			});
+
+			rootElement.addContent(serverElement);
+
+		});
+
+		XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+
+		out.output(xml, fos);
+
+		fos.close();
+
 	}
 
-	//private static boolean init = false;
+	public static void loadServerController(String path) throws JDOMException, IOException, InstantiationException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-	public static void loadServerController(String path) /*throws IOException, ClassNotFoundException */{
-		/*FileInputStream fis = new FileInputStream(path);
-		ObjectInputStream ois = new ObjectInputStream(fis);
-		Object map = null;
-		try {
-			map = ois.readObject();
-		} catch (InvalidClassException | ClassNotFoundException e) {
-			Platform.runLater(() -> {
-				Alert wrongVersion = new Alert(AlertType.ERROR,
-						"Diese Speicher-Datei ist nicht für diese Version des ServerControllers geeignet. Bitte nehme die neuste Version",
-						ButtonType.OK);
-				wrongVersion.getDialogPane().getStylesheets()
-						.add(FrameHandler.class.getResource("style.css").toExternalForm());
-				wrongVersion.showAndWait();
-			});
-		}
-		ois.close();
-		if (map instanceof HashMap<?, ?>) {
-			HashMap<?, ?> servers = (HashMap<?, ?>) map;
+		Servers.serversList.forEach(server -> {
+			if (server.isRunning()) {
+				showServerIsRunningDialog();
+				return;
+			}
+		});
 
-			FrameHandler.mainPane.getTabs().clear();
-			FrameHandler.list.getItems().clear();
-			Tabs.contents.clear();
-			Tabs.servers.clear();
-			Tabs.IDforContents.clear();
-			Tabs.IDforServers.clear();
-			Tabs.resetID();
+		FrameHandler.removeAllServers();
 
-			servers.forEach((id, server) -> {
-				if (server instanceof TabServerHandler) {
-					TabServerHandler tsh = (TabServerHandler) server;
-					Platform.runLater(() -> {
-						TabContent content = new TabContent();
-						ServerTab tab = new ServerTab(tsh.getServer().getName(), content);
-						tab.setContent(content.getTabContent());
-						tab.setClosable(false);
-						FrameHandler.mainPane.getTabs().add(tab);
-						init = false;
-						Tabs.servers.forEach((id2, server2) -> {
-							if (!init) {
-								if (!server2.hasServer()) {
-									EventHandler.EVENT_BUS.post(new ServerCreateEvent(tsh.getServer().createNew()));
-									init = true;
-								}
-							}
-						});
-					});
+		FileInputStream fis = new FileInputStream(new File(path));
+
+		Document xml = new SAXBuilder().build(fis);
+
+		Element serverController = xml.getRootElement();
+
+		for (Element serverElement : serverController.getChildren("server")) {
+
+			String pluginName = serverElement.getAttributeValue("addon");
+			long xmlUid = Long.valueOf(serverElement.getAttributeValue("serialVersionUID"));
+
+			Class<? extends BasicServer> serverClass = ServerController.serverAddon.get(pluginName);
+
+			HashMap<String, Object> map = new HashMap<>();
+
+			for (Element e : serverElement.getChildren()) {
+				map.put(e.getName(), e.getValue());
+			}
+
+			Constructor<?> constructor = serverClass.getConstructors()[1];
+
+			Object serverObject = constructor.newInstance(map);
+
+			if (serverObject instanceof BasicServer) {
+				BasicServer server = (BasicServer) serverObject;
+				server.fromExternalForm();
+				Field serUID;
+				try {
+					serUID = server.getClass().getDeclaredField("serialVersionUID");
+					serUID.setAccessible(true);
+					long uid = serUID.getLong(server);
+					if(uid != xmlUid){
+						throw new IllegalStateException("The save type of the server has been changed");
+					}
+				} catch (NoSuchFieldException | SecurityException e1) {
+					e1.printStackTrace();
 				}
-			});
-		}*/
+				AddonUtil.addServer(server);
+			}
+
+		}
+
+		fis.close();
+
 	}
-/*
+
 	private static void showServerIsRunningDialog() {
 		Alert dialog = new Alert(AlertType.WARNING, "Es müssen erst alle Server beendet werden", ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Warnung");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
-	}*/
+	}
 }

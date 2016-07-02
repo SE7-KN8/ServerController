@@ -22,7 +22,7 @@ public class BungeeCordAddon implements IEventHandler {
 
 	public static void loadAddon() {
 
-		ServerController.serverAddon.add(BungeeCordAddon.ADDON_NAME);
+		ServerController.serverAddon.put(BungeeCordAddon.ADDON_NAME, BungeeCordServer.class);
 		EventHandler.EVENT_BUS.registerEventListener(new BungeeCordAddon());
 
 	}

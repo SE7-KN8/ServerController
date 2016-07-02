@@ -1,7 +1,6 @@
 package sebe3012.servercontroller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
@@ -9,6 +8,7 @@ import sebe3012.servercontroller.addon.spigot.SpigotAddon;
 import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.server.BasicServer;
 
 /**
  * 
@@ -25,10 +25,10 @@ public class ServerController {
 	/**
 	 * A list where all addons of the servercontroller listed
 	 */
-	public static List<String> serverAddon = new ArrayList<>();
+	public static HashMap<String, Class<? extends BasicServer>> serverAddon = new HashMap<>();
 
 	public static boolean DEBUG = false;
-	
+
 	public static final String VERSION = "Alpha 0.1.6.7";
 
 	/**
@@ -41,7 +41,7 @@ public class ServerController {
 		System.setOut(new ServerControllerOutput(System.out));
 
 		for (int i = 0; i < args.length; i++) {
-			if(args[i].equals("-debug")){
+			if (args[i].equals("-debug")) {
 				ServerController.DEBUG = true;
 			}
 			System.out.println("Start-Argument-" + i + " :" + args[i]);

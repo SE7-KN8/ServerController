@@ -39,6 +39,7 @@ public abstract class BasicServer implements Serializable {
 	protected String name;
 	protected String args;
 	protected TabServerHandler handler;
+	private HashMap<String, Object> externalForm;
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -47,7 +48,7 @@ public abstract class BasicServer implements Serializable {
 	}
 
 	public BasicServer(HashMap<String, Object> externalForm) {
-		fromExternalForm(externalForm);
+		this.externalForm = externalForm;
 	}
 
 	public void start() {
@@ -256,7 +257,7 @@ public abstract class BasicServer implements Serializable {
 		return map;
 	}
 
-	public void fromExternalForm(HashMap<String, Object> externalForm) {
+	public void fromExternalForm() {
 
 		name = (String) externalForm.get("name");
 		jarFile = new File((String) externalForm.get("jarfile"));

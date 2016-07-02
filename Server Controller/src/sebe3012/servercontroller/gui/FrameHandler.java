@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,6 +24,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
+import org.jdom2.JDOMException;
+
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -92,29 +96,30 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onRestartAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab->{
-			if(tab instanceof ServerTab){
-				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onRestartClicked();
+		FrameHandler.mainPane.getTabs().forEach(tab -> {
+			if (tab instanceof ServerTab) {
+				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onRestartClicked();
 			}
 		});
 	}
 
 	@FXML
 	void onStartAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab->{
-			if(tab instanceof ServerTab){
-				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onStartClicked();
+		FrameHandler.mainPane.getTabs().forEach(tab -> {
+			if (tab instanceof ServerTab) {
+				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onStartClicked();
 			}
 		});
 	}
 
 	@FXML
 	void onStopAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab->{
-			if(tab instanceof ServerTab){
-				((ServerTab)tab).getTabContent().getContentHandler().getServerHandler().onEndClicked();
+		FrameHandler.mainPane.getTabs().forEach(tab -> {
+			if (tab instanceof ServerTab) {
+				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onEndClicked();
 			}
-		});;
+		});
+		;
 	}
 
 	@FXML
@@ -130,33 +135,38 @@ public class FrameHandler implements IEventHandler {
 	@FXML
 	void onSaveItemClicked(ActionEvent event) {
 		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
+		fc.getExtensionFilters().add(new ExtensionFilter(".xml", "*.xml"));
 		File f = fc.showSaveDialog(Frame.primaryStage);
 		if (f == null) {
 			return;
 		}
-		/*try {*/
+		try {
 			ServerSave.saveServerController(f.getAbsolutePath());
-		/*} catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
-		}*/
+		}
 	}
 
 	@FXML
 	void onOpenItemClicked(ActionEvent event) {
 		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().add(new ExtensionFilter(".serversave", "*.serversave"));
+		fc.getExtensionFilters().add(new ExtensionFilter(".xml", "*.xml"));
 		File f = fc.showOpenDialog(Frame.primaryStage);
 		if (f == null) {
 			return;
 		}
-		/*try {*/
+		try {
 			ServerSave.loadServerController(f.getAbsolutePath());
-		/*} catch (ClassNotFoundException | IOException e) {
+
+		}catch(IllegalStateException e){
+			e.printStackTrace();
+			showSaveStateErrorDialog();
+		} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
-		}*/
+		}
+
 	}
 
 	@FXML
@@ -175,9 +185,9 @@ public class FrameHandler implements IEventHandler {
 		if (server.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			
+
 			Servers.serversList.remove(Tabs.getCurrentServer());
-			
+
 			lView.setItems(null);
 			lView.setItems(Servers.serversList);
 			main.getTabs().remove(Tabs.getCurrentTab());
@@ -199,7 +209,7 @@ public class FrameHandler implements IEventHandler {
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
 		credits.setText(ServerController.VERSION);
-		
+
 		monitoringThread.setName("server-monitoring-thread-1");
 
 		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
@@ -230,14 +240,24 @@ public class FrameHandler implements IEventHandler {
 		dialog.showAndWait();
 	}
 
-	/*private void showSaveErrorDialog() {
+	private void showSaveErrorDialog() {
 		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
 				ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
-	}*/
+	}
+
+	private void showSaveStateErrorDialog() {
+		Alert dialog = new Alert(AlertType.ERROR,
+				"Es gab ein Problem beim Laden der Speicherdatei, die Speicherdatei ist nicht mit dieser Version des ServerControllers kompatibel.",
+				ButtonType.OK);
+		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.setTitle("Fehler");
+		dialog.setHeaderText("");
+		dialog.showAndWait();
+	}
 
 	private class ServerCell extends ListCell<BasicServer> {
 
@@ -314,5 +334,14 @@ public class FrameHandler implements IEventHandler {
 		ramTotal.getData().add(totalRam);
 		cpu.getData().add(usedCpu);
 		cpu.getData().add(totelCpu);
+	}
+
+	public static void removeAllServers() {
+		Servers.serversList.clear();
+		list.setItems(null);
+		list.setItems(Servers.serversList);
+
+		mainPane.getTabs().clear();
+
 	}
 }

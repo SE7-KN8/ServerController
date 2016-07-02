@@ -22,7 +22,7 @@ public class CraftbukkitAddon implements IEventHandler {
 
 	public static void loadAddon() {
 
-		ServerController.serverAddon.add(CraftbukkitAddon.ADDON_NAME);
+		ServerController.serverAddon.put(CraftbukkitAddon.ADDON_NAME, CraftbukkitServer.class);
 		EventHandler.EVENT_BUS.registerEventListener(new CraftbukkitAddon());
 
 	}

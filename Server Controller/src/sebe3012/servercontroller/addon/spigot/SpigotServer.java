@@ -9,6 +9,7 @@ public class SpigotServer extends CraftbukkitServer {
 
 	private static final long serialVersionUID = -2107216290451372139L;
 	private String spigotConfig;
+	private HashMap<String, Object> externalForm;
 
 	public SpigotServer(String name, String jarFile, String propertiesFile, String args, String bukkitConfig,
 			String spigotConfig) {
@@ -18,9 +19,9 @@ public class SpigotServer extends CraftbukkitServer {
 
 	public SpigotServer(HashMap<String, Object> externalForm) {
 		super(externalForm);
+		this.externalForm = externalForm;
 		
-		fromExternalForm(externalForm);
-		
+
 	}
 
 	@Override
@@ -44,10 +45,10 @@ public class SpigotServer extends CraftbukkitServer {
 	}
 
 	@Override
-	public void fromExternalForm(HashMap<String, Object> externalForm) {
-		
+	public void fromExternalForm() {
+		super.fromExternalForm();
 		spigotConfig = (String) externalForm.get("spigot");
-		
+
 	}
 
 	@Override

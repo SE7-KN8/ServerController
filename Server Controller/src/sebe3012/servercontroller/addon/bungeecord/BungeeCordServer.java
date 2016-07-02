@@ -16,6 +16,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	private String configFile;
 
 	private HashMap<String, Runnable> extraButtons = new HashMap<>();
+	private HashMap<String, Object> externalForm;
 
 	public BungeeCordServer(String name, String jarFilePath, String configFile, String args) {
 		super(name, jarFilePath, "-Djline.terminal=jline.UnsupportedTerminal" + args);
@@ -25,9 +26,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 
 	public BungeeCordServer(HashMap<String, Object> externalForm) {
 		super(externalForm);
-
-		fromExternalForm(externalForm);
-
+		this.externalForm = externalForm;
 	}
 
 	@Override
@@ -68,8 +67,8 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public void fromExternalForm(HashMap<String, Object> externalForm) {
-
+	public void fromExternalForm() {
+		super.fromExternalForm();
 		configFile = (String) externalForm.get("bungeecord");
 
 	}

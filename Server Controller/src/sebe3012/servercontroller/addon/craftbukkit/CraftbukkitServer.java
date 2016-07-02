@@ -9,7 +9,8 @@ public class CraftbukkitServer extends VanillaServer {
 
 	private static final long serialVersionUID = -2409037301934942928L;
 	private String bukkitConfig;
-
+	private HashMap<String, Object> externalForm;
+	
 	public CraftbukkitServer(String name, String jarFile, String propertiesFile, String args, String bukkitConfig) {
 		super(name, jarFile, propertiesFile, args);
 		this.bukkitConfig = bukkitConfig;
@@ -17,7 +18,7 @@ public class CraftbukkitServer extends VanillaServer {
 
 	public CraftbukkitServer(HashMap<String, Object> externalForm) {
 		super(externalForm);
-		fromExternalForm(externalForm);
+		this.externalForm = externalForm;
 	}
 
 	@Override
@@ -41,7 +42,8 @@ public class CraftbukkitServer extends VanillaServer {
 	}
 
 	@Override
-	public void fromExternalForm(HashMap<String, Object> externalForm) {
+	public void fromExternalForm() {
+		super.fromExternalForm();
 		this.bukkitConfig = (String) externalForm.get("bukkit");
 	}
 
