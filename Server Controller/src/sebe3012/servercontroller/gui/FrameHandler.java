@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -21,9 +22,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import org.jdom2.JDOMException;
 
@@ -194,6 +200,11 @@ public class FrameHandler implements IEventHandler {
 		}
 
 	}
+	
+	@FXML
+	public void onLicenseClicked(ActionEvent event){
+		showLicense();
+	}
 
 	private void showCredits() {
 		Alert credits = new Alert(AlertType.INFORMATION,
@@ -202,6 +213,30 @@ public class FrameHandler implements IEventHandler {
 		credits.setHeaderText("");
 		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		credits.showAndWait();
+	}
+	
+	private void showLicense(){
+		
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
+		stage.setTitle("Lizenz");
+		
+		VBox root = new VBox();
+		
+		WebView wv = new WebView();
+		WebEngine engine = wv.getEngine();
+		
+		engine.loadContent(ServerController.loadStringContent("sebe3012/servercontroller/gui/license.html"));
+		
+		root.getChildren().add(wv);
+		
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		
+		stage.setResizable(false);
+		stage.setAlwaysOnTop(true);
+		stage.setScene(scene);
+		stage.showAndWait();
 	}
 
 	private void init() {

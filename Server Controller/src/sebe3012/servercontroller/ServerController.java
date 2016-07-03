@@ -1,5 +1,8 @@
 package sebe3012.servercontroller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
@@ -56,5 +59,23 @@ public class ServerController {
 
 		System.out.println("ServerController started!");
 		Frame.load(args);
+	}
+
+	public static String loadStringContent(String path) {
+		System.out.println("Load content: " + path);
+		StringBuilder result = new StringBuilder();
+		try {
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(ServerController.class.getClassLoader().getResourceAsStream(path)));
+			String buffer = "";
+			while ((buffer = reader.readLine()) != null) {
+				result.append(buffer + '\n');
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String r = result.toString();
+		return r;
 	}
 }
