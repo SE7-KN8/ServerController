@@ -243,6 +243,7 @@ public class FrameHandler implements IEventHandler {
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
+		vBox.getStyleClass().add("buttonlist");
 		credits.setText(ServerController.VERSION);
 
 		monitoringThread.setName("server-monitoring-thread-1");
@@ -322,6 +323,7 @@ public class FrameHandler implements IEventHandler {
 			event.getNewButtons().forEach((name, action) -> {
 
 				Button newButton = new Button(name);
+				newButton.setPrefWidth(1000);
 				newButton.setOnAction(e -> {
 					action.run();
 				});

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -41,12 +42,15 @@
       <Label fx:id="credits" alignment="CENTER" text="" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <VBox fx:id="vBox" prefHeight="697.0" prefWidth="175.0" styleClass="vbox" BorderPane.alignment="CENTER">
+      <VBox fx:id="vBox" prefHeight="697.0" prefWidth="206.0" spacing="15.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="btnStartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStartAllClicked" text="Alle Server starten" />
             <Button fx:id="btnStopAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopAllClicked" text="Alle Server beenden" />
             <Button fx:id="btnRestartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRestartAllClicked" text="Alle Server neustarten" />
          </children>
+         <padding>
+            <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+         </padding>
       </VBox>
    </right>
    <center>

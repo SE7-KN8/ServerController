@@ -32,7 +32,7 @@ public class AddonUtil {
 
 		Platform.runLater(() -> {
 			Alert a = new Alert(type);
-			a.setHeaderText(header);
+			a.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());			a.setHeaderText(header);
 			a.setContentText(content);
 			a.show();
 		});
@@ -42,7 +42,7 @@ public class AddonUtil {
 	public static String openFileChooser(String fileType, String fileName) {
 
 		FileChooser fc = new FileChooser();
-
+		
 		fc.getExtensionFilters().add(new ExtensionFilter(fileName, fileType));
 
 		File f = fc.showOpenDialog(null);

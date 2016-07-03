@@ -7,7 +7,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -21,8 +22,8 @@ public class ServerDialog {
 		DialogPane rootPane = new DialogPane();
 		rootPane.getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
 
-		GridPane root = null;
-
+		VBox root = new VBox(10);
+		
 		ComboBox<String> box = new ComboBox<>();
 		box.setItems(FXCollections.observableArrayList(ServerController.serverAddon.keySet()));
 		box.setPrefWidth(300);
@@ -38,10 +39,10 @@ public class ServerDialog {
 		});
 		b.setPrefWidth(300);
 		b.setPrefHeight(75);
-
-		root = new GridPane();
-		root.add(box, 0, 0);
-		root.add(b, 0, 1);
+		
+		root.getChildren().add(box);
+		root.getChildren().add(b);
+		
 		rootPane.getButtonTypes().add(ButtonType.CLOSE);
 
 		rootPane.setContent(root);

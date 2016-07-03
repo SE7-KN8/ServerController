@@ -1,8 +1,10 @@
-.root{
+.root {
 	-fx-base : rgb(220.0,220.0,220.0);
-}
+}/*Base Color */
 
-.button{
+
+/*Start Button */
+.button {
 	-fx-font-size: 15.0;
 	-fx-border-color: rgb(40.0,190.0,31.0);
 	-fx-border-radius: 20.0px;
@@ -10,41 +12,56 @@
 	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
 }
 
-.button:hover{
+.button:hover {
 	-fx-border-color: rgb(30.0,190.0,131.0);
 	-fx-cursor: hand;
 }
 
-.button:armed{
+.button:armed {
 	-fx-border-color: rgb(130.0,190.0,31.0);
 	-fx-cursor: hand;
 }
+/*End Button */
 
-.text-field{
+
+/*Start Textfield */
+.text-field {
     -fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
     -fx-background-insets: 0.0 -1.0 -1.0 -1.0, 0.0 0.0 0.0 0.0, 0.0 -1.0 9.0 -1.0;
 }
 
-.text-field:focused{
+.text-field:focused {
 	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
 	-fx-border-color: rgb(40.0,190.0,31.0);
 	-fx-background-insets: 0.0;
 }
+/*End Textfield */
 
-.text-area{
+
+
+/*Start Textarea */
+.text-area {
     -fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
 }
 
-.text-area:focused{
+.text-area:focused {
 	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
 	-fx-border-color: rgb(40.0,190.0,31.0);
 	-fx-background-insets: 0.0;
 }
+/*End Textarea */
 
-.pane{
+
+.pane {
+	-fx-background-color: rgb(220.0,220.0,220.0);
+}/*Pane */
+
+.buttonlist {
 	-fx-background-color: rgb(220.0,220.0,220.0);
 }
 
+
+/*Start ListView */
 .list-view{
 	-fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
 }
@@ -52,7 +69,10 @@
 .list-view:focused{
 	-fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
 }
+/*End Listview */
 
+
+/*Start TabPane */
 .tab-pane{
 	-fx-background-color: rgb(220.0,220.0,220.0);
 }
@@ -94,13 +114,16 @@
     -fx-alignment: CENTER;
     -fx-text-fill: rgb(40.0,190.0,31.0);
 }
+/*End TabPane */
 
+
+/*Start Menu */
 .menu:hover {
-	-fx-background-color: rgb(80.0,150.0,31.0);
+	-fx-background-color: rgb(40.0,190.0,31.0);
 }
 
 .menu:hover .label{
-	-fx-text-fill: white;
+	-fx-text-fill: black;
 }
 
 .menu:showing {
@@ -126,14 +149,17 @@
 .menu-item:focused .label {
     -fx-text-fill: white;
 }
+/*End Menu */
 
 .context-menu {
-     -fx-background-color: rgb(200.0,200.0,200.0);
+    -fx-background-color: rgb(200.0,200.0,200.0);
     -fx-background-insets: 0.0, 1.0, 2.0;
     -fx-background-radius: 0.0 6.0 6.0 6.0, 0.0 5.0 5.0 5.0, 0.0 4.0 4.0 4.0;
     -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em;
-}
+}/*Contexmenu */
 
+
+/*Start ListCell */
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: rgb(40.0,190.0,31.0);
     -fx-text-fill: white;
@@ -155,3 +181,28 @@
     -fx-background-color: rgb(140.0,190.0,31.0);
     -fx-text-fill: white;
 }
+/*End ListCell */
+
+
+/*Start ComboBox */
+.combo-box-base {	
+	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
+    -fx-border-color: rgb(40.0,190.0,31.0);
+    -fx-border-radius: 20.0px;
+	-fx-border-width: 2.0px;
+    -fx-padding: 0.0;
+}
+
+.combo-box-base:hover {
+    -fx-border-color: rgb(30.0,190.0,131.0);
+    -fx-cursor: hand;
+}
+
+.combo-box-base:showing {
+	-fx-border-color: rgb(130.0,190.0,31.0);
+}
+.combo-box .cell:selected {
+	-fx-text-fill: rgb(40.0,190.0,31.0);
+    -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+}
+/*End ComboBox */
