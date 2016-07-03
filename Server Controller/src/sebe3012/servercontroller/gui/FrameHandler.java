@@ -39,6 +39,7 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
+import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
@@ -253,6 +254,12 @@ public class FrameHandler implements IEventHandler {
 		});
 		main.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
 			FrameHandler.list.getSelectionModel().select(main.getSelectionModel().getSelectedIndex());
+			if(newValue instanceof ServerTab){
+				TabServerHandler handler = ((ServerTab)newValue).getTabContent().getContentHandler().getServerHandler();
+				if(handler.hasServer()){
+					EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(handler.getServer().getExtraButtons()));
+				}
+			}
 		});
 
 		lView.setCellFactory(e -> {

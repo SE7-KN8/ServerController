@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.google.common.eventbus.Subscribe;
 
-import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
@@ -113,8 +112,6 @@ public class TabServerHandler implements Serializable, IEventHandler {
 			}
 
 			getContentHandler().lblInfo.setText(this.server.getServerInfo());
-
-			EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(this.server.getExtraButtons()));
 		}
 	}
 
