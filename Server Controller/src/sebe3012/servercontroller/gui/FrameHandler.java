@@ -35,6 +35,7 @@ import org.jdom2.JDOMException;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ChangeButtonsEvent;
+import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
@@ -166,7 +167,7 @@ public class FrameHandler implements IEventHandler {
 		try {
 			ServerSave.loadServerController(f.getAbsolutePath());
 
-		}catch(IllegalStateException e){
+		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			showSaveStateErrorDialog();
 		} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
@@ -182,28 +183,17 @@ public class FrameHandler implements IEventHandler {
 		if (server.isRunning()) {
 			showServerIsRunningDialog();
 		} else {
-			// TODO Use new dialog
+			EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
 		}
 	}
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
-		BasicServer server = Tabs.getCurrentServer();
-		if (server.isRunning()) {
-			showServerIsRunningDialog();
-		} else {
-
-			Servers.serversList.remove(Tabs.getCurrentServer());
-
-			lView.setItems(null);
-			lView.setItems(Servers.serversList);
-			main.getTabs().remove(Tabs.getCurrentTab());
-		}
-
+		FrameHandler.removeCurrentServer();
 	}
-	
+
 	@FXML
-	public void onLicenseClicked(ActionEvent event){
+	void onLicenseClicked(ActionEvent event) {
 		showLicense();
 	}
 
@@ -215,25 +205,25 @@ public class FrameHandler implements IEventHandler {
 		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
 		credits.showAndWait();
 	}
-	
-	private void showLicense(){
-		
+
+	private void showLicense() {
+
 		Stage stage = new Stage(StageStyle.UTILITY);
 		stage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
 		stage.setTitle("Lizenz");
-		
+
 		VBox root = new VBox();
-		
+
 		WebView wv = new WebView();
 		WebEngine engine = wv.getEngine();
-		
+
 		engine.loadContent(ServerController.loadStringContent("sebe3012/servercontroller/gui/license.html"));
-		
+
 		root.getChildren().add(wv);
-		
+
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-		
+
 		stage.setResizable(false);
 		stage.setAlwaysOnTop(true);
 		stage.setScene(scene);
@@ -254,9 +244,10 @@ public class FrameHandler implements IEventHandler {
 		});
 		main.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
 			FrameHandler.list.getSelectionModel().select(main.getSelectionModel().getSelectedIndex());
-			if(newValue instanceof ServerTab){
-				TabServerHandler handler = ((ServerTab)newValue).getTabContent().getContentHandler().getServerHandler();
-				if(handler.hasServer()){
+			if (newValue instanceof ServerTab) {
+				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
+						.getServerHandler();
+				if (handler.hasServer()) {
 					EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(handler.getServer().getExtraButtons()));
 				}
 			}
@@ -275,28 +266,28 @@ public class FrameHandler implements IEventHandler {
 		monitoringThread.start();
 	}
 
-	private void showServerIsRunningDialog() {
+	private static void showServerIsRunningDialog() {
 		Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
 	}
 
-	private void showSaveErrorDialog() {
+	private static void showSaveErrorDialog() {
 		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
 				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
 	}
 
-	private void showSaveStateErrorDialog() {
+	private static void showSaveStateErrorDialog() {
 		Alert dialog = new Alert(AlertType.ERROR,
 				"Es gab ein Problem beim Laden der Speicherdatei, die Speicherdatei ist nicht mit dieser Version des ServerControllers kompatibel.",
 				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
@@ -387,5 +378,19 @@ public class FrameHandler implements IEventHandler {
 
 		mainPane.getTabs().clear();
 
+	}
+
+	public static void removeCurrentServer() {
+		BasicServer server = Tabs.getCurrentServer();
+		if (server.isRunning()) {
+			showServerIsRunningDialog();
+		} else {
+
+			Servers.serversList.remove(Tabs.getCurrentServer());
+
+			FrameHandler.list.setItems(null);
+			FrameHandler.list.setItems(Servers.serversList);
+			FrameHandler.mainPane.getTabs().remove(Tabs.getCurrentTab());
+		}
 	}
 }

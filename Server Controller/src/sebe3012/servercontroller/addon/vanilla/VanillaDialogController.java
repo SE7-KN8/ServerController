@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla;
 
+import java.util.HashMap;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -54,6 +56,9 @@ public class VanillaDialogController {
 
 	private Alert dialog;
 
+	private HashMap<String, Object> extraValues;
+	private boolean isEdit = false;
+
 	@FXML
 	void onJarClicked(ActionEvent event) {
 		jarPathTextfield.setText(AddonUtil.openFileChooser("*.jar", "Java-Archiv"));
@@ -75,7 +80,7 @@ public class VanillaDialogController {
 					VanillaServer server = new VanillaServer(idTextfield.getText(), jarPathTextfield.getText(),
 							propertiesTextfield.getText(), argsTextfield.getText());
 
-					AddonUtil.addServer(server);
+					AddonUtil.addServer(server, isEdit);
 
 				} else {
 					AddonUtil.openAlert("Fehler", "Properties-Datei ist nicht ausgewählt", AlertType.WARNING);
@@ -90,11 +95,18 @@ public class VanillaDialogController {
 
 	@FXML
 	void initialize() {
-
+		if (extraValues != null) {
+			isEdit = true;
+			idTextfield.setText((String) extraValues.get("name"));
+			jarPathTextfield.setText((String) extraValues.get("jarfile"));
+			argsTextfield.setText((String) extraValues.get("args"));
+			propertiesTextfield.setText((String) extraValues.get("properties"));
+		}
 	}
 
-	public VanillaDialogController(Alert dialog) {
+	public VanillaDialogController(Alert dialog, HashMap<String, Object> extraValues) {
 		this.dialog = dialog;
+		this.extraValues = extraValues;
 	}
 
 }

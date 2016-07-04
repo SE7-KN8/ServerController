@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.craftbukkit;
 
+import java.util.HashMap;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -59,6 +61,8 @@ public class CraftbukkitDialogController {
 	private Button buttonBukkit;
 
 	private Alert dialog;
+	private HashMap<String, Object> extraValues;
+	private boolean isEdit = false;
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
@@ -88,7 +92,7 @@ public class CraftbukkitDialogController {
 								jarPathTextfield.getText(), propertiesTextfield.getText(), argsTextfield.getText(),
 								idBukkit.getText());
 
-						AddonUtil.addServer(server);
+						AddonUtil.addServer(server, isEdit);
 					} else {
 						AddonUtil.openAlert("Fehler", "Bukkit-Datei ist nicht ausgewählt", AlertType.WARNING);
 					}
@@ -105,11 +109,19 @@ public class CraftbukkitDialogController {
 
 	@FXML
 	void initialize() {
-
+		if (extraValues != null) {
+			isEdit = true;
+			idTextfield.setText((String) extraValues.get("name"));
+			jarPathTextfield.setText((String) extraValues.get("jarfile"));
+			argsTextfield.setText((String) extraValues.get("args"));
+			propertiesTextfield.setText((String) extraValues.get("properties"));
+			idBukkit.setText((String) extraValues.get("bukkit"));
+		}
 	}
 
-	public CraftbukkitDialogController(Alert dialog) {
+	public CraftbukkitDialogController(Alert dialog,HashMap<String, Object> extraValues) {
 		this.dialog = dialog;
+		this.extraValues = extraValues;
 	}
 
 }

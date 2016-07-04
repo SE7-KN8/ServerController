@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.addon.craftbukkit;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -11,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -30,16 +32,23 @@ public class CraftbukkitAddon implements IEventHandler {
 	@Subscribe
 	public void serverTypeChoose(ServerTypeChooseEvent event) {
 		if (event.getServerType().equals(CraftbukkitAddon.ADDON_NAME)) {
-			loadDialog();
+			loadDialog(null);
 		}
 	}
 
-	private void loadDialog() {
+	@Subscribe
+	public void serverEdit(ServerEditEvent event) {
+		if (event.getServerType().equals(CraftbukkitAddon.ADDON_NAME)) {
+			loadDialog(event.getServer().toExteralForm());
+		}
+	}
+
+	private void loadDialog(HashMap<String, Object> extraValues) {
 		Platform.runLater(() -> {
 			Alert dialog = new Alert(AlertType.NONE);
 
 			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("CraftbukkitServerDialog.fxml"));
-			loader.setController(new CraftbukkitDialogController(dialog));
+			loader.setController(new CraftbukkitDialogController(dialog, extraValues));
 
 			try {
 				GridPane root = loader.load();

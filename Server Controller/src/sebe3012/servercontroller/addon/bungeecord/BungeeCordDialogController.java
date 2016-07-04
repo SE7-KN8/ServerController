@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
+import java.util.HashMap;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -53,6 +55,8 @@ public class BungeeCordDialogController {
 	private Button confirmButton;
 
 	private Alert dialog;
+	private HashMap<String, Object> extraValues;
+	private boolean isEdit = true;
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
@@ -75,7 +79,7 @@ public class BungeeCordDialogController {
 					BungeeCordServer server = new BungeeCordServer(idTextfield.getText(), jarPathTextfield.getText(),
 							propertiesTextfield.getText(), argsTextfield.getText());
 
-					AddonUtil.addServer(server);
+					AddonUtil.addServer(server, isEdit);
 
 				} else {
 					AddonUtil.openAlert("Fehler", "Config-Datei ist nicht ausgewählt", AlertType.WARNING);
@@ -90,11 +94,17 @@ public class BungeeCordDialogController {
 
 	@FXML
 	void initialize() {
-
+		if (extraValues != null) {
+			idTextfield.setText((String) extraValues.get("name"));
+			jarPathTextfield.setText((String) extraValues.get("jarfile"));
+			argsTextfield.setText((String) extraValues.get("args"));
+			propertiesTextfield.setText((String) extraValues.get("bungeecord"));
+		}
 	}
 
-	public BungeeCordDialogController(Alert dialog) {
+	public BungeeCordDialogController(Alert dialog, HashMap<String, Object> extraValues) {
 		this.dialog = dialog;
+		this.extraValues = extraValues;
 	}
 
 }

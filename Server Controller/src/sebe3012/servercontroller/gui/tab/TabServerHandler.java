@@ -105,7 +105,11 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		if (!this.hasServer()) {
 			this.server = event.getServer();
 			this.serverName = server.getName();
-			Servers.serversList.add(this.server);
+			if (event.hasIndex()) {
+				Servers.serversList.add(event.getIndex(),this.server);
+			} else {
+				Servers.serversList.add(this.server);
+			}
 
 			if (!this.server.hasServerHandler()) {
 				server.setServerHandler(this);

@@ -121,13 +121,13 @@ public class ServerSave {
 					serUID = server.getClass().getDeclaredField("serialVersionUID");
 					serUID.setAccessible(true);
 					long uid = serUID.getLong(server);
-					if(uid != xmlUid){
+					if (uid != xmlUid) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
 				} catch (NoSuchFieldException | SecurityException e1) {
 					e1.printStackTrace();
 				}
-				AddonUtil.addServer(server);
+				AddonUtil.addServer(server, false);
 			}
 
 		}

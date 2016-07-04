@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.spigot;
 
+import java.util.HashMap;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -65,6 +67,8 @@ public class SpigotDialogController {
 	private Button spigotButton;
 
 	private Alert dialog;
+	private HashMap<String, Object> extraValues;
+	private boolean isEdit = false;
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
@@ -99,7 +103,7 @@ public class SpigotDialogController {
 									propertiesTextfield.getText(), argsTextfield.getText(), idBukkit.getText(),
 									idSpigot.getText());
 
-							AddonUtil.addServer(server);
+							AddonUtil.addServer(server, isEdit);
 						} else {
 							AddonUtil.openAlert("Fehler", "Spigot-Datei ist nicht ausgewählt", AlertType.WARNING);
 						}
@@ -119,11 +123,20 @@ public class SpigotDialogController {
 
 	@FXML
 	void initialize() {
-		
+		if (extraValues != null) {
+			isEdit = true;
+			idTextfield.setText((String) extraValues.get("name"));
+			jarPathTextfield.setText((String) extraValues.get("jarfile"));
+			argsTextfield.setText((String) extraValues.get("args"));
+			propertiesTextfield.setText((String) extraValues.get("properties"));
+			idBukkit.setText((String) extraValues.get("bukkit"));
+			idSpigot.setText((String) extraValues.get("spigot"));
+		}
 	}
 
-	public SpigotDialogController(Alert dialog) {
+	public SpigotDialogController(Alert dialog, HashMap<String, Object> extraValues) {
 		this.dialog = dialog;
+		this.extraValues = extraValues;
 	}
 
 }
