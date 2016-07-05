@@ -361,9 +361,9 @@ public class FrameHandler implements IEventHandler {
 		FrameHandler.ramTotelChart = ramTotal;
 		FrameHandler.ramUsedChart = ramUsed;
 
-		ramUsed.setTitle("Genutzer RAM / Zugewiesen");
-		ramTotal.setTitle("Genutzer RAM / Gesamt");
-		cpu.setTitle("Genutze CPU / 100%");
+		ramUsed.setTitle("Genutzer RAM / Zugewiese\n(Ungenau)");
+		ramTotal.setTitle("Genutzer RAM / Gesamt\n(Ungenau)");
+		cpu.setTitle("Genutze CPU / 100%\n(Ungeau)");
 
 		ramUsed.getData().add(ramUsed1);
 		ramUsed.getData().add(assignedRam);

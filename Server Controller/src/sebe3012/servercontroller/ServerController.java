@@ -15,10 +15,10 @@ import sebe3012.servercontroller.server.BasicServer;
 
 /**
  * 
- * ServerController is a programm with which you can control
+ * ServerController is a program with which you can control
  * Minecraft-Server(e.g. Vanilla,Spigot)
  * 
- * This class is the main class of the programm
+ * This class is the main class of the program
  * 
  * @author Sebastian Knackstedt
  * 
@@ -32,7 +32,7 @@ public class ServerController {
 
 	public static boolean DEBUG = false;
 
-	public static final String VERSION = "Alpha 0.1.6.7";
+	public static final String VERSION = "Alpha 0.2.6.7";
 
 	/**
 	 * 
