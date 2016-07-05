@@ -180,10 +180,12 @@ public class FrameHandler implements IEventHandler {
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
 		BasicServer server = Tabs.getCurrentServer();
-		if (server.isRunning()) {
-			showServerIsRunningDialog();
-		} else {
-			EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
+		if(server != null){
+			if (server.isRunning()) {
+				showServerIsRunningDialog();
+			} else {
+				EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
+			}
 		}
 	}
 
@@ -382,15 +384,17 @@ public class FrameHandler implements IEventHandler {
 
 	public static void removeCurrentServer() {
 		BasicServer server = Tabs.getCurrentServer();
-		if (server.isRunning()) {
-			showServerIsRunningDialog();
-		} else {
+		if(server != null){
+			if (server.isRunning()) {
+				showServerIsRunningDialog();
+			} else {
 
-			Servers.serversList.remove(Tabs.getCurrentServer());
+				Servers.serversList.remove(Tabs.getCurrentServer());
 
-			FrameHandler.list.setItems(null);
-			FrameHandler.list.setItems(Servers.serversList);
-			FrameHandler.mainPane.getTabs().remove(Tabs.getCurrentTab());
+				FrameHandler.list.setItems(null);
+				FrameHandler.list.setItems(Servers.serversList);
+				FrameHandler.mainPane.getTabs().remove(Tabs.getCurrentTab());
+			}
 		}
 	}
 }
