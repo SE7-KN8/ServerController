@@ -8,6 +8,8 @@ import java.util.HashMap;
 import com.google.common.eventbus.Subscribe;
 
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -46,13 +48,12 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			handler = new PropertiesHandler();
 		}
-		
 
 		extraButtons.put("Properties", (Runnable & Serializable) () -> {
-			new PropertiesDialog(new Stage(), handler);
+			new PropertiesDialog(new Stage(StageStyle.UTILITY), handler, VanillaServer.this);
 		});
 	}
 

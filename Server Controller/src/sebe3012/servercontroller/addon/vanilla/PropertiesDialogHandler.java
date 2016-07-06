@@ -21,6 +21,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
 
+import sebe3012.servercontroller.gui.Frame;
+
 public class PropertiesDialogHandler {
 
 	private PropertiesHandler handler;
@@ -90,7 +92,7 @@ public class PropertiesDialogHandler {
 
 			Alert warning = new Alert(AlertType.WARNING,
 					"Der Server muß neugestartet werden, damit die Änderungen wirksam werden", ButtonType.OK);
-			warning.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+			warning.getDialogPane().getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
 			warning.setHeaderText("");
 			warning.setTitle("Achtung");
 			warning.showAndWait();
