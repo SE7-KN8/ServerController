@@ -7,6 +7,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+
+import sebe3012.servercontroller.event.ChangeButtonsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
@@ -39,6 +41,9 @@ public class AddonUtil {
 		
 		FrameHandler.mainPane.getSelectionModel().select(tab);
 		
+		if(!isEdit){
+			EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(server.getExtraButtons()));
+		}
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server, isEdit, index));
 	}
 
