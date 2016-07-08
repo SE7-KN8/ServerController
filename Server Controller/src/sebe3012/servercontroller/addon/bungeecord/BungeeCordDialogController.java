@@ -56,7 +56,7 @@ public class BungeeCordDialogController {
 
 	private Alert dialog;
 	private HashMap<String, Object> extraValues;
-	private boolean isEdit = true;
+	private boolean isEdit = false;
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
@@ -95,6 +95,7 @@ public class BungeeCordDialogController {
 	@FXML
 	void initialize() {
 		if (extraValues != null) {
+			isEdit = true;
 			idTextfield.setText((String) extraValues.get("name"));
 			jarPathTextfield.setText((String) extraValues.get("jarfile"));
 			argsTextfield.setText((String) extraValues.get("args"));

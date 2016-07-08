@@ -24,7 +24,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="headerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="750.0" text="Vanillla-Server erstellen" GridPane.columnSpan="3">
+      <Label fx:id="headerLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="73.0" prefWidth="750.0" text="Vanilla-Server erstellen" GridPane.columnSpan="3">
          <font>
             <Font size="50.0" />
          </font>
