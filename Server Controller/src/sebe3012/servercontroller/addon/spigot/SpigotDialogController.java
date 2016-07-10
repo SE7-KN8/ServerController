@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon.spigot;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
@@ -72,7 +73,12 @@ public class SpigotDialogController {
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
-		jarPathTextfield.setText(AddonUtil.openFileChooser("*.jar", "Java-Archiv"));
+		
+		String path = AddonUtil.openFileChooser("*.jar", "Java-Archiv");
+		
+		jarPathTextfield.setText(path);
+		
+		fillValues(path);
 	}
 
 	@FXML
@@ -119,6 +125,16 @@ public class SpigotDialogController {
 		} else {
 			AddonUtil.openAlert("Fehler", "Server-ID ist nicht vorhanden", AlertType.WARNING);
 		}
+	}
+
+	private void fillValues(String baseFile) {
+
+		File baseDir = new File(baseFile).getParentFile();
+
+		propertiesTextfield.setText(new File(baseDir, "server.properties").getAbsolutePath());
+		idBukkit.setText(new File(baseDir, "bukkit.yml").getAbsolutePath());
+		idSpigot.setText(new File(baseFile, "spigot.yml").getAbsolutePath());
+
 	}
 
 	@FXML

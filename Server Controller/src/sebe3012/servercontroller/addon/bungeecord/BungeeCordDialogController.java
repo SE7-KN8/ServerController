@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
@@ -60,7 +61,12 @@ public class BungeeCordDialogController {
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
-		jarPathTextfield.setText(AddonUtil.openFileChooser("*.jar", "Java-Archiv"));
+		
+		String path = AddonUtil.openFileChooser("*.jar", "Java-Archiv");
+		
+		fillValues(path);
+		
+		jarPathTextfield.setText(path);
 	}
 
 	@FXML
@@ -90,6 +96,14 @@ public class BungeeCordDialogController {
 		} else {
 			AddonUtil.openAlert("Fehler", "Server-ID ist nicht vorhanden", AlertType.WARNING);
 		}
+	}
+
+	private void fillValues(String baseFile) {
+
+		File baseDir = new File(baseFile).getParentFile();
+
+		propertiesTextfield.setText(new File(baseDir, "config.yml").getAbsolutePath());
+
 	}
 
 	@FXML

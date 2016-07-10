@@ -1,14 +1,15 @@
 package sebe3012.servercontroller.addon.vanilla;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 import sebe3012.servercontroller.addon.AddonUtil;
@@ -61,7 +62,12 @@ public class VanillaDialogController {
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
-		jarPathTextfield.setText(AddonUtil.openFileChooser("*.jar", "Java-Archiv"));
+		
+		String text = AddonUtil.openFileChooser("*.jar", "Java-Archiv");
+		
+		fillValues(text);
+		
+		jarPathTextfield.setText(text);
 	}
 
 	@FXML
@@ -91,6 +97,15 @@ public class VanillaDialogController {
 		} else {
 			AddonUtil.openAlert("Fehler", "Server-ID ist nicht vorhanden", AlertType.WARNING);
 		}
+	}
+	
+	private void fillValues(String baseFile){
+		
+		File baseDir = new File(baseFile).getParentFile();
+		
+		propertiesTextfield.setText(new File(baseDir, "server.properties").getAbsolutePath());
+		
+		
 	}
 
 	@FXML

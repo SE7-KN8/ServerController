@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon.craftbukkit;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
@@ -66,7 +67,12 @@ public class CraftbukkitDialogController {
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
-		jarPathTextfield.setText(AddonUtil.openFileChooser("*.jar", "Java-Archiv"));
+		
+		String path = AddonUtil.openFileChooser("*.jar", "Java-Archiv");
+		
+		jarPathTextfield.setText(path);
+		
+		fillValues(path);
 	}
 
 	@FXML
@@ -107,6 +113,15 @@ public class CraftbukkitDialogController {
 		}
 	}
 
+	private void fillValues(String baseFile) {
+
+		File baseDir = new File(baseFile).getParentFile();
+
+		propertiesTextfield.setText(new File(baseDir, "server.properties").getAbsolutePath());
+		idBukkit.setText(new File(baseDir, "bukkit.yml").getAbsolutePath());
+
+	}
+	
 	@FXML
 	void initialize() {
 		if (extraValues != null) {
