@@ -40,7 +40,7 @@ public class SpigotServer extends CraftbukkitServer {
 
 	@Override
 	public BasicServer createNew() {
-		return new SpigotServer(name, jarFile.getAbsolutePath(), super.getPropertiesFile(), spigotConfig,
+		return new SpigotServer(name, jarFile.getAbsolutePath(), super.getPropertiesFile(), super.getArgs(),
 				super.getBukkitConfig(), spigotConfig);
 	}
 

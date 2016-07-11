@@ -38,9 +38,15 @@ public class TabServerHandler implements Serializable, IEventHandler {
 
 	public void onStartClicked() {
 		restartServer = false;
-		startServer();
-
-		getContentHandler().cOutput.appendText("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
+		if (server != null) {
+			if (!server.isRunning()) {
+				startServer();
+			}else{
+				showServerAlreadyRunningDialog();
+			}
+		} else {
+			showNoServerDialog();
+		}
 	}
 
 	public void onEndClicked() {
@@ -78,6 +84,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	public void startServer() {
 		if (server != null) {
 			server.start();
+			handler.addTextToOutput("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
 		} else {
 			showNoServerDialog();
 		}
@@ -100,13 +107,17 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		handler.showErrorAlert("Fehler", "", "Der Server muﬂ erst gestartet werden");
 	}
 
+	private void showServerAlreadyRunningDialog() {
+		handler.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
+	}
+
 	@Subscribe
 	public void serverCreateEvent(ServerCreateEvent event) {
 		if (!this.hasServer()) {
 			this.server = event.getServer();
 			this.serverName = server.getName();
 			if (event.hasIndex()) {
-				Servers.serversList.add(event.getIndex(),this.server);
+				Servers.serversList.add(event.getIndex(), this.server);
 			} else {
 				Servers.serversList.add(this.server);
 			}

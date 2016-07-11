@@ -63,6 +63,11 @@ public abstract class BasicServer implements Serializable {
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
 						"nogui");
 
+				serverProcessBuilder.command().forEach(e->{
+					System.out.print(e+" ");
+				});
+				System.out.println();
+				
 				serverProcessBuilder.directory(jarFile.getParentFile());
 				serverProcess = serverProcessBuilder.start();
 				inputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
