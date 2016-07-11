@@ -58,7 +58,7 @@
 
 .buttonlist {
 	-fx-background-color: rgb(220.0,220.0,220.0);
-}
+}/*ButtonList */
 
 
 /*Start ListView */
@@ -206,3 +206,18 @@
     -fx-background-color: rgba(255.0,255.0,255.0,0.0);
 }
 /*End ComboBox */
+
+
+/*Start Separator */
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+   -fx-border-width: 2.0px;
+   -fx-border-radius: 20.0px;
+   -fx-border-color: rgb(40.0,190.0,31.0);
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+   -fx-background-insets: 0.0, 1.0 0.0 1.0 0.0;
+   -fx-border-color: rgb(40.0,190.0,31.0);
+}
+/*End Separator */
