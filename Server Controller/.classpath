@@ -7,5 +7,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Sigar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Guava"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDOM"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/YAML"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

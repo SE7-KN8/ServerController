@@ -119,7 +119,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="lblInfo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <Label fx:id="lblInfo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Label>
                </children>
             </GridPane>
          </items>
