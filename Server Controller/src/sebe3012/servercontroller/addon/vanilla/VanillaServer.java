@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.google.common.eventbus.Subscribe;
-
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.google.common.eventbus.Subscribe;
 
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -20,7 +20,8 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	private static final long serialVersionUID = 3205212775811812781L;
 
 	private String propertiesFile;
-	private PropertiesHandler handler;
+	private PropertiesHandler propertiesHandler;
+	private OpsHandler opsHandler;
 
 	private HashMap<String, Runnable> extraButtons = new HashMap<>();
 	private HashMap<String, Object> externalForm;
@@ -39,28 +40,34 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		this.init(false);
 	}
 
-	private void init(boolean flag) {
+	private void init(boolean isNew) {
 		EventHandler.EVENT_BUS.registerEventListener(this);
-		if (flag) {
-			handler = new PropertiesHandler(new File(propertiesFile));
+		if (isNew) {
+			propertiesHandler = new PropertiesHandler(new File(propertiesFile));
+			opsHandler = new OpsHandler(new File(super.getJarFile().getParentFile(), "ops.json").getAbsolutePath());
 			try {
-				handler.readProperties();
+				propertiesHandler.readProperties();
+				opsHandler.readOps();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		} else {
-			handler = new PropertiesHandler();
+			propertiesHandler = new PropertiesHandler();
+			opsHandler = new OpsHandler();
 		}
 
 		extraButtons.put("Properties", (Runnable & Serializable) () -> {
-			new PropertiesDialog(new Stage(StageStyle.UTILITY), handler, VanillaServer.this);
+			new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this);
+		});
+		extraButtons.put("Operatoren", (Runnable & Serializable) () -> {
+			new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this);
 		});
 	}
 
 	@Override
 	public String getServerInfo() {
-		return "Port: " + handler.getServerPort() + " World-Name: " + handler.getLevelName() + "\nDifficulty: "
-				+ handler.getDifficulty() + " Seed: " + handler.getLevelSeed();
+		return "Port: " + propertiesHandler.getServerPort() + " World-Name: " + propertiesHandler.getLevelName()
+				+ "\nDifficulty: " + propertiesHandler.getDifficulty() + " Seed: " + propertiesHandler.getLevelSeed();
 	}
 
 	public String getPropertiesFile() {
@@ -104,9 +111,11 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	public void fromExternalForm() {
 		super.fromExternalForm();
 		propertiesFile = (String) externalForm.get("properties");
-		handler.setProperitesFile(new File(propertiesFile));
+		propertiesHandler.setProperitesFile(new File(propertiesFile));
+		opsHandler.setPath(new File(super.getJarFile().getParentFile(), "ops.json").getAbsolutePath());
 		try {
-			handler.readProperties();
+			propertiesHandler.readProperties();
+			opsHandler.readOps();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
