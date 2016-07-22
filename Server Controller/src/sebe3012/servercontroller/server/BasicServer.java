@@ -38,6 +38,7 @@ public abstract class BasicServer implements Serializable {
 	protected File jarFile;
 	protected String name;
 	protected String args;
+	protected String argsAfterJar = "";
 	protected TabServerHandler handler;
 	private HashMap<String, Object> externalForm;
 
@@ -59,14 +60,9 @@ public abstract class BasicServer implements Serializable {
 				waitForExitThread = new WaitForExit(new WaitForExit(), this);
 				messageReaderThread.setName(name + "-Server reader");
 				waitForExitThread.setName(name + "-Server stop listener");
-
+				
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
-						"nogui");
-
-				serverProcessBuilder.command().forEach(e->{
-					System.out.print(e+" ");
-				});
-				System.out.println();
+						"nogui " + getArgsAfterJar());
 				
 				serverProcessBuilder.directory(jarFile.getParentFile());
 				serverProcess = serverProcessBuilder.start();
@@ -250,6 +246,14 @@ public abstract class BasicServer implements Serializable {
 
 	public File getJarFile() {
 		return jarFile;
+	}
+	
+	public String getArgsAfterJar() {
+		return argsAfterJar;
+	}
+	
+	public void setArgsAfterJar(String argsAfterJar) {
+		this.argsAfterJar = argsAfterJar;
 	}
 
 	public HashMap<String, Object> toExteralForm() {
