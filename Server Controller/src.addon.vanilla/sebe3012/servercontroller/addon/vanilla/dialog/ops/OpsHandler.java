@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon.vanilla;
+package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
 import java.io.IOException;
 import java.io.Serializable;

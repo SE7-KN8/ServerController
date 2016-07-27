@@ -8,7 +8,7 @@ import java.util.HashMap;
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
-import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
+import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.server.BasicServer;

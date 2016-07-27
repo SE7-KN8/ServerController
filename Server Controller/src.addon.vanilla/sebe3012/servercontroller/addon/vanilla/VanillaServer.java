@@ -10,6 +10,11 @@ import javafx.stage.StageStyle;
 
 import com.google.common.eventbus.Subscribe;
 
+import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
+import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
+import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
+import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
+import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;

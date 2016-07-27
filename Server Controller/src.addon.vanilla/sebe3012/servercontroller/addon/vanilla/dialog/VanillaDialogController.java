@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon.vanilla;
+package sebe3012.servercontroller.addon.vanilla.dialog;
 
 import java.io.File;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 
 public class VanillaDialogController {
 

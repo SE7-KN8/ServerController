@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon.vanilla;
+package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
 import java.io.IOException;
 import java.net.URL;

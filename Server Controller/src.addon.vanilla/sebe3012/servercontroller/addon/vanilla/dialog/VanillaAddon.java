@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon.vanilla;
+package sebe3012.servercontroller.addon.vanilla.dialog;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
