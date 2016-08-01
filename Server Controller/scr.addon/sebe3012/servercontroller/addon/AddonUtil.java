@@ -14,12 +14,10 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
+import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 
 public class AddonUtil {
-
-	public AddonUtil() {
-	}
 
 	public static void addServer(BasicServer server, boolean isEdit) {
 
@@ -30,7 +28,7 @@ public class AddonUtil {
 		tab.setContent(content.getTabContent());
 		if (isEdit) {
 			index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
-			FrameHandler.removeCurrentServerTab();
+			Tabs.removeCurrentTab();
 			FrameHandler.mainPane.getTabs().add(index, tab);
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);

@@ -1,7 +1,12 @@
 package sebe3012.servercontroller.gui.tab;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
+
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.Servers;
 
 public class Tabs {
 
@@ -34,6 +39,44 @@ public class Tabs {
 		}
 		throw new IllegalStateException("Tab index != List index");
 
+	}
+
+	public static void removeAllTabs() {
+		Servers.serversList.clear();
+		FrameHandler.list.setItems(null);
+		FrameHandler.list.setItems(Servers.serversList);
+
+		FrameHandler.mainPane.getTabs().clear();
+
+	}
+
+	public static void removeCurrentTab() {
+		BasicServer server = Tabs.getCurrentServer();
+		if (server != null) {
+			if (server.isRunning()) {
+				showServerIsRunningDialog();
+			} else {
+
+				int index = Tabs.getCurrentIndex();
+
+				FrameHandler.mainPane.getTabs().remove(index);
+				FrameHandler.list.setItems(null);
+
+				Servers.serversList.remove(index);
+
+				FrameHandler.list.setItems(Servers.serversList);
+				FrameHandler.list.getSelectionModel().select(index);
+
+			}
+		}
+	}
+
+	private static void showServerIsRunningDialog() {
+		Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+		dialog.setTitle("Fehler");
+		dialog.setHeaderText("");
+		dialog.showAndWait();
 	}
 
 }

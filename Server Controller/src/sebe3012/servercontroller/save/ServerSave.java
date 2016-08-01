@@ -23,6 +23,7 @@ import org.jdom2.output.XMLOutputter;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.AddonUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 
@@ -88,7 +89,7 @@ public class ServerSave {
 			}
 		});
 
-		FrameHandler.removeAllServers();
+		Tabs.removeAllTabs();
 
 		FileInputStream fis = new FileInputStream(new File(path));
 

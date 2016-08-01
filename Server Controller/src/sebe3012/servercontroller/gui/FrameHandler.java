@@ -191,7 +191,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onServerRemoveItemClicked(ActionEvent event) {
-		FrameHandler.removeCurrentServerTab();
+		Tabs.removeCurrentTab();
 	}
 
 	@FXML
@@ -371,35 +371,5 @@ public class FrameHandler implements IEventHandler {
 		ramTotal.getData().add(totalRam);
 		cpu.getData().add(usedCpu);
 		cpu.getData().add(totelCpu);
-	}
-
-	public static void removeAllServers() {
-		Servers.serversList.clear();
-		list.setItems(null);
-		list.setItems(Servers.serversList);
-
-		mainPane.getTabs().clear();
-
-	}
-
-	public static void removeCurrentServerTab() {
-		BasicServer server = Tabs.getCurrentServer();
-		if (server != null) {
-			if (server.isRunning()) {
-				showServerIsRunningDialog();
-			} else {
-
-				int index = Tabs.getCurrentIndex();
-
-				FrameHandler.mainPane.getTabs().remove(index);
-				FrameHandler.list.setItems(null);
-
-				Servers.serversList.remove(index);
-
-				FrameHandler.list.setItems(Servers.serversList);
-				FrameHandler.list.getSelectionModel().select(index);
-
-			}
-		}
 	}
 }
