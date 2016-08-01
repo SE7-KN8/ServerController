@@ -2,8 +2,6 @@ package sebe3012.servercontroller.util;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -121,14 +119,6 @@ public class WebAPI {
 		}
 
 		return knownHeads.get(uuid);
-	}
-
-	public static void main(String[] args) throws IOException {
-		BufferedImage bimg = getSkin(getUUID("Sebe3012"));
-		File test = new File("C:\\test\\test.png");
-		File test2 = new File("C:\\test\\test2.png");
-		ImageIO.write(bimg, "png", test);
-		ImageIO.write(bimg.getSubimage(8, 8, 8, 8), "png", test2);
 	}
 
 }

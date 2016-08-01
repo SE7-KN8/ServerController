@@ -127,6 +127,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 			}
 
 			getContentHandler().lblInfo.setText(this.server.getServerInfo());
+			
 		}
 	}
 

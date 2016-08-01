@@ -20,8 +20,20 @@ public class Tabs {
 				return getCurrentTab().getTabContent().getContentHandler().getServerHandler().getServer();
 			}
 		}
-		
+
 		return null;
 
 	}
+
+	public static int getCurrentIndex() {
+
+		int index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
+
+		if (index == FrameHandler.list.getSelectionModel().getSelectedIndex()) {
+			return index;
+		}
+		throw new IllegalStateException("Tab index != List index");
+
+	}
+
 }

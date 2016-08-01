@@ -60,10 +60,10 @@ public abstract class BasicServer implements Serializable {
 				waitForExitThread = new WaitForExit(new WaitForExit(), this);
 				messageReaderThread.setName(name + "-Server reader");
 				waitForExitThread.setName(name + "-Server stop listener");
-				
+
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
-						"nogui " + getArgsAfterJar());
-				
+						getArgsAfterJar() + "nogui");
+
 				serverProcessBuilder.directory(jarFile.getParentFile());
 				serverProcess = serverProcessBuilder.start();
 				inputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
@@ -247,11 +247,11 @@ public abstract class BasicServer implements Serializable {
 	public File getJarFile() {
 		return jarFile;
 	}
-	
+
 	public String getArgsAfterJar() {
 		return argsAfterJar;
 	}
-	
+
 	public void setArgsAfterJar(String argsAfterJar) {
 		this.argsAfterJar = argsAfterJar;
 	}

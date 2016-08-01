@@ -14,7 +14,6 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
-import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 
 public class AddonUtil {
@@ -26,22 +25,20 @@ public class AddonUtil {
 
 		int index = -1;
 
-		if (isEdit) {
-			index = FrameHandler.mainPane.getTabs().indexOf(Tabs.getCurrentTab());
-			FrameHandler.removeCurrentServer();
-		}
 		TabContent content = new TabContent();
 		ServerTab tab = new ServerTab(server.getName(), content);
 		tab.setContent(content.getTabContent());
 		if (isEdit) {
+			index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
+			FrameHandler.removeCurrentServerTab();
 			FrameHandler.mainPane.getTabs().add(index, tab);
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);
 		}
-		
+
 		FrameHandler.mainPane.getSelectionModel().select(tab);
-		
-		if(!isEdit){
+
+		if (!isEdit) {
 			EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(server.getExtraButtons()));
 		}
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server, isEdit, index));
