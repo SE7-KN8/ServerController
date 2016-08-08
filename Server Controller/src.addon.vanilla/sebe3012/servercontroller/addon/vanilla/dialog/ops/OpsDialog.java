@@ -17,8 +17,8 @@ public class OpsDialog {
 			stage.setTitle("Operatoren von: " + server.getName());
 
 			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("OpsDialog.fxml"));
-			loader.setController(new OpsDialogController(handler));
-			
+			loader.setController(new OpsDialogController(handler, server));
+
 			GridPane root = loader.load();
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());

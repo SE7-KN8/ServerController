@@ -38,9 +38,11 @@ public class OpsHandler implements Serializable {
 	}
 
 	public void readOps() {
-
+		
 		try (JsonParser parser = Json.createParser(Files.newInputStream(Paths.get(path)))) {
 
+			allValues = null;
+			
 			int counter = 0;
 			String currentKey = null;
 

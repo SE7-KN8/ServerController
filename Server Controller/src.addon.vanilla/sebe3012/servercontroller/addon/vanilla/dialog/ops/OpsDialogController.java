@@ -1,14 +1,23 @@
+
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
+
+import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.server.BasicServer;
 
 public class OpsDialogController {
 
@@ -31,6 +40,7 @@ public class OpsDialogController {
 	private ListView<String> rightList;
 
 	private OpsHandler handler;
+	private BasicServer server;
 
 	private ObservableList<String> main;
 	private ObservableList<String> left;
@@ -51,7 +61,13 @@ public class OpsDialogController {
 		left.clear();
 		right.clear();
 
-		Map<String, ?> map = handler.getAllValues().get(mainList.getSelectionModel().getSelectedIndex());
+		int index = mainList.getSelectionModel().getSelectedIndex();
+
+		if (index >= handler.getAllValues().size() || index < 0) {
+			return;
+		}
+
+		Map<String, ?> map = handler.getAllValues().get(index);
 
 		map.keySet().forEach(key -> {
 			left.add(key);
@@ -69,12 +85,17 @@ public class OpsDialogController {
 
 	}
 
-	public OpsDialogController(OpsHandler handler) {
+	public OpsDialogController(OpsHandler handler, BasicServer server) {
 		this.handler = handler;
+		this.server = server;
 	}
 
 	@FXML
 	void initialize() {
+
+		handler.readOps();
+
+		mainList.setItems(null);
 
 		main = FXCollections.observableArrayList();
 		left = FXCollections.observableArrayList();
@@ -84,6 +105,73 @@ public class OpsDialogController {
 			main.add(map.get("name").toString());
 		}
 		mainList.setItems(main);
+
+		MenuItem addOp = new MenuItem("Operator hinzufügen");
+
+		MenuItem removedOp = new MenuItem("Operator entfernen");
+
+		addOp.setOnAction(e -> {
+
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setHeaderText("Operator hinzufügen");
+			dialog.setContentText("Spielername: ");
+
+			dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+			dialog.getDialogPane().setMaxSize(300, 45);
+			dialog.getDialogPane().setPrefSize(300, 45);
+			Optional<String> result = dialog.showAndWait();
+
+			if (result.isPresent()) {
+				server.getServerHandler().sendCommand("op " + result.get());
+				new Thread(() -> {
+
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					handler.readOps();
+
+					Platform.runLater(() -> {
+						mainList.setItems(null);
+						main.clear();
+						for (Map<String, ?> map : handler.getAllValues()) {
+							main.add(map.get("name").toString());
+						}
+						mainList.setItems(main);
+					});
+				}).start();
+			}
+
+		});
+
+		removedOp.setOnAction(e -> {
+			String player = mainList.getSelectionModel().getSelectedItem();
+			server.getServerHandler().sendCommand("deop " + player);
+			new Thread(() -> {
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				handler.readOps();
+
+				Platform.runLater(() -> {
+					mainList.setItems(null);
+					main.clear();
+					for (Map<String, ?> map : handler.getAllValues()) {
+						main.add(map.get("name").toString());
+					}
+					mainList.setItems(main);
+				});
+			}).start();
+		});
+
+		ContextMenu menu = new ContextMenu(addOp, removedOp);
+		mainList.setContextMenu(menu);
 
 	}
 }
