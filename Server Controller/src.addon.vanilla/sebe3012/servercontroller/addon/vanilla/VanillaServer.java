@@ -2,9 +2,12 @@ package sebe3012.servercontroller.addon.vanilla;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -28,7 +31,7 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	private PropertiesHandler propertiesHandler;
 	private OpsHandler opsHandler;
 
-	private HashMap<String, Runnable> extraButtons = new HashMap<>();
+	private List<Control> extraControls = new ArrayList<>();
 	private HashMap<String, Object> externalForm;
 
 	public VanillaServer(String name, String jarFilePath, String properties, String args) {
@@ -61,12 +64,18 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 			opsHandler = new OpsHandler();
 		}
 
-		extraButtons.put("Properties", (Runnable & Serializable) () -> {
+		Button propertiesButton = new Button("Properties");
+		propertiesButton.setOnAction(e -> {
 			new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this);
 		});
-		extraButtons.put("Operatoren", (Runnable & Serializable) () -> {
+
+		Button opsButtons = new Button("Operatoren");
+		opsButtons.setOnAction(e -> {
 			new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this);
 		});
+
+		extraControls.add(propertiesButton);
+		extraControls.add(opsButtons);
 	}
 
 	@Override
@@ -98,8 +107,8 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public HashMap<String, Runnable> getExtraButtons() {
-		return extraButtons;
+	public List<Control> getExtraControls() {
+		return extraControls;
 	}
 
 	@Override

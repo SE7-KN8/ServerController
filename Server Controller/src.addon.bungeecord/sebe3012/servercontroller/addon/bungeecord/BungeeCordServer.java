@@ -1,6 +1,10 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import javafx.scene.control.Control;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -15,7 +19,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 
 	private String configFile;
 
-	private HashMap<String, Runnable> extraButtons = new HashMap<>();
+	private List<Control> extraControls = new ArrayList<>();
 	private HashMap<String, Object> externalForm;
 
 	public BungeeCordServer(String name, String jarFilePath, String configFile, String args) {
@@ -57,8 +61,8 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public HashMap<String, Runnable> getExtraButtons() {
-		return extraButtons;
+	public List<Control> getExtraControls() {
+		return extraControls;
 	}
 
 	@Override

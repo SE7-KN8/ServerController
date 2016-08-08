@@ -9,12 +9,14 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 
 import com.sun.jna.Pointer;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.Alert.AlertType;
 
 import sebe3012.servercontroller.event.ServerMessageEvent;
@@ -276,6 +278,6 @@ public abstract class BasicServer implements Serializable {
 
 	public abstract BasicServer createNew();
 
-	public abstract HashMap<String, Runnable> getExtraButtons();
+	public abstract List<Control> getExtraControls();
 
 }

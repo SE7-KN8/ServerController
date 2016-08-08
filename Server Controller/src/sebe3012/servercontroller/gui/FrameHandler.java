@@ -34,7 +34,7 @@ import javafx.stage.StageStyle;
 import org.jdom2.JDOMException;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.event.ChangeButtonsEvent;
+import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -250,7 +250,7 @@ public class FrameHandler implements IEventHandler {
 				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
 						.getServerHandler();
 				if (handler.hasServer()) {
-					EventHandler.EVENT_BUS.post(new ChangeButtonsEvent(handler.getServer().getExtraButtons()));
+					EventHandler.EVENT_BUS.post(new ChangeControlsEvent(handler.getServer().getExtraControls()));
 				}
 			}
 		});
@@ -312,7 +312,7 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	@Subscribe
-	public void changeExtraButton(ChangeButtonsEvent event) {
+	public void changeExtraButton(ChangeControlsEvent event) {
 
 		Platform.runLater(() -> {
 
@@ -320,15 +320,9 @@ public class FrameHandler implements IEventHandler {
 				vBox.getChildren().remove(i);
 			}
 
-			event.getNewButtons().forEach((name, action) -> {
-
-				Button newButton = new Button(name);
-				newButton.setPrefWidth(1000);
-				newButton.setOnAction(e -> {
-					action.run();
-				});
-
-				vBox.getChildren().add(newButton);
+			event.getNewControls().forEach(control->{
+				control.setPrefWidth(1000);
+				vBox.getChildren().add(control);
 			});
 
 		});
