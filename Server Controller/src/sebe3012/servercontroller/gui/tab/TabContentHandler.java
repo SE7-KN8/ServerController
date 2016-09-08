@@ -17,7 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.gui.FrameHandler;
 
 public class TabContentHandler implements Initializable {
 
@@ -110,7 +110,7 @@ public class TabContentHandler implements Initializable {
 		Alert a = new Alert(AlertType.ERROR, content, ButtonType.OK);
 		a.setTitle(title);
 		a.setHeaderText(header);
-		a.getDialogPane().getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
+		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 		a.showAndWait();
 	}
 

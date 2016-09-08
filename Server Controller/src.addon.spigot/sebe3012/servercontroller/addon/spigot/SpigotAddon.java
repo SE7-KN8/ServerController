@@ -16,7 +16,7 @@ import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
-import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.gui.FrameHandler;
 
 public class SpigotAddon implements IEventHandler {
 
@@ -55,7 +55,7 @@ public class SpigotAddon implements IEventHandler {
 
 				dialog.getDialogPane().setContent(root);
 				dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-				dialog.getDialogPane().getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
+				dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 				dialog.setTitle("Spigot-Server erstellen");
 				dialog.show();
 

@@ -3,6 +3,8 @@ package sebe3012.servercontroller.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.google.common.eventbus.Subscribe;
@@ -16,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -23,6 +26,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -34,6 +38,7 @@ import javafx.stage.StageStyle;
 import org.jdom2.JDOMException;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -52,6 +57,8 @@ public class FrameHandler implements IEventHandler {
 	public static TabPane mainPane;
 	public static ListView<BasicServer> list;
 	public static VBox buttonList;
+	public static String currentDesign;
+	public static HashMap<String, String> designs;
 
 	@FXML
 	private ResourceBundle resources;
@@ -127,7 +134,6 @@ public class FrameHandler implements IEventHandler {
 				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onEndClicked();
 			}
 		});
-		;
 	}
 
 	@FXML
@@ -199,12 +205,38 @@ public class FrameHandler implements IEventHandler {
 		showLicense();
 	}
 
+	@FXML
+	void onDesignClicked(ActionEvent event) {
+
+		ChoiceDialog<String> cd = new ChoiceDialog<>();
+		cd.setGraphic(new ImageView(this.getClass().getResource("icon.png").toExternalForm()));
+		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
+		cd.setTitle("Design wählen");
+		cd.setHeaderText("Design des ServerController anpassen");
+		cd.getItems().setAll(FrameHandler.designs.keySet());
+
+		Optional<String> result = cd.showAndWait();
+
+		if (result.isPresent()) {
+
+			String name = result.get();
+
+			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.KEY_DESIGN, name);
+
+			Frame.primaryStage.getScene().getStylesheets().clear();
+			Frame.primaryStage.getScene().getStylesheets().add(FrameHandler.designs.get(name));
+			FrameHandler.currentDesign = FrameHandler.designs.get(name);
+
+		}
+
+	}
+
 	private void showCredits() {
 		Alert credits = new Alert(AlertType.INFORMATION,
 				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany", ButtonType.OK);
 		credits.setTitle("Über");
 		credits.setHeaderText("");
-		credits.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		credits.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 		credits.showAndWait();
 	}
 
@@ -224,7 +256,7 @@ public class FrameHandler implements IEventHandler {
 		root.getChildren().add(wv);
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		scene.getStylesheets().add(FrameHandler.currentDesign);
 
 		stage.setResizable(false);
 		stage.setAlwaysOnTop(true);
@@ -233,6 +265,14 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private void init() {
+
+		designs = new HashMap<>();
+
+		designs.put("Hell", this.getClass().getResource("style_bright.css").toExternalForm());
+		designs.put("Dunkel", this.getClass().getResource("style_dark.css").toExternalForm());
+
+		currentDesign = designs.get(ServerControllerPreferences
+				.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.keySet().iterator().next()));
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
@@ -279,7 +319,7 @@ public class FrameHandler implements IEventHandler {
 	private static void showSaveErrorDialog() {
 		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
 				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
@@ -289,7 +329,7 @@ public class FrameHandler implements IEventHandler {
 		Alert dialog = new Alert(AlertType.ERROR,
 				"Es gab ein Problem beim Laden der Speicherdatei, die Speicherdatei ist nicht mit dieser Version des ServerControllers kompatibel.",
 				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");
 		dialog.showAndWait();
@@ -320,7 +360,7 @@ public class FrameHandler implements IEventHandler {
 				vBox.getChildren().remove(i);
 			}
 
-			event.getNewControls().forEach(control->{
+			event.getNewControls().forEach(control -> {
 				control.setPrefWidth(1000);
 				vBox.getChildren().add(control);
 			});
@@ -357,7 +397,7 @@ public class FrameHandler implements IEventHandler {
 
 		ramUsed.setTitle("Genutzer RAM / Zugewiese\n(Ungenau)");
 		ramTotal.setTitle("Genutzer RAM / Gesamt\n(Ungenau)");
-		cpu.setTitle("Genutze CPU / 100%\n(Ungeau)");
+		cpu.setTitle("Genutze CPU / 100%\n(Ungenau)");
 
 		ramUsed.getData().add(ramUsed1);
 		ramUsed.getData().add(assignedRam);

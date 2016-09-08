@@ -22,6 +22,7 @@ import javafx.scene.control.Alert.AlertType;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
@@ -204,8 +205,7 @@ public abstract class BasicServer implements Serializable {
 			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + sb.toString(),
 					ButtonType.OK);
 			error.getDialogPane().setPrefSize(800, 400);
-			error.getDialogPane().getStylesheets().add(this.getClass().getClassLoader()
-					.getResource("sebe3012/servercontroller/gui/style.css").toExternalForm());
+			error.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 			error.showAndWait();
 		});
 	}

@@ -86,7 +86,7 @@ public class Frame extends Application {
 	private void createPrimaryStage() throws IOException {
 		BorderPane root = FXMLLoader.load(this.getClass().getResource("BaseFrame.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+		scene.getStylesheets().add(FrameHandler.currentDesign);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          " + ServerController.VERSION);
 		primaryStage.setMaximized(true);
@@ -96,7 +96,7 @@ public class Frame extends Application {
 			// Close Dialog
 			Alert dialog = new Alert(AlertType.CONFIRMATION, "Wollen sie wirklich beenden?", ButtonType.OK,
 					ButtonType.CANCEL);
-			dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+			dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
 			dialog.setHeaderText("Beenden?");
 			dialog.setTitle("");
 			Optional<ButtonType> result = dialog.showAndWait();

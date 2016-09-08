@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
-import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.gui.FrameHandler;
 
 public class ServerDialog {
 
@@ -20,7 +20,7 @@ public class ServerDialog {
 
 		Alert dialog = new Alert(AlertType.NONE);
 		DialogPane rootPane = new DialogPane();
-		rootPane.getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
+		rootPane.getStylesheets().add(FrameHandler.currentDesign);
 
 		VBox root = new VBox(10);
 		

@@ -58,11 +58,18 @@ public class AddonUtil {
 
 		FileChooser fc = new FileChooser();
 
+		//fc.setInitialDirectory(new File(ServerControllerPreferences
+		//		.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, System.getProperty("user.home"))));
+
 		fc.getExtensionFilters().add(new ExtensionFilter(fileName, fileType));
 
 		File f = fc.showOpenDialog(null);
 
 		if (f != null) {
+
+			//ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL,
+			//		f.getAbsolutePath());
+
 			return f.getAbsolutePath();
 		}
 

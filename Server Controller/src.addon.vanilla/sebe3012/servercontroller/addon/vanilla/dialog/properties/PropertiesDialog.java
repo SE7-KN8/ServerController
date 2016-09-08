@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
 
 public class PropertiesDialog {
@@ -22,7 +22,7 @@ public class PropertiesDialog {
 
 			GridPane root = loader.load();
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
+			scene.getStylesheets().add(FrameHandler.currentDesign);
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

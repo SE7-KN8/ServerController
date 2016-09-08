@@ -58,6 +58,7 @@ public class Tabs {
 			} else {
 
 				int index = Tabs.getCurrentIndex();
+				
 
 				FrameHandler.mainPane.getTabs().remove(index);
 				FrameHandler.list.setItems(null);

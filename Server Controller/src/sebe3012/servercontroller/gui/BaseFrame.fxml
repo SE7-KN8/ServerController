@@ -32,6 +32,7 @@
             <Menu mnemonicParsing="false" text="Hilfe">
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="Lizenz" />
+                  <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="Design" />
                 <MenuItem fx:id="over" mnemonicParsing="false" onAction="#onOverItemClicked" text="Über" />
               </items>
             </Menu>
