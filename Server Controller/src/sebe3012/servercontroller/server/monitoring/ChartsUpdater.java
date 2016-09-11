@@ -16,6 +16,7 @@ public class ChartsUpdater extends Thread {
 			double ramInstalled = ServerMonitoring.installedRam;
 			double cpuPercent = ServerMonitoring.cpuUsed;
 			double assignedRam = ServerMonitoring.assignedRam;
+			
 			double passiveCpu = 10d - cpuPercent;
 
 			Platform.runLater(() -> {
@@ -28,7 +29,7 @@ public class ChartsUpdater extends Thread {
 			});
 
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

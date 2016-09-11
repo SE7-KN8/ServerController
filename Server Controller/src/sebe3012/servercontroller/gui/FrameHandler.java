@@ -7,26 +7,29 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import com.google.common.eventbus.Subscribe;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -34,8 +37,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 import org.jdom2.JDOMException;
+
+import com.google.common.eventbus.Subscribe;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
@@ -51,6 +57,8 @@ import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
+import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.NumberField;
 
 public class FrameHandler implements IEventHandler {
 
@@ -231,13 +239,65 @@ public class FrameHandler implements IEventHandler {
 
 	}
 
+	@FXML
+	void onRConClicked(ActionEvent event) {
+
+		Dialog<Pair<String, Pair<Integer, char[]>>> loginDialog = new Dialog<>();
+
+		loginDialog.setTitle("RCon Verbindung");
+		loginDialog.setHeaderText("RCon Verbindungsinformation");
+		loginDialog.setGraphic(new ImageView(this.getClass().getResource("icon.png").toExternalForm()));
+
+		DialogPane dp = loginDialog.getDialogPane();
+		ButtonType bt = new ButtonType("Login", ButtonData.OK_DONE);
+		dp.getButtonTypes().add(bt);
+		dp.getStylesheets().add(FrameHandler.currentDesign);
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		TextField ip = new TextField();
+		ip.setPromptText("IP");
+		NumberField port = new NumberField();
+		port.setPromptText("Port");
+		PasswordField password = new PasswordField();
+		password.setPromptText("Passwort");
+
+		grid.add(new Label("IP:"), 0, 0);
+		grid.add(ip, 1, 0);
+		grid.add(new Label("Port:"), 0, 1);
+		grid.add(port, 1, 1);
+		grid.add(new Label("Passwort:"), 0, 2);
+		grid.add(password, 1, 2);
+		dp.setContent(grid);
+		loginDialog.setResultConverter(dialogButton -> {
+			try {
+				if (dialogButton == bt) {
+					return new Pair<>(ip.getText(),
+							new Pair<>(Integer.valueOf(port.getText()), password.getText().toCharArray()));
+				}
+			} catch (Exception e) {
+				return null;
+			}
+			return null;
+		});
+
+		Optional<Pair<String, Pair<Integer, char[]>>> result = loginDialog.showAndWait();
+
+		if (result.isPresent()) {
+
+			if (result.get().getKey() != null && result.get().getValue() != null) {
+				new RConConsole(result.get().getKey(), result.get().getValue().getKey(),
+						result.get().getValue().getValue());
+			}
+
+		}
+	}
+
 	private void showCredits() {
-		Alert credits = new Alert(AlertType.INFORMATION,
-				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany", ButtonType.OK);
-		credits.setTitle("‹ber");
-		credits.setHeaderText("");
-		credits.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		credits.showAndWait();
+		DialogUtil.showInformationAlert("‹ber", "",
+				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany");
 	}
 
 	private void showLicense() {
@@ -309,30 +369,16 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private static void showServerIsRunningDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Der Server muﬂ erst gestoppt werden", ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
-		dialog.setTitle("Fehler");
-		dialog.setHeaderText("");
-		dialog.showAndWait();
+		DialogUtil.showWaringAlert("Warnung", "", "Der Server muﬂ erst gestoppt werden");
 	}
 
 	private static void showSaveErrorDialog() {
-		Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler bei der Eingabe/Ausgabe aufgetreten",
-				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		dialog.setTitle("Fehler");
-		dialog.setHeaderText("");
-		dialog.showAndWait();
+		DialogUtil.showErrorAlert("Fehler", "", "Es ist ein Fehler beim Laden/Speichern aufgetreten");
 	}
 
 	private static void showSaveStateErrorDialog() {
-		Alert dialog = new Alert(AlertType.ERROR,
-				"Es gab ein Problem beim Laden der Speicherdatei, die Speicherdatei ist nicht mit dieser Version des ServerControllers kompatibel.",
-				ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		dialog.setTitle("Fehler");
-		dialog.setHeaderText("");
-		dialog.showAndWait();
+		DialogUtil.showErrorAlert("Fehler", "",
+				"Die Datei ist nicht mit dieser Version des ServerControllers kompatibel");
 	}
 
 	private class ServerCell extends ListCell<BasicServer> {

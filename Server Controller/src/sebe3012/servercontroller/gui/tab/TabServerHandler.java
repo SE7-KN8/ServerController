@@ -11,6 +11,7 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.util.DialogUtil;
 
 public class TabServerHandler implements Serializable, IEventHandler {
 
@@ -100,15 +101,15 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	private void showNoServerDialog() {
-		handler.showErrorAlert("Fehler", "", "Kein Server ausgew‰hlt");
+		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgew‰hlt");
 	}
 
 	private void showServerNotRunningDialog() {
-		handler.showErrorAlert("Fehler", "", "Der Server muﬂ erst gestartet werden");
+		DialogUtil.showErrorAlert("Fehler", "", "Der Server muﬂ erst gestartet werden");
 	}
 
 	private void showServerAlreadyRunningDialog() {
-		handler.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
+		DialogUtil.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
 	}
 
 	@Subscribe

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sebe3012.servercontroller.gui.FrameHandler">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sebe3012.servercontroller.gui.FrameHandler">
    <top>
       <MenuBar fx:id="mBar" BorderPane.alignment="CENTER">
          <menus>
@@ -27,6 +27,7 @@
                 <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="Server hinzufügen" />
                   <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="Server bearbeiten" />
                   <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="Server entfernen" />
+                  <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="RCon Verbindung" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Hilfe">

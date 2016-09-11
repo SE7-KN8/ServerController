@@ -2,9 +2,6 @@ package sebe3012.servercontroller.addon;
 
 import java.io.File;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -40,18 +37,6 @@ public class AddonUtil {
 			EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
 		}
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server, isEdit, index));
-	}
-
-	public static void openAlert(String header, String content, AlertType type) {
-
-		Platform.runLater(() -> {
-			Alert a = new Alert(type);
-			a.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
-			a.setHeaderText(header);
-			a.setContentText(content);
-			a.show();
-		});
-
 	}
 
 	public static String openFileChooser(String fileType, String fileName) {

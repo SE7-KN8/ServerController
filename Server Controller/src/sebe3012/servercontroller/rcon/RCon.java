@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.rcon;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 import sebe3012.servercontroller.ServerController;
 
-public class RCon {
+public class RCon implements Closeable {
 
 	private InputStream input;
 	private OutputStream output;
@@ -30,35 +31,31 @@ public class RCon {
 		this.password = password;
 	}
 
-	public void loadConnection() {
+	public void loadConnection() throws IOException {
+		System.out.println("Try connect to " + host + ":" + port);
+		this.socket = new Socket(host, port);
+		this.output = socket.getOutputStream();
+		this.input = socket.getInputStream();
 
-		try {
-
-			this.socket = new Socket(host, port);
-			this.output = socket.getOutputStream();
-			this.input = socket.getInputStream();
-
-			byte[] password = new byte[this.password.length];
-			for (int i = 0; i < this.password.length; i++) {
-				password[i] = (byte) this.password[i];
-			}
-
-			send(LOGIN, password);
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		byte[] password = new byte[this.password.length];
+		for (int i = 0; i < this.password.length; i++) {
+			password[i] = (byte) this.password[i];
 		}
+
+		send(LOGIN, password);
 
 	}
 
 	private byte[] send(int type, byte[] payload) throws IOException {
 
-		int lenght = 18 + payload.length;
-		byte[] sendBytes = new byte[4 + lenght];
+		byte[] receivedPayload;
+
+		int sendLength = 4 + 4 + payload.length + 2;
+		byte[] sendBytes = new byte[4 + sendLength];
 
 		ByteBuffer sendBuffer = ByteBuffer.wrap(sendBytes);
 		sendBuffer.order(ByteOrder.LITTLE_ENDIAN);
-		sendBuffer.putInt(lenght);
+		sendBuffer.putInt(sendLength);
 		sendBuffer.putInt(requestID);
 		sendBuffer.putInt(type);
 		sendBuffer.put(payload);
@@ -68,22 +65,24 @@ public class RCon {
 		output.write(sendBytes);
 		output.flush();
 
-		byte[] receivedBytes = new byte[4096];
-		int receivedBytesLenght = input.read(receivedBytes);
-		ByteBuffer receivedBuffer = ByteBuffer.wrap(receivedBytes, 0, receivedBytesLenght);
+		byte[] receivedBytes = new byte[2048 * 2];
+		int receivedBytesLength = input.read(receivedBytes);
+		ByteBuffer receivedBuffer = ByteBuffer.wrap(receivedBytes, 0, receivedBytesLength);
+
 		receivedBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
 		int receivedLenght = receivedBuffer.getInt();
 		int receivedRequestID = receivedBuffer.getInt();
 		int receivedType = receivedBuffer.getInt();
-		byte[] receivedPayload = new byte[receivedBytesLenght - 10];
-		receivedBuffer.get(receivedPayload);
-		receivedBuffer.get(new byte[2]);
 
 		if (ServerController.DEBUG) {
 			System.out.println(host + "-RCon-Connection received package: Lenght: " + receivedLenght + " RequestID: "
 					+ receivedRequestID + " Type: " + receivedType);
 		}
+
+		receivedPayload = new byte[receivedLenght - 4 - 4 - 2];
+		receivedBuffer.get(receivedPayload);
+		receivedBuffer.get(new byte[2]);
 
 		return receivedPayload;
 	}
@@ -92,13 +91,17 @@ public class RCon {
 		return new String(send(type, payload.getBytes(StandardCharsets.US_ASCII)), StandardCharsets.US_ASCII);
 	}
 
-	public String sendCommand(String command) {
-		try {
-			return send(COMMAND, command);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public String sendCommand(String command) throws IOException {
+		return send(COMMAND, command);
+	}
+
+	@Override
+	public void close() throws IOException {
+
+		socket.close();
+		input.close();
+		output.close();
+
 	}
 
 }

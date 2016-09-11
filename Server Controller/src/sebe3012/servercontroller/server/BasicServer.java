@@ -200,6 +200,7 @@ public abstract class BasicServer implements Serializable {
 			sb.append(errorMessage.getStackTrace()[i]);
 			sb.append("\n");
 		}
+		//TODO Use Error Dialog
 
 		Platform.runLater(() -> {
 			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + sb.toString(),

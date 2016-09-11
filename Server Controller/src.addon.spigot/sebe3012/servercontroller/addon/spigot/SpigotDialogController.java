@@ -9,10 +9,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.util.DialogUtil;
 
 public class SpigotDialogController {
 
@@ -73,11 +73,11 @@ public class SpigotDialogController {
 
 	@FXML
 	void onJarClicked(ActionEvent event) {
-		
+
 		String path = AddonUtil.openFileChooser("*.jar", "Java-Archiv");
-		
+
 		jarPathTextfield.setText(path);
-		
+
 		fillValues(path);
 	}
 
@@ -111,19 +111,19 @@ public class SpigotDialogController {
 
 							AddonUtil.addServer(server, isEdit);
 						} else {
-							AddonUtil.openAlert("Fehler", "Spigot-Datei ist nicht ausgewählt", AlertType.WARNING);
+							DialogUtil.showErrorAlert("Fehler", "", "Spigot-Datei ist nicht ausgewählt");
 						}
 					} else {
-						AddonUtil.openAlert("Fehler", "Bukkit-Datei ist nicht ausgewählt", AlertType.WARNING);
+						DialogUtil.showErrorAlert("Fehler", "", "Bukkit-Datei ist nicht ausgewählt");
 					}
 				} else {
-					AddonUtil.openAlert("Fehler", "Properties-Datei ist nicht ausgewählt", AlertType.WARNING);
+					DialogUtil.showErrorAlert("Fehler", "", "Properties-Datei ist nicht ausgewählt");
 				}
 			} else {
-				AddonUtil.openAlert("Fehler", "Java-Datei ist nicht ausgewählt", AlertType.WARNING);
+				DialogUtil.showErrorAlert("Fehler", "", "Java-Datei ist nicht ausgewählt");
 			}
 		} else {
-			AddonUtil.openAlert("Fehler", "Server-ID ist nicht vorhanden", AlertType.WARNING);
+			DialogUtil.showErrorAlert("Fehler", "", "Server-ID ist nicht vorhanden");
 		}
 	}
 
