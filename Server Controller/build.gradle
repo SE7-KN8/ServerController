@@ -59,7 +59,7 @@ jar {
         def code = versionProps['VERSION_CODE'].toInteger() + 1
 
 			baseName 'servercontroller'
-			version '0.2.7.'+code.toString()
+			version '0.2.7.8_'+code.toString()
 		
         versionProps['VERSION_CODE']=code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)

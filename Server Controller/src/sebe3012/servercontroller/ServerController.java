@@ -32,7 +32,7 @@ public class ServerController {
 
 	public static boolean DEBUG = false;
 
-	public static final String VERSION = "Alpha 0.2.7.8";
+	public static final String VERSION = "Alpha 0.2.8.8";
 
 	/**
 	 * 
