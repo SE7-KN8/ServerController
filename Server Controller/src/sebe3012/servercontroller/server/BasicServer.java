@@ -13,19 +13,15 @@ import java.util.List;
 
 import com.sun.jna.Pointer;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
-import javafx.scene.control.Alert.AlertType;
 
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
-import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
+import sebe3012.servercontroller.util.DialogUtil;
 
 public abstract class BasicServer implements Serializable {
 	private static final long serialVersionUID = -6581065154916341314L;
@@ -187,28 +183,7 @@ public abstract class BasicServer implements Serializable {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n" + errorMessage.toString() + "\n");
-
-		int counter = 12;
-
-		if (errorMessage.getStackTrace().length < 10) {
-			counter = errorMessage.getStackTrace().length;
-		}
-		for (int i = 0; i < counter; i++) {
-			sb.append("at ");
-			sb.append(errorMessage.getStackTrace()[i]);
-			sb.append("\n");
-		}
-		//TODO Use Error Dialog
-
-		Platform.runLater(() -> {
-			Alert error = new Alert(AlertType.ERROR, "Es ist ein Fehler aufgetreten.\n" + "Fehler: " + sb.toString(),
-					ButtonType.OK);
-			error.getDialogPane().setPrefSize(800, 400);
-			error.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-			error.showAndWait();
-		});
+		DialogUtil.showExpectionAlert("Fehler", "Fehler von: " + getName(), "", errorMessage);
 	}
 
 	public void sendCommand(String command) {

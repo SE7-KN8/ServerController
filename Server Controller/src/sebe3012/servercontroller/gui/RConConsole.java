@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -26,9 +27,11 @@ public class RConConsole {
 		RCon rcon = new RCon(ip, port, password);
 		try {
 			rcon.loadConnection();
+		} catch (UnknownHostException e) {
+			DialogUtil.showExpectionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung",
+					"Der Server konnte nicht gefunden werden", e);
 		} catch (IOException e) {
-			//TODO Use exception dialog
-			DialogUtil.showErrorAlert("Fehler", "", "Fehler beim Laden der RCon-Verbindung");
+			DialogUtil.showExpectionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung", "", e);
 		}
 
 		Stage stage = new Stage();
@@ -52,7 +55,7 @@ public class RConConsole {
 			try {
 				rcon.close();
 			} catch (Exception e) {
-				
+
 			}
 		});
 
@@ -94,15 +97,13 @@ public class RConConsole {
 
 		private void sendToServer() {
 
-			
 			String text = input.getText();
-			
+
 			try {
 				String payload = rcon.sendCommand(text);
 				area.appendText(payload + "\n");
 			} catch (Exception e) {
-				//TODO Use exception dialog
-				DialogUtil.showErrorAlert("Fehler", "", "Fehler bei der RCon-Verbindung");
+				DialogUtil.showExpectionAlert("Fehler", "", "Fehler bei der RCon-Verbindung", e);
 			}
 
 			input.setText("");
