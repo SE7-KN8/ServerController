@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    jcenter()
+	mavenCentral();
+}
+
+dependencies {
+   compile 'com.google.guava:guava:20.0'
+   compile 'org.jdom:jdom2:2.0.6'
+   compile 'net.java.dev.jna:jna:4.2.2'
+   compile 'org.glassfish:javax.json:1.0.4'
+   compile 'org.fusesource:sigar:1.6.4'
+}
+
+sourceCompatibility = 1.8
+version = '0.2.8.9_alpha'
+
+jar {
+   manifest {
+      attributes 'Version' : version
+   }	
+}
+
+uploadArchives {
+   repositories {
+      flatDir {
+	     dirs 'versions'
+	  }
+   }
+}
