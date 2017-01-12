@@ -1,32 +1,14 @@
 package sebe3012.servercontroller.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
+import com.google.common.eventbus.Subscribe;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -38,11 +20,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
-
 import org.jdom2.JDOMException;
-
-import com.google.common.eventbus.Subscribe;
-
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
@@ -59,6 +37,13 @@ import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.NumberField;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class FrameHandler implements IEventHandler {
 
@@ -217,9 +202,9 @@ public class FrameHandler implements IEventHandler {
 	void onDesignClicked(ActionEvent event) {
 
 		ChoiceDialog<String> cd = new ChoiceDialog<>();
-		cd.setGraphic(new ImageView(this.getClass().getResource("icon.png").toExternalForm()));
+		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
 		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		cd.setTitle("Design wählen");
+		cd.setTitle("Design wÃ¤hlen");
 		cd.setHeaderText("Design des ServerController anpassen");
 		cd.getItems().setAll(FrameHandler.designs.keySet());
 
@@ -246,7 +231,7 @@ public class FrameHandler implements IEventHandler {
 
 		loginDialog.setTitle("RCon Verbindung");
 		loginDialog.setHeaderText("RCon Verbindungsinformation");
-		loginDialog.setGraphic(new ImageView(this.getClass().getResource("icon.png").toExternalForm()));
+		loginDialog.setGraphic(new ImageView(this.getClass().getResource("png/icon.png").toExternalForm()));
 
 		DialogPane dp = loginDialog.getDialogPane();
 		ButtonType bt = new ButtonType("Login", ButtonData.OK_DONE);
@@ -296,14 +281,14 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private void showCredits() {
-		DialogUtil.showInformationAlert("Über", "",
-				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany");
+		DialogUtil.showInformationAlert("Ãœber", "",
+				"ServerController by Sebastian Knackstedt (Sebe3012)\nÂ© 2016 Germany");
 	}
 
 	private void showLicense() {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
-		stage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
+		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		stage.setTitle("Lizenz");
 
 		VBox root = new VBox();
@@ -311,7 +296,7 @@ public class FrameHandler implements IEventHandler {
 		WebView wv = new WebView();
 		WebEngine engine = wv.getEngine();
 
-		engine.loadContent(ServerController.loadStringContent("sebe3012/servercontroller/gui/license.html"));
+		engine.loadContent(ServerController.loadStringContent("html/license.html"));
 
 		root.getChildren().add(wv);
 
@@ -328,8 +313,8 @@ public class FrameHandler implements IEventHandler {
 
 		designs = new HashMap<>();
 
-		designs.put("Hell", this.getClass().getResource("style_bright.css").toExternalForm());
-		designs.put("Dunkel", this.getClass().getResource("style_dark.css").toExternalForm());
+		designs.put("Hell", ClassLoader.getSystemResource("css/style_bright.css").toExternalForm());
+		designs.put("Dunkel", ClassLoader.getSystemResource("css/style_dark.css").toExternalForm());
 
 		currentDesign = designs.get(ServerControllerPreferences
 				.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.keySet().iterator().next()));
@@ -369,7 +354,7 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert("Warnung", "", "Der Server muß erst gestoppt werden");
+		DialogUtil.showWaringAlert("Warnung", "", "Der Server muï¿½ erst gestoppt werden");
 	}
 
 	private static void showSaveErrorDialog() {
@@ -425,7 +410,7 @@ public class FrameHandler implements IEventHandler {
 	private PieChart cpu;
 
 	public static PieChart cpuChart;
-	public static PieChart ramTotelChart;
+	public static PieChart ramTotalChart;
 	public static PieChart ramUsedChart;
 
 	public static PieChart.Data ramUsed1 = new PieChart.Data("Genutzt", 1.0);
@@ -438,7 +423,7 @@ public class FrameHandler implements IEventHandler {
 	private void initCharts() {
 
 		FrameHandler.cpuChart = cpu;
-		FrameHandler.ramTotelChart = ramTotal;
+		FrameHandler.ramTotalChart = ramTotal;
 		FrameHandler.ramUsedChart = ramUsed;
 
 		ramUsed.setTitle("Genutzer RAM / Zugewiese\n(Ungenau)");

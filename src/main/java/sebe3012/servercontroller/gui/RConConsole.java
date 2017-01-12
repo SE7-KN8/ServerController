@@ -1,10 +1,5 @@
 package sebe3012.servercontroller.gui;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,9 +11,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
 import sebe3012.servercontroller.rcon.RCon;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ResourceBundle;
 
 public class RConConsole {
 
@@ -37,7 +36,7 @@ public class RConConsole {
 		Stage stage = new Stage();
 		stage.setTitle("RCon-Verbindung zu: " + ip + ":" + port);
 
-		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("RConConsole.fxml"));
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../../../../resources/fxml/RConConsole.fxml"));
 
 		loader.setController(new RConConsoleController(rcon));
 

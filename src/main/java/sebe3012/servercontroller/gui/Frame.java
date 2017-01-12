@@ -1,34 +1,32 @@
 package sebe3012.servercontroller.gui;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
-import javafx.scene.control.Alert.AlertType;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
 
+import java.io.IOException;
+import java.util.Optional;
+
 /**
- * 
  * The class contruct the basic frame and starts the splashscreen
- * 
- * @author Sebastian Knackstedt
  *
+ * @author Sebastian Knackstedt
  */
 public class Frame extends Application {
 
@@ -50,7 +48,7 @@ public class Frame extends Application {
 
 		Frame.primaryStage = primaryStage;
 
-		createSpashScreen();
+		createSplashScreen();
 		createPrimaryStage();
 
 		Platform.runLater(() -> {
@@ -65,7 +63,7 @@ public class Frame extends Application {
 
 	}
 
-	private void createSpashScreen() {
+	private void createSplashScreen() {
 		Stage splash = new Stage(StageStyle.UNDECORATED);
 		this.splash = splash;
 		Group root = new Group();
@@ -74,23 +72,23 @@ public class Frame extends Application {
 
 		Rectangle image = new Rectangle(800, 600);
 
-		image.setFill(new ImagePattern(new Image(this.getClass().getResource("splash.png").toExternalForm())));
+		image.setFill(new ImagePattern(new Image(ClassLoader.getSystemResourceAsStream("png/splash.png"))));
 
 		root.getChildren().add(image);
 
-		splash.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
+		splash.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		splash.setScene(new Scene(root));
 		splash.show();
 	}
 
 	private void createPrimaryStage() throws IOException {
-		BorderPane root = FXMLLoader.load(this.getClass().getResource("BaseFrame.fxml"));
+		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(FrameHandler.currentDesign);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          " + ServerController.VERSION);
 		primaryStage.setMaximized(true);
-		primaryStage.getIcons().add(new Image(this.getClass().getResource("icon.png").toExternalForm()));
+		primaryStage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		primaryStage.setOnCloseRequest(event -> {
 
 			// Close Dialog
@@ -127,9 +125,8 @@ public class Frame extends Application {
 
 	/**
 	 * This method load the frame and starts the splashscreen
-	 * 
-	 * @param args
-	 *            The start arguments
+	 *
+	 * @param args The start arguments
 	 */
 	public static void load(String... args) {
 		launch(args);

@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.gui.tab;
 
-import java.io.IOException;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
+
+import java.io.IOException;
 
 public class TabContent {
 
@@ -12,7 +12,7 @@ public class TabContent {
 
 	public TabContent() {
 		try {
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("TabGUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../../../../../resources/fxml/TabGUI.fxml"));
 			this.handler = new TabContentHandler(this);
 			loader.setController(handler);
 			root = loader.load();

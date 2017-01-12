@@ -1,10 +1,5 @@
 package sebe3012.servercontroller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
@@ -13,15 +8,18 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.server.BasicServer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
 /**
- * 
  * ServerController is a program with which you can control
  * Minecraft-Server(e.g. Vanilla,Spigot)
- * 
+ * <p>
  * This class is the main class of the program
- * 
+ *
  * @author Sebastian Knackstedt
- * 
  */
 public class ServerController {
 
@@ -35,9 +33,8 @@ public class ServerController {
 	public static final String VERSION = "Alpha 0.2.8.8";
 
 	/**
-	 * 
 	 * The main method
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -66,10 +63,11 @@ public class ServerController {
 		StringBuilder result = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(ServerController.class.getClassLoader().getResourceAsStream(path)));
-			String buffer = "";
+					new InputStreamReader(ClassLoader.getSystemResourceAsStream(path)));
+			String buffer;
 			while ((buffer = reader.readLine()) != null) {
-				result.append(buffer + '\n');
+				result.append(buffer);
+				result.append('\n');
 			}
 			reader.close();
 		} catch (IOException e) {
