@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 
 repositories {
     jcenter()
-	mavenCentral();
+	mavenCentral()
 }
 
 dependencies {
@@ -14,7 +14,6 @@ dependencies {
    compile 'org.fusesource:sigar:1.6.4'
 }
 
-sourceCompatibility = 1.8
 version = '0.2.8.9_alpha'
 
 jar {
