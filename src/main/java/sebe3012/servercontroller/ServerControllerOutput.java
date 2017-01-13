@@ -10,14 +10,16 @@ public class ServerControllerOutput extends PrintStream {
 		super(original);
 	}
 
+	private Calendar cal = Calendar.getInstance();
+
 	@Override
 	public void println(String line) {
 		
 		if(ServerController.DEBUG){
+
+			cal.setTimeInMillis(System.currentTimeMillis());
+
 			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-
-			Calendar cal = Calendar.getInstance();
-
 			StackTraceElement caller = stack[2];
 
 			String callerString = "(" + caller.getFileName() + ":" + caller.getLineNumber() + ")";

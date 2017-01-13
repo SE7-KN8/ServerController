@@ -1,18 +1,10 @@
 package sebe3012.servercontroller.addon.vanilla;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.google.common.eventbus.Subscribe;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import com.google.common.eventbus.Subscribe;
-
 import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
@@ -22,6 +14,12 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class VanillaServer extends BasicServer implements IEventHandler {
 
@@ -89,7 +87,7 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Subscribe
-	public void serverStoped(ServerStopEvent event) {
+	public void serverStopped(ServerStopEvent event) {
 		if (event.getServer() == this) {
 			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
 		}
@@ -112,8 +110,8 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public HashMap<String, Object> toExteralForm() {
-		HashMap<String, Object> map = super.toExteralForm();
+	public HashMap<String, Object> toExternalForm() {
+		HashMap<String, Object> map = super.toExternalForm();
 
 		map.put("properties", propertiesFile);
 

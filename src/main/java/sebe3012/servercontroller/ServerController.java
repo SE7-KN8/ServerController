@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 /**
  * ServerController is a program with which you can control
- * Minecraft-Server(e.g. Vanilla,Spigot)
+ * Minecraft-Server(e.g. Vanilla, Spigot)
  * <p>
  * This class is the main class of the program
  *
@@ -30,7 +30,7 @@ public class ServerController {
 
 	public static boolean DEBUG = false;
 
-	public static final String VERSION = "Alpha 0.2.8.8";
+	public static final String VERSION = "0.2.8.9_alpha";
 
 	/**
 	 * The main method

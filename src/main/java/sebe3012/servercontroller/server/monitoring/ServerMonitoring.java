@@ -1,12 +1,6 @@
 package sebe3012.servercontroller.server.monitoring;
 
-import org.hyperic.sigar.Cpu;
-import org.hyperic.sigar.Mem;
-import org.hyperic.sigar.ProcCpu;
-import org.hyperic.sigar.ProcMem;
-import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
-
+import org.hyperic.sigar.*;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
@@ -21,6 +15,7 @@ public class ServerMonitoring {
 	public static double assignedRam = 1;
 	public static double totalCpu = 1;
 
+	@Deprecated
 	private final static Sigar sigar = new Sigar();
 	private static final Thread monitoringThread = new Thread(new ServerMontior());
 

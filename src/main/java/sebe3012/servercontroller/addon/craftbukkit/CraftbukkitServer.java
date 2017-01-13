@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.addon.craftbukkit;
 
-import java.util.HashMap;
-
 import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 import sebe3012.servercontroller.server.BasicServer;
+
+import java.util.HashMap;
 
 public class CraftbukkitServer extends VanillaServer {
 
@@ -48,8 +48,8 @@ public class CraftbukkitServer extends VanillaServer {
 	}
 
 	@Override
-	public HashMap<String, Object> toExteralForm() {
-		HashMap<String, Object> map = super.toExteralForm();
+	public HashMap<String, Object> toExternalForm() {
+		HashMap<String, Object> map = super.toExternalForm();
 
 		map.put("bukkit", bukkitConfig);
 

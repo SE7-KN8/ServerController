@@ -1,15 +1,11 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.google.common.eventbus.Subscribe;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerEditEvent;
@@ -17,6 +13,9 @@ import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class SpigotAddon implements IEventHandler {
 
@@ -39,7 +38,7 @@ public class SpigotAddon implements IEventHandler {
 	@Subscribe
 	public void serverEdit(ServerEditEvent event){
 		if(event.getServerType().equals(SpigotAddon.ADDON_NAME)){
-			loadDialog(event.getServer().toExteralForm());
+			loadDialog(event.getServer().toExternalForm());
 		}
 	}
 
@@ -47,7 +46,7 @@ public class SpigotAddon implements IEventHandler {
 		Platform.runLater(() -> {
 			Alert dialog = new Alert(AlertType.NONE);
 
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("SpigotServerDialog.fxml"));
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/SpigotServerDialog.fxml"));
 			loader.setController(new SpigotDialogController(dialog,extraValues));
 
 			try {

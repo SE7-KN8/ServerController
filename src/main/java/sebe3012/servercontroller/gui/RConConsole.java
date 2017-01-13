@@ -27,10 +27,10 @@ public class RConConsole {
 		try {
 			rcon.loadConnection();
 		} catch (UnknownHostException e) {
-			DialogUtil.showExpectionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung",
+			DialogUtil.showExceptionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung",
 					"Der Server konnte nicht gefunden werden", e);
 		} catch (IOException e) {
-			DialogUtil.showExpectionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung", "", e);
+			DialogUtil.showExceptionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung", "", e);
 		}
 
 		Stage stage = new Stage();
@@ -102,7 +102,7 @@ public class RConConsole {
 				String payload = rcon.sendCommand(text);
 				area.appendText(payload + "\n");
 			} catch (Exception e) {
-				DialogUtil.showExpectionAlert("Fehler", "", "Fehler bei der RCon-Verbindung", e);
+				DialogUtil.showExceptionAlert("Fehler", "", "Fehler bei der RCon-Verbindung", e);
 			}
 
 			input.setText("");

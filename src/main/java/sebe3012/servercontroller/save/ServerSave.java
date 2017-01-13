@@ -1,5 +1,21 @@
 package sebe3012.servercontroller.save;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.Servers;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,24 +24,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.AddonUtil;
-import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.Servers;
 
 public class ServerSave {
 
@@ -59,7 +57,7 @@ public class ServerSave {
 				e.printStackTrace();
 			}
 
-			server.toExteralForm().forEach((key, value) -> {
+			server.toExternalForm().forEach((key, value) -> {
 
 				Element keyElement = new Element(key);
 				keyElement.setText(value.toString());

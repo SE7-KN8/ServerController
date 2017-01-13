@@ -1,20 +1,7 @@
 package sebe3012.servercontroller.server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-
 import com.sun.jna.Pointer;
-
 import javafx.scene.control.Control;
-
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -22,6 +9,11 @@ import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class BasicServer implements Serializable {
 	private static final long serialVersionUID = -6581065154916341314L;
@@ -183,7 +175,7 @@ public abstract class BasicServer implements Serializable {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
 
-		DialogUtil.showExpectionAlert("Fehler", "Fehler von: " + getName(), "", errorMessage);
+		DialogUtil.showExceptionAlert("Fehler", "Fehler von: " + getName(), "", errorMessage);
 	}
 
 	public void sendCommand(String command) {
@@ -234,7 +226,7 @@ public abstract class BasicServer implements Serializable {
 		this.argsAfterJar = argsAfterJar;
 	}
 
-	public HashMap<String, Object> toExteralForm() {
+	public HashMap<String, Object> toExternalForm() {
 		HashMap<String, Object> map = new HashMap<>();
 
 		map.put("name", name);

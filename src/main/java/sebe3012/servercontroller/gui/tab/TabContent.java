@@ -12,7 +12,7 @@ public class TabContent {
 
 	public TabContent() {
 		try {
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../../../../../resources/fxml/TabGUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/TabGUI.fxml"));
 			this.handler = new TabContentHandler(this);
 			loader.setController(handler);
 			root = loader.load();

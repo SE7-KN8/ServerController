@@ -1,10 +1,7 @@
 package sebe3012.servercontroller.addon;
 
-import java.io.File;
-
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -13,6 +10,8 @@ import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
+
+import java.io.File;
 
 public class AddonUtil {
 
@@ -63,10 +62,7 @@ public class AddonUtil {
 	}
 
 	public static boolean checkUserInput(String input) {
-		if (input != null) {
-			return input.trim().length() < 1 ? false : true;
-		}
-		return false;
+		return input != null && input.trim().length() >= 1;
 	}
 
 }

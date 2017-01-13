@@ -1,8 +1,5 @@
 package sebe3012.servercontroller.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -10,8 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
 import sebe3012.servercontroller.gui.FrameHandler;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class DialogUtil {
 
@@ -39,7 +38,7 @@ public class DialogUtil {
 		a.showAndWait();
 	}
 
-	public static void showExpectionAlert(String title, String header, String content, Exception exception) {
+	public static void showExceptionAlert(String title, String header, String content, Exception exception) {
 		Alert a = new Alert(AlertType.ERROR);
 		a.setTitle(title);
 		a.setHeaderText(header);

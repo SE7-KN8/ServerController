@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import java.util.HashMap;
-
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
 import sebe3012.servercontroller.server.BasicServer;
+
+import java.util.HashMap;
 
 public class SpigotServer extends CraftbukkitServer {
 
@@ -52,9 +52,9 @@ public class SpigotServer extends CraftbukkitServer {
 	}
 
 	@Override
-	public HashMap<String, Object> toExteralForm() {
+	public HashMap<String, Object> toExternalForm() {
 
-		HashMap<String, Object> map = super.toExteralForm();
+		HashMap<String, Object> map = super.toExternalForm();
 
 		map.put("spigot", spigotConfig);
 

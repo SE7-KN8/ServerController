@@ -1,15 +1,11 @@
 package sebe3012.servercontroller.addon.vanilla.dialog;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import com.google.common.eventbus.Subscribe;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.vanilla.VanillaServer;
@@ -18,6 +14,9 @@ import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class VanillaAddon implements IEventHandler {
 
@@ -40,7 +39,7 @@ public class VanillaAddon implements IEventHandler {
 	@Subscribe
 	public void serverEdit(ServerEditEvent event){
 		if(event.getServerType().equals(VanillaAddon.ADDON_NAME)){
-			loadDialog(event.getServer().toExteralForm());
+			loadDialog(event.getServer().toExternalForm());
 		}
 	}
 
@@ -48,7 +47,7 @@ public class VanillaAddon implements IEventHandler {
 		Platform.runLater(() -> {
 			Alert dialog = new Alert(AlertType.NONE);
 
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("VanillaServerDialog.fxml"));
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("/fxml/VanillaServerDialog.fxml"));
 			loader.setController(new VanillaDialogController(dialog, extraValues));
 
 			try {
