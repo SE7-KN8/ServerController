@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.rcon;
 
+import sebe3012.servercontroller.ServerController;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +10,6 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-
-import sebe3012.servercontroller.ServerController;
 
 public class RCon implements Closeable {
 

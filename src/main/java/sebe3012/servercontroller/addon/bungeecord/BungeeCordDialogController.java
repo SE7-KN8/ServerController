@@ -1,8 +1,5 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import java.io.File;
-import java.util.HashMap;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,9 +7,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
-import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import java.io.File;
+import java.util.HashMap;
 
 public class BungeeCordDialogController {
 
@@ -88,10 +87,10 @@ public class BungeeCordDialogController {
 					AddonUtil.addServer(server, isEdit);
 
 				} else {
-					DialogUtil.showErrorAlert("Fehler", "", "Config-Datei ist nicht ausgewählt");
+					DialogUtil.showErrorAlert("Fehler", "", "Config-Datei ist nicht ausgewï¿½hlt");
 				}
 			} else {
-				DialogUtil.showErrorAlert("Fehler", "", "Java-Datei ist nicht ausgewählt");
+				DialogUtil.showErrorAlert("Fehler", "", "Java-Datei ist nicht ausgewï¿½hlt");
 			}
 		} else {
 			DialogUtil.showErrorAlert("Fehler", "", "Server-ID ist nicht vorhanden");

@@ -1,23 +1,18 @@
 
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
-import java.net.URL;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
-
+import javafx.scene.control.*;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
+
+import java.net.URL;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class OpsDialogController {
 
@@ -106,14 +101,14 @@ public class OpsDialogController {
 		}
 		mainList.setItems(main);
 
-		MenuItem addOp = new MenuItem("Operator hinzufügen");
+		MenuItem addOp = new MenuItem("Operator hinzufï¿½gen");
 
 		MenuItem removedOp = new MenuItem("Operator entfernen");
 
 		addOp.setOnAction(e -> {
 
 			TextInputDialog dialog = new TextInputDialog();
-			dialog.setHeaderText("Operator hinzufügen");
+			dialog.setHeaderText("Operator hinzufï¿½gen");
 			dialog.setContentText("Spielername: ");
 
 			dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());

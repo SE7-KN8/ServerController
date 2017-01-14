@@ -20,6 +20,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.JDOMException;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
@@ -52,6 +54,8 @@ public class FrameHandler implements IEventHandler {
 	public static VBox buttonList;
 	public static String currentDesign;
 	public static HashMap<String, String> designs;
+
+	private static final Logger log = LogManager.getLogger();
 
 	@FXML
 	private ResourceBundle resources;
@@ -349,7 +353,7 @@ public class FrameHandler implements IEventHandler {
 		buttonList = vBox;
 		lView.setItems(Servers.serversList);
 		initCharts();
-		System.out.println("FXML intitialized");
+		log.info("FXML initialized");
 		monitoringThread.start();
 	}
 

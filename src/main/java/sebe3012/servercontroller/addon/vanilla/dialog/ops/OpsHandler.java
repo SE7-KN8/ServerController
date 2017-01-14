@@ -1,5 +1,8 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
+import javax.json.Json;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -8,10 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
 
 public class OpsHandler implements Serializable {
 

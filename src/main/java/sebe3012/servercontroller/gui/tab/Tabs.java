@@ -1,9 +1,8 @@
 package sebe3012.servercontroller.gui.tab;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
-
+import javafx.scene.control.ButtonType;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
@@ -73,7 +72,7 @@ public class Tabs {
 	}
 
 	private static void showServerIsRunningDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Der Server muß erst gestoppt werden", ButtonType.OK);
+		Alert dialog = new Alert(AlertType.WARNING, "Der Server muï¿½ erst gestoppt werden", ButtonType.OK);
 		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
 		dialog.setTitle("Fehler");
 		dialog.setHeaderText("");

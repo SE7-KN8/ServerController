@@ -1,15 +1,5 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,8 +10,17 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
-
 import sebe3012.servercontroller.gui.Frame;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class PropertiesDialogHandler {
 
@@ -91,7 +90,7 @@ public class PropertiesDialogHandler {
 			Files.write(file, lines, Charset.forName("UTF-8"));
 
 			Alert warning = new Alert(AlertType.WARNING,
-					"Der Server muß neugestartet werden, damit die Änderungen wirksam werden", ButtonType.OK);
+					"Der Server muï¿½ neugestartet werden, damit die ï¿½nderungen wirksam werden", ButtonType.OK);
 			warning.getDialogPane().getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
 			warning.setHeaderText("");
 			warning.setTitle("Achtung");

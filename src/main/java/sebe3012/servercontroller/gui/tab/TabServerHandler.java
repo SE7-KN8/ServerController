@@ -1,9 +1,6 @@
 package sebe3012.servercontroller.gui.tab;
 
-import java.io.Serializable;
-
 import com.google.common.eventbus.Subscribe;
-
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
@@ -12,6 +9,8 @@ import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import java.io.Serializable;
 
 public class TabServerHandler implements Serializable, IEventHandler {
 
@@ -101,11 +100,11 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	private void showNoServerDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgewählt");
+		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgewï¿½hlt");
 	}
 
 	private void showServerNotRunningDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Der Server muß erst gestartet werden");
+		DialogUtil.showErrorAlert("Fehler", "", "Der Server muï¿½ erst gestartet werden");
 	}
 
 	private void showServerAlreadyRunningDialog() {

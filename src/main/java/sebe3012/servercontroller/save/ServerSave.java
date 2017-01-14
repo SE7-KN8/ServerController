@@ -10,7 +10,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;

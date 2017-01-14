@@ -1,4 +1,4 @@
-package sebe3012.servercontroller.addon;
+package sebe3012.servercontroller.addon.api;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;

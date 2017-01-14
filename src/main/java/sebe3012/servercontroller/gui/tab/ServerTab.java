@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.gui.tab;
 
-import javafx.scene.control.Tab;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 
 public class ServerTab extends Tab {
 

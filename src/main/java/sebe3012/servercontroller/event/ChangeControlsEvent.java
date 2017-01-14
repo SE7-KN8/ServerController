@@ -1,10 +1,9 @@
 package sebe3012.servercontroller.event;
 
-import java.util.List;
-
 import javafx.scene.control.Control;
-
 import sebe3012.servercontroller.eventbus.IEvent;
+
+import java.util.List;
 
 public class ChangeControlsEvent implements IEvent {
 

@@ -11,34 +11,39 @@ import sebe3012.servercontroller.gui.FrameHandler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 
 public class DialogUtil {
 
-	public static void showErrorAlert(String title, String header, String content) {
-		showAlert(title, header, content, AlertType.ERROR);
+	public static Optional<ButtonType> showErrorAlert(String title, String header, String content) {
+		return showAlert(title, header, content, AlertType.ERROR);
 	}
 
-	public static void showWaringAlert(String title, String header, String content) {
-		showAlert(title, header, content, AlertType.WARNING);
+	public static Optional<ButtonType> showWaringAlert(String title, String header, String content) {
+		return showAlert(title, header, content, AlertType.WARNING);
 	}
 
-	public static void showInformationAlert(String title, String header, String content) {
-		showAlert(title, header, content, AlertType.INFORMATION);
+	public static Optional<ButtonType> showInformationAlert(String title, String header, String content) {
+		return showAlert(title, header, content, AlertType.INFORMATION);
 	}
 
-	public static void showConformationAlert(String title, String header, String content) {
-		showAlert(title, header, content, AlertType.CONFIRMATION);
+	public static Optional<ButtonType> showConformationAlert(String title, String header, String content) {
+		return showAlert(title, header, content, AlertType.CONFIRMATION);
 	}
 
-	public static void showAlert(String title, String header, String content, AlertType type) {
-		Alert a = new Alert(AlertType.ERROR, content, ButtonType.OK);
+	public static Optional<ButtonType> showAlert(String title, String header, String content, AlertType type) {
+		return showAlert(title, header, content, type, ButtonType.OK);
+	}
+
+	public static Optional<ButtonType> showAlert(String title, String header, String content, AlertType type, ButtonType... types) {
+		Alert a = new Alert(type, content, types);
 		a.setTitle(title);
 		a.setHeaderText(header);
 		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		a.showAndWait();
+		return a.showAndWait();
 	}
 
-	public static void showExceptionAlert(String title, String header, String content, Exception exception) {
+	public static Optional<ButtonType> showExceptionAlert(String title, String header, String content, Exception exception) {
 		Alert a = new Alert(AlertType.ERROR);
 		a.setTitle(title);
 		a.setHeaderText(header);
@@ -68,7 +73,7 @@ public class DialogUtil {
 
 		a.getDialogPane().setExpandableContent(expContent);
 
-		a.showAndWait();
+		return a.showAndWait();
 	}
 
 }

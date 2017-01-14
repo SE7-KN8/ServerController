@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="ConsoleFull" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%logger{36}]: %msg%n"/>
+        </Console>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%C{1}]: %msg%n"/>
+        </Console>
+        <Console name="ConsoleError" target="SYSTEM_ERR">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%C{1}]: %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="ServerController" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="sebe3012.servercontroller" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="SYSOUT" level="debug" additivity="false">
+            <AppenderRef ref="ConsoleFull"/>
+        </Logger>
+
+        <Root level="ERROR">
+            <AppenderRef ref="ConsoleError"/>
+        </Root>
+    </Loggers>
+</Configuration>

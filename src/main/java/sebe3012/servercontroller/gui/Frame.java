@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -15,16 +14,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.gui.tab.ServerTab;
-import sebe3012.servercontroller.gui.tab.TabServerHandler;
-import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
-import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
+import sebe3012.servercontroller.util.DialogUtil;
 
 import java.io.IOException;
 import java.util.Optional;
 
 /**
- * The class contruct the basic frame and starts the splashscreen
+ * The class construct the basic frame and starts the splash-screen
  *
  * @author Sebastian Knackstedt
  */
@@ -92,29 +88,11 @@ public class Frame extends Application {
 		primaryStage.setOnCloseRequest(event -> {
 
 			// Close Dialog
-			Alert dialog = new Alert(AlertType.CONFIRMATION, "Wollen sie wirklich beenden?", ButtonType.OK,
-					ButtonType.CANCEL);
-			dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-			dialog.setHeaderText("Beenden?");
-			dialog.setTitle("");
-			Optional<ButtonType> result = dialog.showAndWait();
+			Optional<ButtonType> result = DialogUtil.showAlert("", "Beenden?", "Wollen sie wirklich beenden?", AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
 
 			if (result.isPresent()) {
 				if (result.get().equals(ButtonType.OK)) {
-					System.out.println("Stop Servercontroller");
-					FrameHandler.mainPane.getTabs().forEach(tab -> {
-						if (tab instanceof ServerTab) {
-
-							TabServerHandler handler = ((ServerTab) tab).getTabContent().getContentHandler()
-									.getServerHandler();
-
-							if (handler.getServer().isRunning()) {
-								handler.onEndClicked();
-							}
-						}
-					});
-					ChartsUpdater.stopUpdate();
-					ServerMonitoring.stopMonitoring();
+					ServerController.stop();
 					Platform.exit();
 				} else {
 					event.consume();
@@ -124,7 +102,7 @@ public class Frame extends Application {
 	}
 
 	/**
-	 * This method load the frame and starts the splashscreen
+	 * This method load the frame and starts the splash-screen
 	 *
 	 * @param args The start arguments
 	 */

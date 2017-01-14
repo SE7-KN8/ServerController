@@ -1,14 +1,11 @@
 package sebe3012.servercontroller.gui.dialog;
 
 import javafx.collections.FXCollections;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -16,8 +13,10 @@ import sebe3012.servercontroller.gui.FrameHandler;
 
 public class ServerDialog {
 
-	public static void loadDialog() {
+	private static Logger log = LogManager.getLogger();
 
+	public static void loadDialog() {
+		log.debug("Load ServerDialog");
 		Alert dialog = new Alert(AlertType.NONE);
 		DialogPane rootPane = new DialogPane();
 		rootPane.getStylesheets().add(FrameHandler.currentDesign);
@@ -34,6 +33,7 @@ public class ServerDialog {
 		b.setOnAction(event -> {
 			if (box.getSelectionModel().getSelectedItem() != null) {
 				dialog.close();
+				log.debug("Load addon for name {}", box.getSelectionModel().getSelectedItem());
 				EventHandler.EVENT_BUS.post(new ServerTypeChooseEvent(box.getSelectionModel().getSelectedItem()));
 			}
 		});
@@ -47,7 +47,7 @@ public class ServerDialog {
 
 		rootPane.setContent(root);
 		dialog.setDialogPane(rootPane);
-		dialog.setTitle("Servertyp ausw‰hlen");
+		dialog.setTitle("Servertyp ausw√§hlen");
 		dialog.showAndWait();
 
 	}
