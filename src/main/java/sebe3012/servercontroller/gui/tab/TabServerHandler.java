@@ -100,11 +100,11 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	private void showNoServerDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgew�hlt");
+		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgewählt");
 	}
 
 	private void showServerNotRunningDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Der Server mu� erst gestartet werden");
+		DialogUtil.showErrorAlert("Fehler", "", "Der Server muß erst gestartet werden");
 	}
 
 	private void showServerAlreadyRunningDialog() {
@@ -141,7 +141,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 	}
 
 	@Subscribe
-	public void serverStoped(ServerStopEvent event) {
+	public void serverStopped(ServerStopEvent event) {
 
 		if (event.getServer() == server) {
 

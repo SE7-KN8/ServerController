@@ -1,5 +1,9 @@
 package sebe3012.servercontroller.addon.vanilla.dialog;
 
+import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.addon.vanilla.VanillaServer;
+import sebe3012.servercontroller.util.DialogUtil;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -7,9 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import sebe3012.servercontroller.addon.api.AddonUtil;
-import sebe3012.servercontroller.addon.vanilla.VanillaServer;
-import sebe3012.servercontroller.util.DialogUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -89,10 +90,10 @@ public class VanillaDialogController {
 					AddonUtil.addServer(server, isEdit);
 
 				} else {
-					DialogUtil.showErrorAlert("Fehler", "", "Properties-Datei ist nicht ausgew‰hlt");
+					DialogUtil.showErrorAlert("Fehler", "", "Properties-Datei ist nicht ausgew√§hlt");
 				}
 			} else {
-				DialogUtil.showErrorAlert("Fehler", "", "Java-Datei ist nicht ausgew‰hlt");
+				DialogUtil.showErrorAlert("Fehler", "", "Java-Datei ist nicht ausgew√§hlt");
 			}
 		} else {
 			DialogUtil.showErrorAlert("Fehler", "", "Server-ID ist nicht vorhanden");

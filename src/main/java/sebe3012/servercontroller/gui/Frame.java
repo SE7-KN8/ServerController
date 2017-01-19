@@ -1,5 +1,8 @@
 package sebe3012.servercontroller.gui;
 
+import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.util.DialogUtil;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +16,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.util.DialogUtil;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -87,17 +88,23 @@ public class Frame extends Application {
 		primaryStage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		primaryStage.setOnCloseRequest(event -> {
 
-			// Close Dialog
-			Optional<ButtonType> result = DialogUtil.showAlert("", "Beenden?", "Wollen sie wirklich beenden?", AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
+			if (ServerController.DEBUG) {
+				ServerController.stop();
+				Platform.exit();
+			} else {
+				// Close Dialog
+				Optional<ButtonType> result = DialogUtil.showAlert("", "Beenden?", "Wollen sie wirklich beenden?", AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
 
-			if (result.isPresent()) {
-				if (result.get().equals(ButtonType.OK)) {
-					ServerController.stop();
-					Platform.exit();
-				} else {
-					event.consume();
+				if (result.isPresent()) {
+					if (result.get().equals(ButtonType.OK)) {
+						ServerController.stop();
+						Platform.exit();
+					} else {
+						event.consume();
+					}
 				}
 			}
+
 		});
 	}
 
