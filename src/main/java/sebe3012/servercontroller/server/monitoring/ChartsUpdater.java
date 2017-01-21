@@ -1,7 +1,8 @@
 package sebe3012.servercontroller.server.monitoring;
 
-import javafx.application.Platform;
 import sebe3012.servercontroller.gui.FrameHandler;
+
+import javafx.application.Platform;
 
 public class ChartsUpdater extends Thread {
 

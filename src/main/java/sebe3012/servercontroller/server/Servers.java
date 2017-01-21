@@ -1,10 +1,11 @@
 package sebe3012.servercontroller.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class Servers {
 	public static ObservableList<BasicServer> serversList = FXCollections.observableArrayList();
@@ -14,11 +15,6 @@ public class Servers {
 	static {
 		log.info("Server-list was initialized");
 
-		Servers.serversList.addListener(new ListChangeListener<BasicServer>() {
-			@Override
-			public void onChanged(ListChangeListener.Change<? extends BasicServer> c) {
-				log.debug("Servers-list was changed");
-			}
-		});
+		Servers.serversList.addListener((ListChangeListener.Change<? extends BasicServer> change) -> log.debug("Servers-list was changed"));
 	}
 }

@@ -13,8 +13,8 @@ public class ConsoleLog extends PrintStream {
 
 	private Logger log = LogManager.getLogger("SYSOUT");
 
-	public ConsoleLog(PrintStream orginal) {
-		super(orginal);
+	public ConsoleLog() {
+		super(System.out);
 	}
 
 	@Override

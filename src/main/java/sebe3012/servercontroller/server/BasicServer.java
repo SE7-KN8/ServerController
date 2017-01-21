@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.server;
 
-import com.sun.jna.Pointer;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -8,6 +7,8 @@ import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import com.sun.jna.Pointer;
 
 import javafx.scene.control.Control;
 

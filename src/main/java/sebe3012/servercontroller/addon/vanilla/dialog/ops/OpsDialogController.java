@@ -1,13 +1,18 @@
 
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
+import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.server.BasicServer;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.server.BasicServer;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 
 import java.net.URL;
 import java.util.Map;
@@ -64,13 +69,8 @@ public class OpsDialogController {
 
 		Map<String, ?> map = handler.getAllValues().get(index);
 
-		map.keySet().forEach(key -> {
-			left.add(key);
-		});
-
-		map.values().forEach(o -> {
-			right.add(o.toString());
-		});
+		map.keySet().forEach(key -> left.add(key));
+		map.values().forEach(o -> right.add(o.toString()));
 
 		leftList.setItems(null);
 		rightList.setItems(null);

@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import com.google.common.eventbus.Subscribe;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.addon.api.DialogRow;
@@ -10,6 +9,8 @@ import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+
+import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;

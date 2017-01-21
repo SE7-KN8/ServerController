@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.util;
 
+import sebe3012.servercontroller.gui.FrameHandler;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -7,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import sebe3012.servercontroller.gui.FrameHandler;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -86,9 +86,7 @@ public class TabContentHandler implements Initializable {
 	}
 
 	protected void addTextToOutput(String text) {
-		Platform.runLater(() -> {
-			cOutput.appendText(text + "\n");
-		});
+		Platform.runLater(() -> cOutput.appendText(text + "\n"));
 	}
 
 	private void sendCommandToServer(String command) {

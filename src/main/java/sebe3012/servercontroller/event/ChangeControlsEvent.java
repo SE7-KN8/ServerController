@@ -1,7 +1,8 @@
 package sebe3012.servercontroller.event;
 
-import javafx.scene.control.Control;
 import sebe3012.servercontroller.eventbus.IEvent;
+
+import javafx.scene.control.Control;
 
 import java.util.List;
 

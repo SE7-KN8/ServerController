@@ -1,10 +1,5 @@
 package sebe3012.servercontroller.addon.vanilla;
 
-import com.google.common.eventbus.Subscribe;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
@@ -14,6 +9,13 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+
+import com.google.common.eventbus.Subscribe;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,14 +65,10 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		}
 
 		Button propertiesButton = new Button("Properties");
-		propertiesButton.setOnAction(e -> {
-			new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this);
-		});
+		propertiesButton.setOnAction(e -> new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this));
 
 		Button opsButtons = new Button("Operatoren");
-		opsButtons.setOnAction(e -> {
-			new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this);
-		});
+		opsButtons.setOnAction(e -> new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this));
 
 		extraControls.add(propertiesButton);
 		extraControls.add(opsButtons);

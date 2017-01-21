@@ -29,7 +29,7 @@ public class PropertiesHandler implements Serializable {
 		while (s.hasNextLine()) {
 			String l = s.nextLine();
 			String[] lArr = l.split("=");
-			String lValue = null;
+			String lValue;
 			if (lArr.length == 1) {
 				lValue = " ";
 			} else {

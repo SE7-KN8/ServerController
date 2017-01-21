@@ -1,5 +1,8 @@
 package sebe3012.servercontroller.gui;
 
+import sebe3012.servercontroller.rcon.RCon;
+import sebe3012.servercontroller.util.DialogUtil;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import sebe3012.servercontroller.rcon.RCon;
-import sebe3012.servercontroller.util.DialogUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,7 +55,7 @@ public class RConConsole {
 			try {
 				rcon.close();
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		});
 

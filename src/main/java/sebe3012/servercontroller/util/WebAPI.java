@@ -5,6 +5,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.net.ssl.HttpsURLConnection;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public class WebAPI {
 	public static String getUUID(String name) {
 
 		if (!knownPlayers.containsKey(name)) {
-			HttpsURLConnection connection = null;
+			HttpsURLConnection connection;
 			try {
 				URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
 				connection = (HttpsURLConnection) url.openConnection();
@@ -62,7 +63,7 @@ public class WebAPI {
 	public static BufferedImage getSkin(String uuid) {
 
 		if (!knownSkins.containsKey(uuid)) {
-			HttpsURLConnection connection = null;
+			HttpsURLConnection connection;
 			try {
 				URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
 				connection = (HttpsURLConnection) url.openConnection();

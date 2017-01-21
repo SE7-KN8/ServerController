@@ -1,28 +1,5 @@
 package sebe3012.servercontroller.gui;
 
-import com.google.common.eventbus.Subscribe;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jdom2.JDOMException;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
@@ -39,6 +16,44 @@ import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.NumberField;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jdom2.JDOMException;
+
+import com.google.common.eventbus.Subscribe;
+
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -330,9 +345,7 @@ public class FrameHandler implements IEventHandler {
 
 		monitoringThread.setName("server-monitoring-thread-1");
 
-		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
-			FrameHandler.mainPane.getSelectionModel().select(lView.getSelectionModel().getSelectedIndex());
-		});
+		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> FrameHandler.mainPane.getSelectionModel().select(lView.getSelectionModel().getSelectedIndex()));
 		main.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
 			FrameHandler.list.getSelectionModel().select(main.getSelectionModel().getSelectedIndex());
 			if (newValue instanceof ServerTab) {
@@ -344,9 +357,7 @@ public class FrameHandler implements IEventHandler {
 			}
 		});
 
-		lView.setCellFactory(e -> {
-			return new ServerCell();
-		});
+		lView.setCellFactory(e -> new ServerCell());
 
 		mainPane = main;
 		list = lView;

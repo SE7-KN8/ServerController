@@ -1,11 +1,12 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
+import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.server.BasicServer;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.server.BasicServer;
 
 import java.io.IOException;
 

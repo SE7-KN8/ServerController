@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.gui.tab;
 
-import com.google.common.eventbus.Subscribe;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
@@ -9,6 +8,8 @@ import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+
+import com.google.common.eventbus.Subscribe;
 
 import java.io.Serializable;
 

@@ -1,7 +1,5 @@
 package sebe3012.servercontroller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
@@ -14,6 +12,9 @@ import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ServerController {
 	/**
 	 * The main method
 	 *
-	 * @param args
+	 * @param args Arguments from the console
 	 */
 	public static void main(String[] args) {
 		log.info("ServerController is starting!");
@@ -102,7 +103,7 @@ public class ServerController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		String r = result.toString();
-		return r;
+
+		return result.toString();
 	}
 }

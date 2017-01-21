@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
+import sebe3012.servercontroller.gui.Frame;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,7 +12,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
-import sebe3012.servercontroller.gui.Frame;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,20 +50,18 @@ public class PropertiesDialogHandler {
 	void initialize() {
 		lProperties.setEditable(true);
 		rProperties.setEditable(true);
-		rProperties.setCellFactory(e -> {
-			return new TextFieldListCell<>(new StringConverter<String>() {
+		rProperties.setCellFactory(e -> new TextFieldListCell<>(new StringConverter<String>() {
+					@Override
+					public String toString(String object) {
+						return object;
+					}
 
-				@Override
-				public String toString(String object) {
-					return object;
-				}
-
-				@Override
-				public String fromString(String string) {
-					return string;
-				}
-			});
-		});
+					@Override
+					public String fromString(String string) {
+						return string;
+					}
+				})
+		);
 		ObservableList<String> keys = FXCollections.observableArrayList(handler.getAllValues().keySet());
 		ObservableList<String> values = FXCollections.observableArrayList(handler.getAllValues().values());
 		lProperties.setItems(keys);

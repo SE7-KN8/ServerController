@@ -1,11 +1,13 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import com.google.common.eventbus.Subscribe;
-import javafx.scene.control.Control;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+
+import com.google.common.eventbus.Subscribe;
+
+import javafx.scene.control.Control;
 
 import java.util.ArrayList;
 import java.util.HashMap;
