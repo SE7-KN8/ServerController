@@ -44,6 +44,8 @@ public class AddonUtil {
 
 	public static void addServer(BasicServer server, boolean isEdit) {
 
+		log.debug("Added server {}", server);
+
 		int index = -1;
 
 		TabContent content = new TabContent();
@@ -95,15 +97,15 @@ public class AddonUtil {
 	/**
 	 * Creates an dialog to create Addon-Specified server
 	 *
-	 * @param addon            The addon name
-	 * @param values           The rows to be used
-	 * @param serverConsumer   The function to create the server
-	 * @param parent           A parent server if the dialog is used to edit
+	 * @param addon          The addon name
+	 * @param values         The rows to be used
+	 * @param parent         A parent server if the dialog is used to edit. Can be null.
+	 * @param serverConsumer The function to create the server
 	 */
 	public static void openCreateDialog(@NotNull String addon, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, StringProperty>> serverConsumer) {
 		Alert dialog = new Alert(Alert.AlertType.NONE);
 
-		GridPane root = getDialogLayout(addon, values, serverConsumer, parent);
+		GridPane root = getDialogLayout(addon, values, serverConsumer, parent, v -> dialog.close());
 
 		dialog.getDialogPane().setContent(root);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
@@ -113,7 +115,7 @@ public class AddonUtil {
 	}
 
 
-	private static GridPane getDialogLayout(String addon, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent) {
+	private static GridPane getDialogLayout(String addon, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
 		DialogRow idRow = new DialogRow().setName("Server-ID").setPropertyName("name").setStringPredicate(StringPredicates.DEFAULT_CHECK);
 		DialogRow argsRow = new DialogRow().setName("Start-Argumente").setPropertyName("args").setStringPredicate(StringPredicates.DO_NOTHING);
 
@@ -203,6 +205,7 @@ public class AddonUtil {
 
 			if (flag.get()) {
 				serverConsumer.accept(properties);
+				closeCallback.accept(null);
 			}
 			log.debug("Server created");
 		});

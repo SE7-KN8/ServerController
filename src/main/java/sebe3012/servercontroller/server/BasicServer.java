@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.server;
 
 import com.sun.jna.Pointer;
-import javafx.scene.control.Control;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -10,7 +9,15 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.util.DialogUtil;
 
-import java.io.*;
+import javafx.scene.control.Control;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -245,6 +252,18 @@ public abstract class BasicServer implements Serializable {
 	}
 
 	public abstract BasicServer createNew();
+
+	@Override
+	public String toString() {
+		return "BasicServer{" +
+				"running=" + running +
+				", started=" + started +
+				", jarFile=" + jarFile +
+				", name='" + name + '\'' +
+				", args='" + args + '\'' +
+				", argsAfterJar='" + argsAfterJar + '\'' +
+				'}';
+	}
 
 	public abstract List<Control> getExtraControls();
 
