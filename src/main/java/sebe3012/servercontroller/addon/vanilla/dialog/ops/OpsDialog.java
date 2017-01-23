@@ -21,7 +21,7 @@ public class OpsDialog {
 
 			GridPane root = loader.load();
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+			scene.getStylesheets().add(FrameHandler.currentDesign);
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

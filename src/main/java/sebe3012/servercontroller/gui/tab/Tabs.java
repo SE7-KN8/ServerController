@@ -4,12 +4,24 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 
+import org.jetbrains.annotations.Nullable;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 public class Tabs {
 
+	@Nullable
+	public static TabServerHandler getCurrentServerHandler(){
+		if(getCurrentTab() != null){
+			return getCurrentTab().getTabContent().getContentHandler().getServerHandler();
+		}
+
+		return null;
+	}
+
+	@Nullable
 	public static ServerTab getCurrentTab() {
 		if (FrameHandler.mainPane.getSelectionModel().getSelectedItem() != null) {
 			if (FrameHandler.mainPane.getSelectionModel().getSelectedItem() instanceof ServerTab) {
@@ -19,6 +31,7 @@ public class Tabs {
 		return null;
 	}
 
+	@Nullable
 	public static BasicServer getCurrentServer() {
 		if (getCurrentTab() != null) {
 			if (getCurrentTab().getTabContent().getContentHandler().getServerHandler().hasServer()) {

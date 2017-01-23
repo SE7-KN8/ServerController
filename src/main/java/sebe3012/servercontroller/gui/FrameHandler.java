@@ -43,6 +43,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -113,6 +114,9 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	private Button btnStopAll;
+
+	@FXML
+	private ToolBar toolbar;
 
 	public static Thread monitoringThread = new Thread(new ChartsUpdater());
 
@@ -250,7 +254,7 @@ public class FrameHandler implements IEventHandler {
 
 		loginDialog.setTitle("RCon Verbindung");
 		loginDialog.setHeaderText("RCon Verbindungsinformation");
-		loginDialog.setGraphic(new ImageView(this.getClass().getResource("png/icon.png").toExternalForm()));
+		loginDialog.setGraphic(new ImageView(ClassLoader.getSystemClassLoader().getResource("png/icon.png").toExternalForm()));
 
 		DialogPane dp = loginDialog.getDialogPane();
 		ButtonType bt = new ButtonType("Login", ButtonData.OK_DONE);
@@ -358,6 +362,28 @@ public class FrameHandler implements IEventHandler {
 		});
 
 		lView.setCellFactory(e -> new ServerCell());
+
+		Button toolBarStart = new Button();
+		toolBarStart.getStyleClass().add("tool-button");
+		toolBarStart.setMaxHeight(10);
+		toolBarStart.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm()));
+		toolBarStart.setOnAction(e -> Tabs.getCurrentServerHandler().onStartClicked());
+
+		Button toolBarRestart = new Button();
+		toolBarRestart.getStyleClass().add("tool-button");
+		toolBarRestart.setMaxHeight(10);
+		toolBarRestart.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm()));
+		toolBarRestart.setOnAction(e -> Tabs.getCurrentServerHandler().onRestartClicked());
+
+		Button toolBarStop = new Button();
+		toolBarStop.getStyleClass().add("tool-button");
+		toolBarStop.setMaxHeight(10);
+		toolBarStop.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm()));
+		toolBarStop.setOnAction(e -> Tabs.getCurrentServerHandler().onEndClicked());
+
+		toolbar.getItems().add(toolBarStart);
+		toolbar.getItems().add(toolBarRestart);
+		toolbar.getItems().add(toolBarStop);
 
 		mainPane = main;
 		list = lView;

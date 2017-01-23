@@ -51,7 +51,7 @@ public class ServerController {
 	public static void main(String[] args) {
 		log.info("ServerController is starting!");
 
-		System.setOut(new ConsoleLog(System.out));
+		System.setOut(new ConsoleLog());
 
 
 		for (int i = 0; i < args.length; i++) {

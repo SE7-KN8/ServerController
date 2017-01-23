@@ -9,35 +9,41 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sebe3012.servercontroller.gui.FrameHandler">
    <top>
-      <MenuBar fx:id="mBar" BorderPane.alignment="CENTER">
-         <menus>
-            <Menu mnemonicParsing="false" text="Datei">
-               <items>
-                  <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="Einstellungen speichern" />
-                  <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="Einstellungen laden" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Server">
-              <items>
-                <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="Server hinzufügen" />
-                  <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="Server bearbeiten" />
-                  <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="Server entfernen" />
-                  <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="RCon Verbindung" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Hilfe">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="Lizenz" />
-                  <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="Design" />
-                <MenuItem fx:id="over" mnemonicParsing="false" onAction="#onOverItemClicked" text="Über" />
-              </items>
-            </Menu>
-         </menus>
-      </MenuBar>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="mBar">
+               <menus>
+                  <Menu mnemonicParsing="false" text="Datei">
+                     <items>
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="Einstellungen speichern" />
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="Einstellungen laden" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Server">
+                    <items>
+                      <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="Server hinzufügen" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="Server bearbeiten" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="Server entfernen" />
+                        <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="RCon Verbindung" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Hilfe">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="Lizenz" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="Design" />
+                      <MenuItem fx:id="over" mnemonicParsing="false" onAction="#onOverItemClicked" text="Über" />
+                    </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <ToolBar fx:id="toolbar" prefHeight="20.0" prefWidth="200.0" />
+         </children>
+      </VBox>
    </top>
    <bottom>
       <Label fx:id="credits" alignment="CENTER" text="" BorderPane.alignment="CENTER" />

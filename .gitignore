@@ -14,5 +14,8 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-src/main/resources/png/Thumbs.db
+# Windows
+Thumbs.db
+
+# Intellij
 .idea/

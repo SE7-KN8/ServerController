@@ -35,24 +35,7 @@ public class TabContentHandler implements Initializable {
 	public Button btnSend;
 
 	@FXML
-	public Button btnStart;
-
-	@FXML
-	public Button btnEnd;
-
-	@FXML
 	public Label lblInfo;
-
-	@FXML
-	public Button btnRestart;
-
-	@FXML
-	public Button btnPro;
-
-	@FXML
-	void onEndClicked(ActionEvent event) {
-		server.onEndClicked();
-	}
 
 	@FXML
 	void onSendClicked(ActionEvent event) {
@@ -60,20 +43,10 @@ public class TabContentHandler implements Initializable {
 	}
 
 	@FXML
-	void onStartClicked(ActionEvent event) {
-		server.onStartClicked();
-	}
-
-	@FXML
 	void onEnterPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
 			sendCommandToServer(cInput.getText());
 		}
-	}
-
-	@FXML
-	void onRestartClicked(ActionEvent event) {
-		server.onRestartClicked();
 	}
 
 	public TabContentHandler(TabContent content) {

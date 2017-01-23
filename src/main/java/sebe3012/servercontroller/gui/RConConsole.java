@@ -37,7 +37,7 @@ public class RConConsole {
 		Stage stage = new Stage();
 		stage.setTitle("RCon-Verbindung zu: " + ip + ":" + port);
 
-		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../../../../resources/fxml/RConConsole.fxml"));
+		FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource("fxml/RConConsole.fxml"));
 
 		loader.setController(new RConConsoleController(rcon));
 
