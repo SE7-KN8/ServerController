@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:20.0'
+    compile 'com.google.guava:guava:21.0'
     compile 'org.jdom:jdom2:2.0.6'
     compile 'net.java.dev.jna:jna:4.2.2'
     compile 'org.glassfish:javax.json:1.0.4'

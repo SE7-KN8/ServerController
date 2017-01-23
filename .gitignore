@@ -4,7 +4,6 @@
 #Build files
 /build/
 /versions/
-/.idea/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -16,3 +15,4 @@ gradle-app.setting
 .gradletasknamecache
 
 src/main/resources/png/Thumbs.db
+.idea/
