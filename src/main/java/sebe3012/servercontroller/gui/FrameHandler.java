@@ -201,6 +201,10 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
+		editCurrentServer();
+	}
+
+	private void editCurrentServer() {
 		BasicServer server = Tabs.getCurrentServer();
 		if (server != null) {
 			if (server.isRunning()) {
@@ -381,9 +385,16 @@ public class FrameHandler implements IEventHandler {
 		toolBarStop.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm()));
 		toolBarStop.setOnAction(e -> Tabs.getCurrentServerHandler().onEndClicked());
 
+		Button toolBarEdit = new Button();
+		toolBarEdit.getStyleClass().add("tool-button");
+		toolBarEdit.setMaxHeight(10);
+		toolBarEdit.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm()));
+		toolBarEdit.setOnAction(e -> editCurrentServer());
+
 		toolbar.getItems().add(toolBarStart);
 		toolbar.getItems().add(toolBarRestart);
 		toolbar.getItems().add(toolBarStop);
+		toolbar.getItems().add(toolBarEdit);
 
 		mainPane = main;
 		list = lView;
@@ -395,7 +406,7 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert("Warnung", "", "Der Server mu� erst gestoppt werden");
+		DialogUtil.showWaringAlert("Warnung", "", "Der Server muß erst gestoppt werden");
 	}
 
 	private static void showSaveErrorDialog() {
