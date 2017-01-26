@@ -3,18 +3,15 @@ package sebe3012.servercontroller.gui.tab;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.util.DialogUtil;
 
 import org.jetbrains.annotations.Nullable;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 
 public class Tabs {
 
 	@Nullable
-	public static TabServerHandler getCurrentServerHandler(){
-		if(getCurrentTab() != null){
+	public static TabServerHandler getCurrentServerHandler() {
+		if (getCurrentTab() != null) {
 			return getCurrentTab().getTabContent().getContentHandler().getServerHandler();
 		}
 
@@ -40,11 +37,9 @@ public class Tabs {
 		}
 
 		return null;
-
 	}
 
 	public static int getCurrentIndex() {
-
 		int index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
 
 		if (index == FrameHandler.list.getSelectionModel().getSelectedIndex()) {
@@ -71,7 +66,7 @@ public class Tabs {
 			} else {
 
 				int index = Tabs.getCurrentIndex();
-				
+
 
 				FrameHandler.mainPane.getTabs().remove(index);
 				FrameHandler.list.setItems(null);
@@ -80,17 +75,12 @@ public class Tabs {
 
 				FrameHandler.list.setItems(Servers.serversList);
 				FrameHandler.list.getSelectionModel().select(index);
-
 			}
 		}
 	}
 
 	private static void showServerIsRunningDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Der Server mu� erst gestoppt werden", ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
-		dialog.setTitle("Fehler");
-		dialog.setHeaderText("");
-		dialog.showAndWait();
+		DialogUtil.showWaringAlert("Fehler", "", "Der Server muß erst gestoppt werden");
 	}
 
 }

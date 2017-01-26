@@ -8,6 +8,9 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.util.DialogUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sun.jna.Pointer;
 
 import javafx.scene.control.Control;
@@ -40,6 +43,7 @@ public abstract class BasicServer implements Serializable {
 	protected String argsAfterJar = "";
 	protected TabServerHandler handler;
 	private HashMap<String, Object> externalForm;
+	private Logger log = LogManager.getLogger();
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -62,6 +66,14 @@ public abstract class BasicServer implements Serializable {
 
 				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
 						getArgsAfterJar() + "nogui");
+
+
+				StringBuilder builder = new StringBuilder();
+				for(String s : serverProcessBuilder.command()){
+					builder.append(s);
+					builder.append("");
+				}
+				log.info("Start with command: '{}'", builder.toString());
 
 				serverProcessBuilder.directory(jarFile.getParentFile());
 				serverProcess = serverProcessBuilder.start();

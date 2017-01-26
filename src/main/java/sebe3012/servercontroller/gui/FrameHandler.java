@@ -15,6 +15,7 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.NumberField;
 
 import org.apache.logging.log4j.LogManager;
@@ -367,34 +368,10 @@ public class FrameHandler implements IEventHandler {
 
 		lView.setCellFactory(e -> new ServerCell());
 
-		Button toolBarStart = new Button();
-		toolBarStart.getStyleClass().add("tool-button");
-		toolBarStart.setMaxHeight(10);
-		toolBarStart.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm()));
-		toolBarStart.setOnAction(e -> Tabs.getCurrentServerHandler().onStartClicked());
-
-		Button toolBarRestart = new Button();
-		toolBarRestart.getStyleClass().add("tool-button");
-		toolBarRestart.setMaxHeight(10);
-		toolBarRestart.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm()));
-		toolBarRestart.setOnAction(e -> Tabs.getCurrentServerHandler().onRestartClicked());
-
-		Button toolBarStop = new Button();
-		toolBarStop.getStyleClass().add("tool-button");
-		toolBarStop.setMaxHeight(10);
-		toolBarStop.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm()));
-		toolBarStop.setOnAction(e -> Tabs.getCurrentServerHandler().onEndClicked());
-
-		Button toolBarEdit = new Button();
-		toolBarEdit.getStyleClass().add("tool-button");
-		toolBarEdit.setMaxHeight(10);
-		toolBarEdit.setGraphic(new ImageView(ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm()));
-		toolBarEdit.setOnAction(e -> editCurrentServer());
-
-		toolbar.getItems().add(toolBarStart);
-		toolbar.getItems().add(toolBarRestart);
-		toolbar.getItems().add(toolBarStop);
-		toolbar.getItems().add(toolBarEdit);
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onStartClicked());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onRestartClicked());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onEndClicked());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e->editCurrentServer());
 
 		mainPane = main;
 		list = lView;

@@ -9,7 +9,7 @@ import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.LayoutUtil;
+import sebe3012.servercontroller.util.GUIUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -142,14 +142,14 @@ public class AddonUtil {
 
 		//Add rows to layout
 		for (int i = 0; i < size; i++) {
-			LayoutUtil.addRowConstraints(layout, 10, 30, -1, Priority.SOMETIMES);
+			GUIUtil.addRowConstraints(layout, 10, 30, -1, Priority.SOMETIMES);
 		}
 
 		//Add columns to layout
-		LayoutUtil.addColumnConstraints(layout, 10, 100, -1, Priority.SOMETIMES);
-		LayoutUtil.addColumnConstraints(layout, 10, 100, -1, Priority.SOMETIMES);
-		LayoutUtil.addColumnConstraints(layout, 10, 134, 227, Priority.SOMETIMES);
-		LayoutUtil.addColumnConstraints(layout, 10, 238, 253, Priority.SOMETIMES);
+		GUIUtil.addColumnConstraints(layout, 10, 100, -1, Priority.SOMETIMES);
+		GUIUtil.addColumnConstraints(layout, 10, 100, -1, Priority.SOMETIMES);
+		GUIUtil.addColumnConstraints(layout, 10, 134, 227, Priority.SOMETIMES);
+		GUIUtil.addColumnConstraints(layout, 10, 238, 253, Priority.SOMETIMES);
 
 		//Add header text
 		Label header = new Label(addon + "-Server erstellen");

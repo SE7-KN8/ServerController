@@ -4,6 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -13,17 +18,17 @@ import javafx.scene.layout.RowConstraints;
  * Created by Sebe3012 on 16.01.2017.
  * This class contains static methods for better layout handling
  */
-public class LayoutUtil {
+public class GUIUtil {
 
 	private static Logger log = LogManager.getLogger();
 
 	/**
-	 *-1 will disabling a number setting
+	 * -1 will disabling a number setting
 	 *
-	 * @param layout The GridPane
-	 * @param minWidth The minimal width of the column
-	 * @param prefWidth The prefers width of the column
-	 * @param maxWidth The max width of the column
+	 * @param layout         The GridPane
+	 * @param minWidth       The minimal width of the column
+	 * @param prefWidth      The prefers width of the column
+	 * @param maxWidth       The max width of the column
 	 * @param horizontalGrow The horizontal grow of the column
 	 */
 	public static void addColumnConstraints(GridPane layout, int minWidth, int prefWidth, int maxWidth, Priority horizontalGrow) {
@@ -50,12 +55,12 @@ public class LayoutUtil {
 	}
 
 	/**
-	 *-1 will disabling a number setting
+	 * -1 will disabling a number setting
 	 *
-	 * @param layout The GridPane
-	 * @param minHeight The minimal height of the row
-	 * @param prefHeight The prefers height of the row
-	 * @param maxHeight The max height of the row
+	 * @param layout       The GridPane
+	 * @param minHeight    The minimal height of the row
+	 * @param prefHeight   The prefers height of the row
+	 * @param maxHeight    The max height of the row
 	 * @param verticalGrow The vertical grow of the row
 	 */
 	public static void addRowConstraints(@Nullable GridPane layout, int minHeight, int prefHeight, int maxHeight, @Nullable Priority verticalGrow) {
@@ -77,7 +82,31 @@ public class LayoutUtil {
 			layout.getRowConstraints().add(rowConstraints);
 			log.debug("Added row constraints {}", rowConstraints);
 		} else {
-			log.warn("Could not add row constraints! Layout is null!");
+			log.warn("Couldn't add row constraints! Layout is null!");
+		}
+	}
+
+	/**
+	 * Adds a {@link javafx.scene.control.Button} with an image to the toolbar
+	 *
+	 * @param bar          The toolbar
+	 * @param imagePath    The path to the image
+	 * @param eventHandler The eventhandler which one handles the click event
+	 */
+	public static void addButtonToToolbar(@Nullable ToolBar bar, @Nullable String imagePath, @Nullable EventHandler<ActionEvent> eventHandler) {
+		if (bar != null) {
+			if (imagePath != null) {
+				ImageView imageView = new ImageView(imagePath);
+				Button b = new Button();
+				b.getStyleClass().add("tool-button");
+				b.setGraphic(imageView);
+				b.setOnAction(eventHandler);
+				bar.getItems().add(b);
+
+			}
+
+		} else {
+			log.warn("Couldn't add button! ToolBar is null!");
 		}
 	}
 }
