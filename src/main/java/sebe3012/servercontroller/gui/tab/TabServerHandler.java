@@ -6,7 +6,6 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
 
 import com.google.common.eventbus.Subscribe;
@@ -50,7 +49,7 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		}
 	}
 
-	public void onEndClicked() {
+	public void onStopClicked() {
 		restartServer = false;
 		if (server != null) {
 			if (server.isRunning()) {
@@ -117,11 +116,6 @@ public class TabServerHandler implements Serializable, IEventHandler {
 		if (!this.hasServer()) {
 			this.server = event.getServer();
 			this.serverName = server.getName();
-			if (event.hasIndex()) {
-				Servers.serversList.add(event.getIndex(), this.server);
-			} else {
-				Servers.serversList.add(this.server);
-			}
 
 			if (!this.server.hasServerHandler()) {
 				server.setServerHandler(this);

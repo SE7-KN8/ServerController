@@ -7,12 +7,16 @@ import sebe3012.servercontroller.util.DialogUtil;
 
 import org.jetbrains.annotations.Nullable;
 
+import javafx.scene.control.Tab;
+
 public class Tabs {
 
 	@Nullable
 	public static TabServerHandler getCurrentServerHandler() {
-		if (getCurrentTab() != null) {
-			return getCurrentTab().getTabContent().getContentHandler().getServerHandler();
+		ServerTab tab = getCurrentTab();
+
+		if(tab != null){
+			return tab.getTabContent().getContentHandler().getServerHandler();
 		}
 
 		return null;
@@ -20,20 +24,21 @@ public class Tabs {
 
 	@Nullable
 	public static ServerTab getCurrentTab() {
-		if (FrameHandler.mainPane.getSelectionModel().getSelectedItem() != null) {
-			if (FrameHandler.mainPane.getSelectionModel().getSelectedItem() instanceof ServerTab) {
-				return (ServerTab) FrameHandler.mainPane.getSelectionModel().getSelectedItem();
-			}
+		Tab tab = FrameHandler.mainPane.getSelectionModel().getSelectedItem();
+
+		if (tab != null && tab instanceof ServerTab) {
+			return (ServerTab) tab;
 		}
+
 		return null;
 	}
 
 	@Nullable
 	public static BasicServer getCurrentServer() {
-		if (getCurrentTab() != null) {
-			if (getCurrentTab().getTabContent().getContentHandler().getServerHandler().hasServer()) {
-				return getCurrentTab().getTabContent().getContentHandler().getServerHandler().getServer();
-			}
+		TabServerHandler serverHandler = getCurrentServerHandler();
+
+		if(serverHandler != null && serverHandler.hasServer()){
+			return serverHandler.getServer();
 		}
 
 		return null;

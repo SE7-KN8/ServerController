@@ -80,7 +80,7 @@ public class ServerController {
 						.getServerHandler();
 
 				if (handler.getServer().isRunning()) {
-					handler.onEndClicked();
+					handler.onStopClicked();
 				}
 			}
 		});

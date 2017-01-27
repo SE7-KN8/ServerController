@@ -8,6 +8,7 @@ import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 
@@ -46,17 +47,17 @@ public class AddonUtil {
 
 		log.debug("Added server {}", server);
 
-		int index = -1;
-
 		TabContent content = new TabContent();
 		ServerTab tab = new ServerTab(server.getName(), content);
 		tab.setContent(content.getTabContent());
+
 		if (isEdit) {
-			index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
-			Tabs.removeCurrentTab();
-			FrameHandler.mainPane.getTabs().add(index, tab);
+			int index = Tabs.getCurrentIndex();
+			FrameHandler.mainPane.getTabs().set(index, tab);
+			Servers.serversList.set(index, server);
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);
+			Servers.serversList.add(server);
 		}
 
 		FrameHandler.mainPane.getSelectionModel().select(tab);
@@ -64,7 +65,7 @@ public class AddonUtil {
 		if (!isEdit) {
 			EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
 		}
-		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server, isEdit, index));
+		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server));
 	}
 
 	public static String openFileChooser(String fileType, String fileName) {

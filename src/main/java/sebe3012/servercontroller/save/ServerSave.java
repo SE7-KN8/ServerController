@@ -2,21 +2,19 @@ package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.api.AddonUtil;
-import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.util.DialogUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,10 +27,15 @@ import java.util.HashMap;
 
 public class ServerSave {
 
+	private static Logger log = LogManager.getLogger();
+
 	public static void saveServerController(String path) throws IOException {
+
+		log.info("Start saving");
 
 		Servers.serversList.forEach(server -> {
 			if (server.isRunning()) {
+				log.warn("Can't save while server is running");
 				showServerIsRunningDialog();
 				return;
 			}
@@ -46,21 +49,23 @@ public class ServerSave {
 		Document xml = new Document(rootElement);
 
 		Servers.serversList.forEach(server -> {
-
+			log.info("Start saving server {}", server.getName());
 			final Element serverElement = new Element("server");
 
+			log.debug("Addon name from server {} is {}", server.getName(), server.getPluginName());
 			serverElement.setAttribute("addon", server.getPluginName());
 			try {
 				Field serUID = server.getClass().getDeclaredField("serialVersionUID");
 				serUID.setAccessible(true);
 				long uid = serUID.getLong(server);
 				serverElement.setAttribute("serialVersionUID", String.valueOf(uid));
+				log.debug("Version from server {} is {}", server.getName(), uid);
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 
 			server.toExternalForm().forEach((key, value) -> {
-
+				log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
 				Element keyElement = new Element(key);
 				keyElement.setText(value.toString());
 				serverElement.addContent(keyElement);
@@ -68,7 +73,7 @@ public class ServerSave {
 			});
 
 			rootElement.addContent(serverElement);
-
+			log.info("Finished saving server {}", server.getName());
 		});
 
 		XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
@@ -77,13 +82,19 @@ public class ServerSave {
 
 		fos.close();
 
+		log.info("Finished saving");
+
+		DialogUtil.showInformationAlert("Information", "", "Speichern war erfolgreich");
 	}
 
 	public static void loadServerController(String path) throws JDOMException, IOException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
+		log.info("Start loading");
+
 		Servers.serversList.forEach(server -> {
 			if (server.isRunning()) {
+				log.warn("Can't load while server is running");
 				showServerIsRunningDialog();
 				return;
 			}
@@ -98,15 +109,22 @@ public class ServerSave {
 		Element serverController = xml.getRootElement();
 
 		for (Element serverElement : serverController.getChildren("server")) {
-
+			log.info("Start loading {}" + serverElement);
 			String pluginName = serverElement.getAttributeValue("addon");
+			log.debug("Plugin is {}", pluginName);
 			long xmlUid = Long.valueOf(serverElement.getAttributeValue("serialVersionUID"));
 
 			Class<? extends BasicServer> serverClass = ServerController.serverAddon.get(pluginName);
 
+			if (serverClass == null) {
+				log.warn("No plugin found with name: {}", pluginName);
+				DialogUtil.showErrorAlert("Fehler", "", "Kein Plugin mit der ID '" + pluginName + "' gefunden!");
+			}
+
 			HashMap<String, Object> map = new HashMap<>();
 
 			for (Element e : serverElement.getChildren()) {
+				log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
 				map.put(e.getName(), e.getValue());
 			}
 
@@ -116,6 +134,7 @@ public class ServerSave {
 
 			if (serverObject instanceof BasicServer) {
 				BasicServer server = (BasicServer) serverObject;
+				log.info("Create server");
 				server.fromExternalForm();
 				Field serUID;
 				try {
@@ -130,18 +149,17 @@ public class ServerSave {
 				}
 				AddonUtil.addServer(server, false);
 			}
-
 		}
 
 		fis.close();
 
+		DialogUtil.showInformationAlert("Information", "", "Laden war erfolgreich");
+
+		log.info("Finished loading");
+
 	}
 
 	private static void showServerIsRunningDialog() {
-		Alert dialog = new Alert(AlertType.WARNING, "Es müssen erst alle Server beendet werden", ButtonType.OK);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
-		dialog.setTitle("Warnung");
-		dialog.setHeaderText("");
-		dialog.showAndWait();
+		DialogUtil.showWaringAlert("Warnung", "", "Es müssen erst alle Server beendet werden");
 	}
 }

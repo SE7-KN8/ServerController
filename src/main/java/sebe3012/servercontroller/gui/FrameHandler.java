@@ -3,7 +3,6 @@ package sebe3012.servercontroller.gui;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
-import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
@@ -128,34 +127,22 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onRestartAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab -> {
-			if (tab instanceof ServerTab) {
-				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onRestartClicked();
-			}
-		});
+		Servers.restartAllServers();
 	}
 
 	@FXML
 	void onStartAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab -> {
-			if (tab instanceof ServerTab) {
-				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onStartClicked();
-			}
-		});
+		Servers.startAllServers();
 	}
 
 	@FXML
 	void onStopAllClicked() {
-		FrameHandler.mainPane.getTabs().forEach(tab -> {
-			if (tab instanceof ServerTab) {
-				((ServerTab) tab).getTabContent().getContentHandler().getServerHandler().onEndClicked();
-			}
-		});
+		Servers.stopAllServers();
 	}
 
 	@FXML
 	void onOverItemClicked(ActionEvent event) {
-		showCredits();
+		DialogUtil.showInformationAlert("Über", "", "ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016-2017 Germany");
 	}
 
 	@FXML
@@ -202,18 +189,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onServerEditItemClicked(ActionEvent event) {
-		editCurrentServer();
-	}
-
-	private void editCurrentServer() {
-		BasicServer server = Tabs.getCurrentServer();
-		if (server != null) {
-			if (server.isRunning()) {
-				showServerIsRunningDialog();
-			} else {
-				EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
-			}
-		}
+		Servers.editCurrentServer();
 	}
 
 	@FXML
@@ -308,11 +284,6 @@ public class FrameHandler implements IEventHandler {
 		}
 	}
 
-	private void showCredits() {
-		DialogUtil.showInformationAlert("Über", "",
-				"ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016 Germany");
-	}
-
 	private void showLicense() {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
@@ -344,6 +315,9 @@ public class FrameHandler implements IEventHandler {
 		designs.put("Hell", ClassLoader.getSystemResource("css/style_bright.css").toExternalForm());
 		designs.put("Dunkel", ClassLoader.getSystemResource("css/style_dark.css").toExternalForm());
 
+		lView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> mainPane.getSelectionModel().select(newValue.intValue()));
+		main.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> lView.getSelectionModel().select(newValue.intValue()));
+
 		currentDesign = designs.get(ServerControllerPreferences
 				.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.keySet().iterator().next()));
 
@@ -354,9 +328,7 @@ public class FrameHandler implements IEventHandler {
 
 		monitoringThread.setName("server-monitoring-thread-1");
 
-		lView.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> FrameHandler.mainPane.getSelectionModel().select(lView.getSelectionModel().getSelectedIndex()));
-		main.getSelectionModel().selectedItemProperty().addListener((oberservable, oldValue, newValue) -> {
-			FrameHandler.list.getSelectionModel().select(main.getSelectionModel().getSelectedIndex());
+		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue instanceof ServerTab) {
 				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
 						.getServerHandler();
@@ -368,10 +340,10 @@ public class FrameHandler implements IEventHandler {
 
 		lView.setCellFactory(e -> new ServerCell());
 
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onStartClicked());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onRestartClicked());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e-> Tabs.getCurrentServerHandler().onEndClicked());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e->editCurrentServer());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer());
 
 		mainPane = main;
 		list = lView;
@@ -380,10 +352,6 @@ public class FrameHandler implements IEventHandler {
 		initCharts();
 		log.info("FXML initialized");
 		monitoringThread.start();
-	}
-
-	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert("Warnung", "", "Der Server muß erst gestoppt werden");
 	}
 
 	private static void showSaveErrorDialog() {
