@@ -26,8 +26,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class BasicServer implements Serializable {
-	private static final long serialVersionUID = -6581065154916341314L;
+public abstract class BasicServer {
 	protected boolean running = false;
 	private boolean started = false;
 	protected BufferedReader inputReader;
@@ -71,7 +70,7 @@ public abstract class BasicServer implements Serializable {
 				StringBuilder builder = new StringBuilder();
 				for(String s : serverProcessBuilder.command()){
 					builder.append(s);
-					builder.append("");
+					builder.append(" ");
 				}
 				log.info("Start with command: '{}'", builder.toString());
 
@@ -279,5 +278,7 @@ public abstract class BasicServer implements Serializable {
 	}
 
 	public abstract List<Control> getExtraControls();
+
+	public abstract int getSaveVersion();
 
 }

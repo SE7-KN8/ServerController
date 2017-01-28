@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
@@ -54,15 +53,8 @@ public class ServerSave {
 
 			log.debug("Addon name from server {} is {}", server.getName(), server.getPluginName());
 			serverElement.setAttribute("addon", server.getPluginName());
-			try {
-				Field serUID = server.getClass().getDeclaredField("serialVersionUID");
-				serUID.setAccessible(true);
-				long uid = serUID.getLong(server);
-				serverElement.setAttribute("serialVersionUID", String.valueOf(uid));
-				log.debug("Version from server {} is {}", server.getName(), uid);
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
+			log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 
 			server.toExternalForm().forEach((key, value) -> {
 				log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
@@ -112,7 +104,7 @@ public class ServerSave {
 			log.info("Start loading {}" + serverElement);
 			String pluginName = serverElement.getAttributeValue("addon");
 			log.debug("Plugin is {}", pluginName);
-			long xmlUid = Long.valueOf(serverElement.getAttributeValue("serialVersionUID"));
+			long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));
 
 			Class<? extends BasicServer> serverClass = ServerController.serverAddon.get(pluginName);
 
@@ -136,17 +128,9 @@ public class ServerSave {
 				BasicServer server = (BasicServer) serverObject;
 				log.info("Create server");
 				server.fromExternalForm();
-				Field serUID;
-				try {
-					serUID = server.getClass().getDeclaredField("serialVersionUID");
-					serUID.setAccessible(true);
-					long uid = serUID.getLong(server);
-					if (uid != xmlUid) {
+					if (server.getSaveVersion() != saveVersion) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
-				} catch (NoSuchFieldException | SecurityException e1) {
-					e1.printStackTrace();
-				}
 				AddonUtil.addServer(server, false);
 			}
 		}

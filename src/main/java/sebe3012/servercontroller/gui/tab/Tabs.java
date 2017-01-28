@@ -74,11 +74,9 @@ public class Tabs {
 
 
 				FrameHandler.mainPane.getTabs().remove(index);
-				FrameHandler.list.setItems(null);
 
 				Servers.serversList.remove(index);
 
-				FrameHandler.list.setItems(Servers.serversList);
 				FrameHandler.list.getSelectionModel().select(index);
 			}
 		}

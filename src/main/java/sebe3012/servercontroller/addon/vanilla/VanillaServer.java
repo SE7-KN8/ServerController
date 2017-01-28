@@ -24,9 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class VanillaServer extends BasicServer implements IEventHandler {
-
-	private static final long serialVersionUID = 3205212775811812781L;
-
 	private String propertiesFile;
 	private PropertiesHandler propertiesHandler;
 	private OpsHandler opsHandler;
@@ -46,6 +43,11 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		this.externalForm = externalForm;
 
 		this.init(false);
+	}
+
+	@Override
+	public int getSaveVersion() {
+		return 1;
 	}
 
 	private void init(boolean isNew) {

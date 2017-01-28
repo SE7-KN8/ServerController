@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BungeeCordServer extends BasicServer implements IEventHandler {
-
-	private static final long serialVersionUID = 5283403326325684583L;
-
 	private String configFile;
 
 	private List<Control> extraControls = new ArrayList<>();
@@ -31,6 +28,11 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	public BungeeCordServer(HashMap<String, Object> externalForm) {
 		super(externalForm);
 		this.externalForm = externalForm;
+	}
+
+	@Override
+	public int getSaveVersion() {
+		return 1;
 	}
 
 	@Override

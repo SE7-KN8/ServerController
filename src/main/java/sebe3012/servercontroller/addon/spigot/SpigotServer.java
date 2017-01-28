@@ -6,8 +6,6 @@ import sebe3012.servercontroller.server.BasicServer;
 import java.util.HashMap;
 
 public class SpigotServer extends CraftbukkitServer {
-
-	private static final long serialVersionUID = -2107216290451372139L;
 	private String spigotConfig;
 	private HashMap<String, Object> externalForm;
 
@@ -22,6 +20,11 @@ public class SpigotServer extends CraftbukkitServer {
 		this.externalForm = externalForm;
 		
 
+	}
+
+	@Override
+	public int getSaveVersion() {
+		return 1;
 	}
 
 	@Override

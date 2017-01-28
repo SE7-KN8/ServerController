@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 public class Servers {
 	public static ObservableList<BasicServer> serversList = FXCollections.observableArrayList();
 
+
 	private static Logger log = LogManager.getLogger();
 
 	static {

@@ -65,6 +65,7 @@ public class AddonUtil {
 		if (!isEdit) {
 			EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
 		}
+
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server));
 	}
 

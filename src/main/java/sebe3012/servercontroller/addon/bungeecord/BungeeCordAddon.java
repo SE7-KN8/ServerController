@@ -73,6 +73,11 @@ public class BungeeCordAddon implements IEventHandler {
 			String jarPath = map.get("jar").get();
 			String configPath = map.get("bungeeConfig").get();
 			String args = map.get("args").get();
+
+			System.out.println(args);
+			args = args.replace("-Djline.terminal=jline.UnsupportedTerminal", "");
+			System.out.println(args);
+
 			AddonUtil.addServer(new BungeeCordServer(name, jarPath, configPath, args), edit);
 
 		});

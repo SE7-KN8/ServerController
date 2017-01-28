@@ -10,11 +10,7 @@ import sebe3012.servercontroller.util.DialogUtil;
 
 import com.google.common.eventbus.Subscribe;
 
-import java.io.Serializable;
-
-public class TabServerHandler implements Serializable, IEventHandler {
-
-	private static final long serialVersionUID = -3676312859798447613L;
+public class TabServerHandler implements IEventHandler {
 	private BasicServer server;
 	private boolean restartServer = false;
 	private TabContentHandler handler;

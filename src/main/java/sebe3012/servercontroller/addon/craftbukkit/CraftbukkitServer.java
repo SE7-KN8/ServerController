@@ -6,8 +6,6 @@ import sebe3012.servercontroller.server.BasicServer;
 import java.util.HashMap;
 
 public class CraftbukkitServer extends VanillaServer {
-
-	private static final long serialVersionUID = -2409037301934942928L;
 	private String bukkitConfig;
 	private HashMap<String, Object> externalForm;
 	
@@ -19,6 +17,11 @@ public class CraftbukkitServer extends VanillaServer {
 	public CraftbukkitServer(HashMap<String, Object> externalForm) {
 		super(externalForm);
 		this.externalForm = externalForm;
+	}
+
+	@Override
+	public int getSaveVersion() {
+		return 1;
 	}
 
 	@Override
