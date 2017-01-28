@@ -21,8 +21,13 @@ version = '0.2.8.9_alpha'
 
 jar {
    manifest {
-      attributes 'Version' : version
-   }	
+       attributes 'Version' : version
+       attributes 'Main-Class' : 'sebe3012.servercontroller.ServerController'
+   }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 uploadArchives {
