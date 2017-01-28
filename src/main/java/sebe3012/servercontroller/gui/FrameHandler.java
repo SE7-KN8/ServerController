@@ -49,7 +49,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -377,9 +377,9 @@ public class FrameHandler implements IEventHandler {
 					setGraphic(null);
 				} else {
 
-					Rectangle r = new Rectangle(20, 20, ServerState.getColor(item.getState()));
+					Circle c = new Circle(10,ServerState.getColor(item.getState()));
 
-					setGraphic(r);
+					setGraphic(c);
 					setText(item.getName());
 				}
 			});
