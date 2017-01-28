@@ -120,6 +120,11 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
+	public String getDoneRegex() {
+		return ".*Done \\(\\d*,\\d*s\\)! For help, type \"help\" or \"\\?\"";
+	}
+
+	@Override
 	public void fromExternalForm() {
 		super.fromExternalForm();
 		propertiesFile = (String) externalForm.get("properties");

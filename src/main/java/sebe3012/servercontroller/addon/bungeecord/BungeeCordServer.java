@@ -45,7 +45,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	@Subscribe
-	public void serverStoped(ServerStopEvent event) {
+	public void serverStopped(ServerStopEvent event) {
 		if (event.getServer() == this) {
 			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
 		}
@@ -70,6 +70,11 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	@Override
 	public String getStopCommand() {
 		return "end";
+	}
+
+	@Override
+	public String getDoneRegex() {
+		return ".*Listening on \\/\\d*.\\d*.\\d*.\\d*:\\d*";
 	}
 
 	@Override

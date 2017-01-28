@@ -1,11 +1,14 @@
 package sebe3012.servercontroller.gui.tab;
 
+import sebe3012.servercontroller.addon.api.StringPredicates;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.ServerState;
+import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
 
 import com.google.common.eventbus.Subscribe;
@@ -50,6 +53,7 @@ public class TabServerHandler implements IEventHandler {
 		if (server != null) {
 			if (server.isRunning()) {
 				server.sendCommand(server.getStopCommand());
+				server.setState(ServerState.STOPPING);
 			} else {
 				showServerNotRunningDialog();
 			}
@@ -107,6 +111,10 @@ public class TabServerHandler implements IEventHandler {
 		DialogUtil.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
 	}
 
+	public void refreshListState(){
+		handler.refreshListState();
+	}
+
 	@Subscribe
 	public void serverCreateEvent(ServerCreateEvent event) {
 		if (!this.hasServer()) {
@@ -125,8 +133,10 @@ public class TabServerHandler implements IEventHandler {
 	@Subscribe
 	public void serverReturnMessage(ServerMessageEvent event) {
 		if (event.getServer() == server) {
-
 			handler.addTextToOutput("[" + serverName + "] " + event.getMessage());
+			if(StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())){
+				server.setState(ServerState.RUNNING);
+			}
 
 		}
 	}
@@ -136,8 +146,13 @@ public class TabServerHandler implements IEventHandler {
 
 		if (event.getServer() == server) {
 
+			int index = Servers.serversList.indexOf(server);
+
 			server.stop();
 			server = server.createNew();
+			server.setServerHandler(this);
+
+			Servers.serversList.set(index, server);
 
 			if (restartServer) {
 				server.start();

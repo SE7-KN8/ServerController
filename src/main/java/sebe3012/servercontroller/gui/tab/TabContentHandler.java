@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.gui.tab;
 
+import sebe3012.servercontroller.gui.FrameHandler;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,6 +49,10 @@ public class TabContentHandler implements Initializable {
 		if (event.getCode() == KeyCode.ENTER) {
 			sendCommandToServer(cInput.getText());
 		}
+	}
+
+	public void refreshListState(){
+		FrameHandler.list.refresh();
 	}
 
 	public TabContentHandler(TabContent content) {

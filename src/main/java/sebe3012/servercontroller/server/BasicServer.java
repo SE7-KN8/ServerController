@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public abstract class BasicServer {
-	protected boolean running = false;
-	private boolean started = false;
 	protected BufferedReader inputReader;
 	protected BufferedWriter outputWriter;
 	protected WaitForExit waitForExitThread;
@@ -43,6 +41,7 @@ public abstract class BasicServer {
 	protected TabServerHandler handler;
 	private HashMap<String, Object> externalForm;
 	private Logger log = LogManager.getLogger();
+	private ServerState state = ServerState.STOPPED;
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -55,9 +54,9 @@ public abstract class BasicServer {
 	}
 
 	public void start() {
-		if (!started) {
+		if (getState() == ServerState.STOPPED) {
 			try {
-
+				setState(ServerState.STARTING);
 				messageReaderThread = new MessageReader(new MessageReader(), this);
 				waitForExitThread = new WaitForExit(new WaitForExit(), this);
 				messageReaderThread.setName(name + "-Server reader");
@@ -68,11 +67,11 @@ public abstract class BasicServer {
 
 
 				StringBuilder builder = new StringBuilder();
-				for(String s : serverProcessBuilder.command()){
+				for (String s : serverProcessBuilder.command()) {
 					builder.append(s);
 					builder.append(" ");
 				}
-				log.info("Start with command: '{}'", builder.toString());
+				log.info("[{}]: Start with command: '{}'", getName(), builder.toString());
 
 				serverProcessBuilder.directory(jarFile.getParentFile());
 				serverProcess = serverProcessBuilder.start();
@@ -93,8 +92,6 @@ public abstract class BasicServer {
 					pid = kernel.GetProcessId(handle);
 
 				}
-				running = true;
-				started = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 				onError(e);
@@ -108,8 +105,7 @@ public abstract class BasicServer {
 			messageReaderThread.interrupt();
 			inputReader.close();
 			outputWriter.close();
-			running = false;
-			started = false;
+			setState(ServerState.STOPPED);
 		} catch (IOException e) {
 			onError(e);
 			e.printStackTrace();
@@ -170,8 +166,6 @@ public abstract class BasicServer {
 			try {
 				int code = serverProcess.waitFor();
 				EventHandler.EVENT_BUS.post(new ServerStopEvent(this.server, code));
-				running = false;
-				started = false;
 
 				messageReaderThread.interrupt();
 
@@ -222,7 +216,7 @@ public abstract class BasicServer {
 	public abstract String getPluginName();
 
 	public boolean isRunning() {
-		return running;
+		return getState() != ServerState.STOPPED;
 	}
 
 	public int getPID() {
@@ -268,9 +262,8 @@ public abstract class BasicServer {
 	@Override
 	public String toString() {
 		return "BasicServer{" +
-				"running=" + running +
-				", started=" + started +
-				", jarFile=" + jarFile +
+				", state=" + state + '\'' +
+				", jarFile=" + jarFile + '\'' +
 				", name='" + name + '\'' +
 				", args='" + args + '\'' +
 				", argsAfterJar='" + argsAfterJar + '\'' +
@@ -280,5 +273,19 @@ public abstract class BasicServer {
 	public abstract List<Control> getExtraControls();
 
 	public abstract int getSaveVersion();
+
+	public String getDoneRegex() {
+		return null;
+	}
+
+	public ServerState getState() {
+		return this.state;
+	}
+
+	public void setState(ServerState state) {
+		log.debug("[{}]: Set state from {} to {}", getName(), this.state, state);
+		this.state = state;
+		handler.refreshListState();
+	}
 
 }

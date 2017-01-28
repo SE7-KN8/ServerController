@@ -11,6 +11,7 @@ import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
 import sebe3012.servercontroller.util.DialogUtil;
@@ -48,6 +49,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -368,13 +370,20 @@ public class FrameHandler implements IEventHandler {
 		@Override
 		protected void updateItem(BasicServer item, boolean empty) {
 			super.updateItem(item, empty);
-			if (item == null || empty) {
-				setText("");
-				setGraphic(null);
-			} else {
-				setGraphic(null);
-				setText(item.getName());
-			}
+
+			Platform.runLater(() -> {
+				if (item == null || empty) {
+					setText("");
+					setGraphic(null);
+				} else {
+
+					Rectangle r = new Rectangle(20, 20, ServerState.getColor(item.getState()));
+
+					setGraphic(r);
+					setText(item.getName());
+				}
+			});
+
 		}
 
 	}
