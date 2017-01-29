@@ -342,8 +342,8 @@ public class FrameHandler implements IEventHandler {
 
 		lView.setCellFactory(e -> new ServerCell());
 
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e-> ServerDialog.loadDialog(), "Server hinzufügen");
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e-> Tabs.removeCurrentTab(), "Server entfernen");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), "Server hinzufügen");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), "Server entfernen");
 		GUIUtil.addSeparatorToToolbar(toolbar);
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), "Server starten");
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), "Server neustarten");
@@ -375,18 +375,16 @@ public class FrameHandler implements IEventHandler {
 		protected void updateItem(BasicServer item, boolean empty) {
 			super.updateItem(item, empty);
 
-			Platform.runLater(() -> {
-				if (item == null || empty) {
-					setText("");
-					setGraphic(null);
-				} else {
+			if (item == null || empty) {
+				setText("");
+				setGraphic(null);
+			} else {
 
-					Circle c = new Circle(10,ServerState.getColor(item.getState()));
+				Circle c = new Circle(10, ServerState.getColor(item.getState()));
 
-					setGraphic(c);
-					setText(item.getName());
-				}
-			});
+				setGraphic(c);
+				setText(item.getName());
+			}
 
 		}
 

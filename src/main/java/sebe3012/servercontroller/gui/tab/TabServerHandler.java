@@ -13,6 +13,8 @@ import sebe3012.servercontroller.util.DialogUtil;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.application.Platform;
+
 public class TabServerHandler implements IEventHandler {
 	private BasicServer server;
 	private boolean restartServer = false;
@@ -40,7 +42,7 @@ public class TabServerHandler implements IEventHandler {
 		if (server != null) {
 			if (!server.isRunning()) {
 				startServer();
-			}else{
+			} else {
 				showServerAlreadyRunningDialog();
 			}
 		} else {
@@ -111,7 +113,7 @@ public class TabServerHandler implements IEventHandler {
 		DialogUtil.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
 	}
 
-	public void refreshListState(){
+	public void refreshListState() {
 		handler.refreshListState();
 	}
 
@@ -126,7 +128,7 @@ public class TabServerHandler implements IEventHandler {
 			}
 
 			getContentHandler().lblInfo.setText(this.server.getServerInfo());
-			
+
 		}
 	}
 
@@ -134,7 +136,7 @@ public class TabServerHandler implements IEventHandler {
 	public void serverReturnMessage(ServerMessageEvent event) {
 		if (event.getServer() == server) {
 			handler.addTextToOutput("[" + serverName + "] " + event.getMessage());
-			if(StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())){
+			if (StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())) {
 				server.setState(ServerState.RUNNING);
 			}
 
@@ -152,7 +154,7 @@ public class TabServerHandler implements IEventHandler {
 			server = server.createNew();
 			server.setServerHandler(this);
 
-			Servers.serversList.set(index, server);
+			Platform.runLater(() -> Servers.serversList.set(index, server));
 
 			if (restartServer) {
 				server.start();
