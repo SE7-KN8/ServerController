@@ -25,7 +25,7 @@ public class ChartsUpdater extends Thread {
 				FrameHandler.ramUsed1.setPieValue(ramUsed);
 				FrameHandler.ramUsed2.setPieValue(ramUsed);
 				FrameHandler.totalRam.setPieValue(ramInstalled);
-				FrameHandler.totelCpu.setPieValue(passiveCpu);
+				FrameHandler.totalCpu.setPieValue(passiveCpu);
 				FrameHandler.usedCpu.setPieValue(cpuPercent);
 			});
 

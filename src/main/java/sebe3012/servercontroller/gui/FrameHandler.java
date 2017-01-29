@@ -342,10 +342,14 @@ public class FrameHandler implements IEventHandler {
 
 		lView.setCellFactory(e -> new ServerCell());
 
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer());
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer());
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e-> ServerDialog.loadDialog(), "Server hinzufügen");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e-> Tabs.removeCurrentTab(), "Server entfernen");
+		GUIUtil.addSeparatorToToolbar(toolbar);
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), "Server starten");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), "Server neustarten");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer(), "Server stoppen");
+		GUIUtil.addSeparatorToToolbar(toolbar);
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), "Server bearbeiten");
 
 		mainPane = main;
 		list = lView;
@@ -398,6 +402,7 @@ public class FrameHandler implements IEventHandler {
 			}
 
 			event.getNewControls().forEach(control -> {
+				log.debug("help");
 				control.setPrefWidth(1000);
 				vBox.getChildren().add(control);
 			});
@@ -423,7 +428,7 @@ public class FrameHandler implements IEventHandler {
 	public static PieChart.Data ramUsed2 = new PieChart.Data("Genutzt", 1.0);
 	public static PieChart.Data assignedRam = new PieChart.Data("Zugewiesen", 1.0);
 	public static PieChart.Data totalRam = new PieChart.Data("Gesamt", 1.0);
-	public static PieChart.Data totelCpu = new PieChart.Data("100%", 1.0);
+	public static PieChart.Data totalCpu = new PieChart.Data("100%", 1.0);
 	public static PieChart.Data usedCpu = new PieChart.Data("Genutzt", 1.0);
 
 	private void initCharts() {
@@ -432,7 +437,7 @@ public class FrameHandler implements IEventHandler {
 		FrameHandler.ramTotalChart = ramTotal;
 		FrameHandler.ramUsedChart = ramUsed;
 
-		ramUsed.setTitle("Genutzer RAM / Zugewiese\n(Ungenau)");
+		ramUsed.setTitle("Genutzer RAM / Zugewiesen\n(Ungenau)");
 		ramTotal.setTitle("Genutzer RAM / Gesamt\n(Ungenau)");
 		cpu.setTitle("Genutze CPU / 100%\n(Ungenau)");
 
@@ -441,6 +446,6 @@ public class FrameHandler implements IEventHandler {
 		ramTotal.getData().add(ramUsed2);
 		ramTotal.getData().add(totalRam);
 		cpu.getData().add(usedCpu);
-		cpu.getData().add(totelCpu);
+		cpu.getData().add(totalCpu);
 	}
 }

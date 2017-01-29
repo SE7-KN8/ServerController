@@ -1,3 +1,9 @@
+* {
+	-base-normal: rgb(40.0,190.0,31.0);
+	-base-hover: rgb(30.0,190.0,131.0);
+	-base-armed: rgb(130.0,190.0,31.0);
+}
+
 .root {
 	-fx-base : rgb(220.0,220.0,220.0);
 }/*Base Color */
@@ -6,19 +12,19 @@
 /*Start Button */
 .button {
 	-fx-font-size: 15.0;
-	-fx-border-color: rgb(40.0,190.0,31.0);
+	-fx-border-color: -base-normal;
 	-fx-border-radius: 20.0px;
 	-fx-border-width: 2.0px;
-	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
+	-fx-background-color: transparent;
 }
 
 .button:hover {
-	-fx-border-color: rgb(30.0,190.0,131.0);
+	-fx-border-color: -base-hover;
 	-fx-cursor: hand;
 }
 
 .button:armed {
-	-fx-border-color: rgb(130.0,190.0,31.0);
+	-fx-border-color: -base-armed;
 	-fx-cursor: hand;
 }
 /*End Button */
@@ -39,13 +45,13 @@
 
 /*Start Textfield */
 .text-field {
-    -fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
+    -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
     -fx-background-insets: 0.0 -1.0 -1.0 -1.0, 0.0 0.0 0.0 0.0, 0.0 -1.0 9.0 -1.0;
 }
 
 .text-field:focused {
 	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
-	-fx-border-color: rgb(40.0,190.0,31.0);
+	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
 /*End Textfield */
@@ -54,44 +60,44 @@
 
 /*Start Textarea */
 .text-area {
-    -fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
+    -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
 }
 
 .text-area:focused {
 	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
-	-fx-border-color: rgb(40.0,190.0,31.0);
+	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
 /*End Textarea */
 
 
 .pane {
-	-fx-background-color: rgb(220.0,220.0,220.0);
+	-fx-background-color: -fx-base;
 }/*Pane */
 
 .buttonlist {
-	-fx-background-color: rgb(220.0,220.0,220.0);
+	-fx-background-color: -fx-base;
 }/*ButtonList */
 
 
 /*Start ListView */
 .list-view{
-	-fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
+	-fx-background-color: #a9a9a9 , -fx-base, -fx-base;
 }
 
 .list-view:focused{
-	-fx-background-color: #a9a9a9 , rgb(220.0,220.0,220.0) , rgb(220.0,220.0,220.0);
+	-fx-background-color: #a9a9a9 , -fx-base, -fx-base;
 }
 /*End Listview */
 
 
 /*Start TabPane */
 .tab-pane{
-	-fx-background-color: rgb(220.0,220.0,220.0);
+	-fx-background-color: -fx-base;
 }
 
 .tab-pane:focused{
-	-fx-border-color: rgb(40.0,190.0,31.0, 0.0);
+	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
 
@@ -108,7 +114,7 @@
 }
 
 .tab-pane .tab {
-    -fx-background-color: rgb(220.0,220.0,220.0);
+    -fx-background-color: -fx-base;
 
 }
 
@@ -125,7 +131,7 @@
 
 .tab:selected .tab-label{
     -fx-alignment: CENTER;
-    -fx-text-fill: rgb(40.0,190.0,31.0);
+    -fx-text-fill: -base-normal;
 }
 /*End TabPane */
 
@@ -140,7 +146,7 @@
 }
 
 .menu:hover {
-	-fx-background-color: rgb(40.0,190.0,31.0);
+	-fx-background-color: -base-normal;
 }
 
 .menu:hover .label{
@@ -148,7 +154,7 @@
 }
 
 .menu:showing {
-	-fx-background-color: rgb(40.0,190.0,31.0);
+	-fx-background-color: -base-normal;
 }
 
 .menu:showing .label{
@@ -164,7 +170,7 @@
 }
 
 .menu-item:focused {
-     -fx-background-color: rgb(40.0,190.0,31.0);
+     -fx-background-color: -base-normal;
 }
 
 .menu-item:focused .label {
@@ -182,7 +188,7 @@
 
 /*Start ListCell */
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
-    -fx-background-color: rgb(40.0,190.0,31.0);
+    -fx-background-color: -base-normal;
     -fx-text-fill: white;
 }
 
@@ -207,39 +213,49 @@
 
 /*Start ComboBox */
 .combo-box-base {	
-	-fx-background-color: rgba(255.0,255.0,255.0,0.0);
-    -fx-border-color: rgb(40.0,190.0,31.0);
+	-fx-background-color: transparent;
+    -fx-border-color: -base-normal;
     -fx-border-radius: 20.0px;
 	-fx-border-width: 2.0px;
     -fx-padding: 0.0;
 }
 
 .combo-box-base:hover {
-    -fx-border-color: rgb(30.0,190.0,131.0);
+    -fx-border-color: -base-hover;
     -fx-cursor: hand;
 }
 
 .combo-box-base:showing {
-	-fx-border-color: rgb(130.0,190.0,31.0);
+	-fx-border-color: -base-armed;
 }
 .combo-box .cell:selected {
-	-fx-text-fill: rgb(40.0,190.0,31.0);
-    -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+	-fx-text-fill: -base-normal;
+    -fx-background-color: transparent;
 }
 /*End ComboBox */
 
 
 /*Start Separator */
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+   -fx-background-color: transparent;
    -fx-border-width: 2.0px;
    -fx-border-radius: 20.0px;
-   -fx-border-color: rgb(40.0,190.0,31.0);
+   -fx-border-color: -base-normal;
 }
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: rgba(255.0,255.0,255.0,0.0);
+   -fx-background-color: transparent;
    -fx-border-width: 2.0px;
    -fx-border-radius: 20.0px;
-   -fx-border-color: rgb(40.0,190.0,31.0);
+   -fx-border-color: -base-normal;
+}
+
+.separator .line {
+    -fx-border-color: -base-normal;
+    -fx-border-width: 1.0px;
 }
 /*End Separator */
+
+.tooltip {
+    -fx-background-color: -fx-base;
+    -fx-text-fill: black;
+}/*Tooltip*/

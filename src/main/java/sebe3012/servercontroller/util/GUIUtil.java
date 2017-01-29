@@ -6,8 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -92,8 +95,9 @@ public class GUIUtil {
 	 * @param bar          The toolbar
 	 * @param imagePath    The path to the image
 	 * @param eventHandler The eventhandler which one handles the click event
+	 * @param tooltip      The tooltip that is show when the mouse is over the button
 	 */
-	public static void addButtonToToolbar(@Nullable ToolBar bar, @Nullable String imagePath, @Nullable EventHandler<ActionEvent> eventHandler) {
+	public static void addButtonToToolbar(@Nullable ToolBar bar, @Nullable String imagePath, @Nullable EventHandler<ActionEvent> eventHandler, @Nullable String tooltip) {
 		if (bar != null) {
 			if (imagePath != null) {
 				ImageView imageView = new ImageView(imagePath);
@@ -101,12 +105,24 @@ public class GUIUtil {
 				b.getStyleClass().add("tool-button");
 				b.setGraphic(imageView);
 				b.setOnAction(eventHandler);
+				b.setTooltip(new Tooltip(tooltip));
 				bar.getItems().add(b);
 
 			}
 
 		} else {
 			log.warn("Couldn't add button! ToolBar is null!");
+		}
+	}
+
+	/**
+	 * Adds a {@link javafx.scene.control.Separator} to the Toolbar
+	 *
+	 * @param bar The toolbar
+	 */
+	public static void addSeparatorToToolbar(@Nullable ToolBar bar) {
+		if (bar != null) {
+			bar.getItems().add(new Separator(Orientation.VERTICAL));
 		}
 	}
 }
