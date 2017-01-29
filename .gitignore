@@ -1,6 +1,8 @@
 #All gradle files
 .gradle
 
+!/build/launch4j/icons/icon.ico
+
 #Build files
 /build/
 /versions/

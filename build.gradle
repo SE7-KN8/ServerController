@@ -1,5 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'edu.sc.seis.launch4j' version '2.3.0'
+}
+
 
 repositories {
     jcenter()
@@ -36,4 +40,11 @@ uploadArchives {
 	     dirs 'versions'
 	  }
    }
+}
+
+launch4j {
+	mainClassName = 'sebe3012.servercontroller.ServerController'
+	icon = "${projectDir}/raw/icon.ico"
+	copyright = '2016-2017 by Sebastian Knackstedt'
+	outfile = project.name + '-' + project.version + '.exe'
 }
