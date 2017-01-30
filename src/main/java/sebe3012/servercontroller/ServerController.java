@@ -37,7 +37,7 @@ public class ServerController {
 
 	public static boolean DEBUG = false;
 
-	public static final String VERSION = "0.3.9.9_alpha";
+	public static final String VERSION = "0.3.10.9_alpha";
 
 
 	private static final Logger log = LogManager.getLogger();
