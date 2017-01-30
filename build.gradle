@@ -15,10 +15,10 @@ dependencies {
     compile 'org.jdom:jdom2:2.0.6'
     compile 'net.java.dev.jna:jna:4.2.2'
     compile 'org.glassfish:javax.json:1.0.4'
-    compile 'org.fusesource:sigar:1.6.4'
-    compile 'org.apache.logging.log4j:log4j-core:2.3'
-    compile 'org.apache.logging.log4j:log4j-api:2.3'
+    compile 'org.apache.logging.log4j:log4j-core:2.8'
+    compile 'org.apache.logging.log4j:log4j-api:2.8'
     compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.github.dblock:oshi-core:3.3'
 }
 
 version = '0.3.9.9_alpha'

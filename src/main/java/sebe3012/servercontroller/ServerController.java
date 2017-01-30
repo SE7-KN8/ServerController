@@ -10,8 +10,7 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
-import sebe3012.servercontroller.server.monitoring.ServerMonitoring;
+import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,6 +72,7 @@ public class ServerController {
 
 	public static void stop(){
 		log.info("ServerController is stopping");
+		ServerWatcher.running = false;
 		FrameHandler.mainPane.getTabs().forEach(tab -> {
 			if (tab instanceof ServerTab) {
 
@@ -84,8 +84,6 @@ public class ServerController {
 				}
 			}
 		});
-		ChartsUpdater.stopUpdate();
-		ServerMonitoring.stopMonitoring();
 	}
 
 	public static String loadStringContent(String path) {

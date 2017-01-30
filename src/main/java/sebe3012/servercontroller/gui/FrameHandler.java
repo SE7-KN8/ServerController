@@ -13,7 +13,7 @@ import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
-import sebe3012.servercontroller.server.monitoring.ChartsUpdater;
+import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.NumberField;
@@ -24,12 +24,16 @@ import org.jdom2.JDOMException;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -64,6 +68,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FrameHandler implements IEventHandler {
 
@@ -72,6 +77,7 @@ public class FrameHandler implements IEventHandler {
 	public static VBox buttonList;
 	public static String currentDesign;
 	public static HashMap<String, String> designs;
+	public static Thread monitoringThread;
 
 	private static final Logger log = LogManager.getLogger();
 
@@ -119,8 +125,6 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	private ToolBar toolbar;
-
-	public static Thread monitoringThread = new Thread(new ChartsUpdater());
 
 	@FXML
 	void initialize() {
@@ -328,9 +332,11 @@ public class FrameHandler implements IEventHandler {
 		vBox.getStyleClass().add("buttonlist");
 		credits.setText(ServerController.VERSION);
 
-		monitoringThread.setName("server-monitoring-thread-1");
-
 		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+			FrameHandler.this.dataCounterRam.set(0);
+			FrameHandler.this.dataCounterCpu.set(0);
+
 			if (newValue instanceof ServerTab) {
 				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
 						.getServerHandler();
@@ -356,8 +362,12 @@ public class FrameHandler implements IEventHandler {
 		buttonList = vBox;
 		lView.setItems(Servers.serversList);
 		initCharts();
-		log.info("FXML initialized");
+
+		monitoringThread = new Thread(new ServerWatcher());
+		monitoringThread.setName("Server Monitoring Thread");
 		monitoringThread.start();
+
+		log.info("FXML initialized");
 	}
 
 	private static void showSaveErrorDialog() {
@@ -400,7 +410,6 @@ public class FrameHandler implements IEventHandler {
 			}
 
 			event.getNewControls().forEach(control -> {
-				log.debug("help");
 				control.setPrefWidth(1000);
 				vBox.getChildren().add(control);
 			});
@@ -410,40 +419,101 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	@FXML
-	private PieChart ramUsed;
+	private VBox leftBox;
 
-	@FXML
-	private PieChart ramTotal;
+	private NumberAxis ramAxis;
+	private NumberAxis cpuAxis;
 
-	@FXML
-	private PieChart cpu;
+	private AreaChart.Series<Number, Number> ramSeries;
+	private AreaChart.Series<Number, Number> cpuSeries;
 
-	public static PieChart cpuChart;
-	public static PieChart ramTotalChart;
-	public static PieChart ramUsedChart;
+	private int maxValues = 10;
+	private IntegerProperty dataCounterRam = new SimpleIntegerProperty(0);
+	private IntegerProperty dataCounterCpu = new SimpleIntegerProperty(0);
 
-	public static PieChart.Data ramUsed1 = new PieChart.Data("Genutzt", 1.0);
-	public static PieChart.Data ramUsed2 = new PieChart.Data("Genutzt", 1.0);
-	public static PieChart.Data assignedRam = new PieChart.Data("Zugewiesen", 1.0);
-	public static PieChart.Data totalRam = new PieChart.Data("Gesamt", 1.0);
-	public static PieChart.Data totalCpu = new PieChart.Data("100%", 1.0);
-	public static PieChart.Data usedCpu = new PieChart.Data("Genutzt", 1.0);
+	public static ConcurrentLinkedQueue<Number> ramData = new ConcurrentLinkedQueue<>();
+	public static ConcurrentLinkedQueue<Number> cpuData = new ConcurrentLinkedQueue<>();
 
 	private void initCharts() {
 
-		FrameHandler.cpuChart = cpu;
-		FrameHandler.ramTotalChart = ramTotal;
-		FrameHandler.ramUsedChart = ramUsed;
+		ramAxis = new NumberAxis(0, maxValues, 1);
+		ramAxis.setForceZeroInRange(false);
+		ramAxis.setAutoRanging(false);
 
-		ramUsed.setTitle("Genutzer RAM / Zugewiesen\n(Ungenau)");
-		ramTotal.setTitle("Genutzer RAM / Gesamt\n(Ungenau)");
-		cpu.setTitle("Genutze CPU / 100%\n(Ungenau)");
+		cpuAxis = new NumberAxis(0, maxValues, 1);
+		cpuAxis.setForceZeroInRange(false);
+		cpuAxis.setAutoRanging(false);
 
-		ramUsed.getData().add(ramUsed1);
-		ramUsed.getData().add(assignedRam);
-		ramTotal.getData().add(ramUsed2);
-		ramTotal.getData().add(totalRam);
-		cpu.getData().add(usedCpu);
-		cpu.getData().add(totalCpu);
+		NumberAxis ramAxisY = new NumberAxis();
+		ramAxisY.setAutoRanging(false);
+		ramAxisY.setLowerBound(0);
+		ramAxisY.setUpperBound(100);
+		ramAxisY.setTickUnit(20);
+
+		NumberAxis cpuAxisY = new NumberAxis();
+		cpuAxisY.setAutoRanging(false);
+		cpuAxisY.setLowerBound(0);
+		cpuAxisY.setUpperBound(100);
+		cpuAxisY.setTickUnit(20);
+
+		AreaChart<Number, Number> ram = new AreaChart<Number, Number>(ramAxis, ramAxisY) {
+			@Override
+			protected void dataItemAdded(Series<Number, Number> series, int itemIndex, Data<Number, Number> item) {
+			}
+		};
+
+		AreaChart<Number, Number> cpu = new AreaChart<Number, Number>(cpuAxis, cpuAxisY) {
+			@Override
+			protected void dataItemAdded(Series<Number, Number> series, int itemIndex, Data<Number, Number> item) {
+			}
+		};
+
+		ram.setAnimated(false);
+		cpu.setAnimated(false);
+
+		ram.setTitle("RAM");
+		cpu.setTitle("CPU");
+
+		ramSeries = new AreaChart.Series<>();
+		cpuSeries = new AreaChart.Series<>();
+
+		ramSeries.setName("RAM-Auslastung");
+		cpuSeries.setName("CPU-Auslastung");
+
+		ram.getData().add(ramSeries);
+		cpu.getData().add(cpuSeries);
+
+		leftBox.getChildren().add(cpu);
+		leftBox.getChildren().add(ram);
+
+		new AnimationTimer() {
+
+			@Override
+			public void handle(long now) {
+				addDataToSeries(ramData, ramSeries, ramAxis, dataCounterRam);
+			}
+		}.start();
+
+		new AnimationTimer() {
+
+			@Override
+			public void handle(long now) {
+				addDataToSeries(cpuData, cpuSeries, cpuAxis, dataCounterCpu);
+			}
+		}.start();
+	}
+
+	private void addDataToSeries(ConcurrentLinkedQueue<Number> queue, AreaChart.Series<Number, Number> series, NumberAxis axis, IntegerProperty dataCounter) {
+		for (int i = 0; i < 20; i++) {
+			if (queue.isEmpty()) break;
+			series.getData().add(new AreaChart.Data<>(dataCounter.get(), queue.remove()));
+			dataCounter.set(dataCounter.get() + 1);
+		}
+		if (series.getData().size() > maxValues) {
+			series.getData().remove(0, series.getData().size() - maxValues);
+		}
+
+		axis.setLowerBound(dataCounter.get() - maxValues);
+		axis.setUpperBound(dataCounter.get() - 1);
 	}
 }

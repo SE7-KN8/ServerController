@@ -6,6 +6,7 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
+import sebe3012.servercontroller.server.monitoring.ServerMonitor;
 import sebe3012.servercontroller.util.DialogUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +43,7 @@ public abstract class BasicServer {
 	private HashMap<String, Object> externalForm;
 	private Logger log = LogManager.getLogger();
 	private ServerState state = ServerState.STOPPED;
+	private ServerMonitor monitor = new ServerMonitor();
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -56,7 +58,6 @@ public abstract class BasicServer {
 	public void start() {
 		if (getState() == ServerState.STOPPED) {
 			try {
-				setState(ServerState.STARTING);
 				messageReaderThread = new MessageReader(new MessageReader(), this);
 				waitForExitThread = new WaitForExit(new WaitForExit(), this);
 				messageReaderThread.setName(name + "-Server reader");
@@ -92,6 +93,10 @@ public abstract class BasicServer {
 					pid = kernel.GetProcessId(handle);
 
 				}
+
+
+				setState(ServerState.STARTING);
+				this.monitor.setPid(pid);
 			} catch (Exception e) {
 				e.printStackTrace();
 				onError(e);
@@ -101,6 +106,7 @@ public abstract class BasicServer {
 
 	public void stop() {
 		try {
+			this.monitor.setPid(-1);
 			serverProcess.destroy();
 			messageReaderThread.interrupt();
 			inputReader.close();
@@ -286,6 +292,10 @@ public abstract class BasicServer {
 		log.debug("[{}]: Set state from {} to {}", getName(), this.state, state);
 		this.state = state;
 		handler.refreshListState();
+	}
+
+	public ServerMonitor getMonitor(){
+		return this.monitor;
 	}
 
 }
