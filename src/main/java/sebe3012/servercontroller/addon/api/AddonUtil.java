@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon.api;
 
+import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -55,7 +56,7 @@ public class AddonUtil {
 		if (isEdit) {
 			int index = Tabs.getCurrentIndex();
 			FrameHandler.mainPane.getTabs().set(index, tab);
-			    Servers.serversList.set(index, server);
+			Servers.serversList.set(index, server);
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);
 			Servers.serversList.add(server);
@@ -70,12 +71,23 @@ public class AddonUtil {
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server));
 	}
 
+	/**
+	 * @param fileType The file regex
+	 * @param fileName The file name
+	 * @return the path to the file or null if the user canceled the operation
+	 */
+	@Nullable
 	public static String openFileChooser(String fileType, String fileName) {
 
 		FileChooser fc = new FileChooser();
 
-		//fc.setInitialDirectory(new File(ServerControllerPreferences
-		//		.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, System.getProperty("user.home"))));
+		log.debug("Path: {}", ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, "nulll"));
+
+		File path = new File(ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, System.getProperty("user.home")));
+
+		if (path.exists()) {
+			fc.setInitialDirectory(path);
+		}
 
 		fc.getExtensionFilters().add(new ExtensionFilter(fileName, fileType));
 
@@ -83,13 +95,12 @@ public class AddonUtil {
 
 		if (f != null) {
 
-			//ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL,
-			//		f.getAbsolutePath());
+			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, f.getParent());
 
 			return f.getAbsolutePath();
 		}
 
-		return "";
+		return null;
 
 	}
 
