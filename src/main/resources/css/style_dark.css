@@ -42,7 +42,7 @@
 }
 /*End Tool-button*/
 
-/*Start Textfield */
+/*Start TextField */
 .text-field {
     -fx-background-color: transparent;
     -fx-border-color: -base-normal;
@@ -57,11 +57,11 @@
 	-fx-border-color: derive(-base-normal, -20.0%);
 	-fx-background-insets: 0.0;
 }
-/*End Textfield */
+/*End TextField */
 
 
 
-/*Start Textarea */
+/*Start TextArea */
 .text-area {
 	-fx-background-color: derive(-fx-base, 10.0%);
     -fx-border-color: -base-normal;
@@ -78,14 +78,14 @@
 	-fx-text-fill: white;
 	-fx-border-color: derive(-base-normal, -20.0%);
 }
-/*End Textarea */
+/*End TextArea */
 
 
 .pane {
 	-fx-background-color: derive(-fx-base, 10.0%);
 }/*Pane */
 
-.buttonlist {
+.button-list {
 	-fx-background-color: -fx-base;
 }/*ButtonList */
 
@@ -98,7 +98,7 @@
 .list-view:focused{
 	-fx-background-color: -fx-base;
 }
-/*End Listview */
+/*End ListView */
 
 
 /*Start TabPane */
@@ -192,7 +192,7 @@
 .context-menu {
     -fx-background-color: derive(-fx-base,20.0%);
     -fx-background-radius: 0.0px;
-}/*Contexmenu */
+}/*ContextMenu */
 
 
 /*Start ListCell */

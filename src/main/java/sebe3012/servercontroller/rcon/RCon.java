@@ -71,16 +71,16 @@ public class RCon implements Closeable {
 
 		receivedBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		int receivedLenght = receivedBuffer.getInt();
+		int receivedLength = receivedBuffer.getInt();
 		int receivedRequestID = receivedBuffer.getInt();
 		int receivedType = receivedBuffer.getInt();
 
 		if (ServerController.DEBUG) {
-			System.out.println(host + "-RCon-Connection received package: Lenght: " + receivedLenght + " RequestID: "
+			System.out.println(host + "-RCon-Connection received package: Length: " + receivedLength + " RequestID: "
 					+ receivedRequestID + " Type: " + receivedType);
 		}
 
-		receivedPayload = new byte[receivedLenght - 4 - 4 - 2];
+		receivedPayload = new byte[receivedLength - 4 - 4 - 2];
 		receivedBuffer.get(receivedPayload);
 		receivedBuffer.get(new byte[2]);
 

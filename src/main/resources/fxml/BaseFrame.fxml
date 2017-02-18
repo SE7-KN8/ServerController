@@ -17,25 +17,25 @@
          <children>
             <MenuBar fx:id="mBar">
                <menus>
-                  <Menu mnemonicParsing="false" text="Datei">
+                  <Menu mnemonicParsing="false" text="%menu_file">
                      <items>
-                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="Einstellungen speichern" />
-                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="Einstellungen laden" />
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="%menu_item_save_settings" />
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="%menu_item_load_settings" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Server">
+                  <Menu mnemonicParsing="false" text="%menu_server">
                     <items>
-                      <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="Server hinzufügen" />
-                        <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="Server bearbeiten" />
-                        <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="Server entfernen" />
-                        <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="RCon Verbindung" />
+                      <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="%menu_item_add_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="%menu_item_edit_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="%menu_item_remove_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="%menu_item_rcon_connection" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Hilfe">
+                  <Menu mnemonicParsing="false" text="%menu_help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="Lizenz" />
-                        <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="Design" />
-                      <MenuItem fx:id="over" mnemonicParsing="false" onAction="#onOverItemClicked" text="Über" />
+                        <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="%menu_item_license" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="%menu_item_design" />
+                      <MenuItem fx:id="creditsItem" mnemonicParsing="false" onAction="#onCreditsItemClicked" text="%menu_item_credits" />
                     </items>
                   </Menu>
                </menus>
@@ -50,9 +50,9 @@
    <right>
       <VBox fx:id="vBox" prefHeight="697.0" prefWidth="206.0" spacing="15.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnStartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStartAllClicked" text="Alle Server starten" />
-            <Button fx:id="btnStopAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopAllClicked" text="Alle Server beenden" />
-            <Button fx:id="btnRestartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRestartAllClicked" text="Alle Server neustarten" />
+            <Button fx:id="btnStartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStartAllClicked" text="%start_all_server" />
+            <Button fx:id="btnStopAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopAllClicked" text="%stop_all_server" />
+            <Button fx:id="btnRestartAll" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRestartAllClicked" text="%restart_all_server" />
          </children>
          <padding>
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
@@ -63,7 +63,7 @@
       <TabPane fx:id="main" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
    </center>
    <left>
-      <VBox prefHeight="697.0" prefWidth="272.0" styleClass="vbox" BorderPane.alignment="CENTER" fx:id="leftBox">
+      <VBox fx:id="leftBox" prefHeight="697.0" prefWidth="272.0" styleClass="vbox" BorderPane.alignment="CENTER">
          <children>
             <ListView fx:id="lView" prefHeight="662.0" prefWidth="209.0" />
          </children>

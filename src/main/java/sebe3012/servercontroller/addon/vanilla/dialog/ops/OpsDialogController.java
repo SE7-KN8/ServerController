@@ -3,6 +3,7 @@ package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.util.I18N;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -101,17 +102,17 @@ public class OpsDialogController {
 		}
 		mainList.setItems(main);
 
-		MenuItem addOp = new MenuItem("Operator hinzuf�gen");
+		MenuItem addOp = new MenuItem(I18N.translate("addon_vanilla_add_operator"));
 
-		MenuItem removedOp = new MenuItem("Operator entfernen");
+		MenuItem removedOp = new MenuItem(I18N.translate("addon_vanilla_remove_operator"));
 
 		addOp.setOnAction(e -> {
 
 			TextInputDialog dialog = new TextInputDialog();
-			dialog.setHeaderText("Operator hinzuf�gen");
-			dialog.setContentText("Spielername: ");
+			dialog.setHeaderText(I18N.translate("addon_vanilla_add_operator"));
+			dialog.setContentText(I18N.translate("addon_vanilla_player_name"));
 
-			dialog.getDialogPane().getStylesheets().add(FrameHandler.class.getResource("style.css").toExternalForm());
+			dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 			dialog.getDialogPane().setMaxSize(300, 45);
 			dialog.getDialogPane().setPrefSize(300, 45);
 			Optional<String> result = dialog.showAndWait();

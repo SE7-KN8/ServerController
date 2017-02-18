@@ -10,6 +10,7 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -83,7 +84,7 @@ public class TabServerHandler implements IEventHandler {
 
 	private String serverName;
 
-	public void startServer() {
+	private void startServer() {
 		if (server != null) {
 			server.start();
 			handler.addTextToOutput("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
@@ -102,15 +103,15 @@ public class TabServerHandler implements IEventHandler {
 	}
 
 	private void showNoServerDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Kein Server ausgewählt");
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_no_server_selected"));
 	}
 
 	private void showServerNotRunningDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Der Server muß erst gestartet werden");
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_server_must_be_started"));
 	}
 
 	private void showServerAlreadyRunningDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Der Server ist bereits gestartet");
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_server_already_started"));
 	}
 
 	public void refreshListState() {

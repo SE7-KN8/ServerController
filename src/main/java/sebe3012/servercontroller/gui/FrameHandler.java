@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.ServerControllerPreferences;
+import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -14,8 +15,10 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
+import sebe3012.servercontroller.util.Design;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
+import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.NumberField;
 
 import org.apache.logging.log4j.LogManager;
@@ -56,16 +59,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -75,8 +76,8 @@ public class FrameHandler implements IEventHandler {
 	public static TabPane mainPane;
 	public static ListView<BasicServer> list;
 	public static VBox buttonList;
-	public static String currentDesign;
-	public static HashMap<String, String> designs;
+	public static Design currentDesign;
+	public static List<Design> designs;
 	public static Thread monitoringThread;
 
 	private static final Logger log = LogManager.getLogger();
@@ -103,7 +104,7 @@ public class FrameHandler implements IEventHandler {
 	private TabPane main;
 
 	@FXML
-	private MenuItem over;
+	private MenuItem creditsItem;
 
 	@FXML
 	private MenuItem addServer;
@@ -147,8 +148,8 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	@FXML
-	void onOverItemClicked(ActionEvent event) {
-		DialogUtil.showInformationAlert("Über", "", "ServerController by Sebastian Knackstedt (Sebe3012)\n© 2016-2017 Germany");
+	void onCreditsItemClicked(ActionEvent event) {
+		DialogUtil.showInformationAlert(I18N.translate("menu_item_credits"), "", I18N.format("credits", ServerController.VERSION));
 	}
 
 	@FXML
@@ -158,14 +159,10 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onSaveItemClicked(ActionEvent event) {
-		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().add(new ExtensionFilter(".xml", "*.xml"));
-		File f = fc.showSaveDialog(Frame.primaryStage);
-		if (f == null) {
-			return;
-		}
+		String file = AddonUtil.openFileChooser("*.xml", ".xml");
+
 		try {
-			ServerSave.saveServerController(f.getAbsolutePath());
+			ServerSave.saveServerController(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
@@ -174,14 +171,10 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onOpenItemClicked(ActionEvent event) {
-		FileChooser fc = new FileChooser();
-		fc.getExtensionFilters().add(new ExtensionFilter(".xml", "*.xml"));
-		File f = fc.showOpenDialog(Frame.primaryStage);
-		if (f == null) {
-			return;
-		}
+		String file = AddonUtil.openFileChooser("*.xml", ".xml");
+
 		try {
-			ServerSave.loadServerController(f.getAbsolutePath());
+			ServerSave.loadServerController(file);
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -211,24 +204,24 @@ public class FrameHandler implements IEventHandler {
 	@FXML
 	void onDesignClicked(ActionEvent event) {
 
-		ChoiceDialog<String> cd = new ChoiceDialog<>();
+		ChoiceDialog<Design> cd = new ChoiceDialog<>();
 		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
-		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		cd.setTitle("Design wählen");
-		cd.setHeaderText("Design des ServerController anpassen");
-		cd.getItems().setAll(FrameHandler.designs.keySet());
+		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		cd.setTitle(I18N.translate("dialog_choose_design"));
+		cd.setHeaderText(I18N.translate("dialog_choose_design_desc"));
+		cd.getItems().setAll(FrameHandler.designs);
 
-		Optional<String> result = cd.showAndWait();
+		Optional<Design> result = cd.showAndWait();
 
 		if (result.isPresent()) {
 
-			String name = result.get();
+			Design design = result.get();
 
-			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.KEY_DESIGN, name);
+			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.KEY_DESIGN, design.getId());
 
 			Frame.primaryStage.getScene().getStylesheets().clear();
-			Frame.primaryStage.getScene().getStylesheets().add(FrameHandler.designs.get(name));
-			FrameHandler.currentDesign = FrameHandler.designs.get(name);
+			Frame.primaryStage.getScene().getStylesheets().add(design.getStylesheet());
+			FrameHandler.currentDesign = design;
 
 		}
 
@@ -239,31 +232,31 @@ public class FrameHandler implements IEventHandler {
 
 		Dialog<Pair<String, Pair<Integer, char[]>>> loginDialog = new Dialog<>();
 
-		loginDialog.setTitle("RCon Verbindung");
-		loginDialog.setHeaderText("RCon Verbindungsinformation");
+		loginDialog.setTitle(I18N.translate("dialog_rcon"));
+		loginDialog.setHeaderText(I18N.translate("dialog_rcon_desc"));
 		loginDialog.setGraphic(new ImageView(ClassLoader.getSystemClassLoader().getResource("png/icon.png").toExternalForm()));
 
 		DialogPane dp = loginDialog.getDialogPane();
-		ButtonType bt = new ButtonType("Login", ButtonData.OK_DONE);
+		ButtonType bt = new ButtonType(I18N.translate("dialog_rcon_login"), ButtonData.OK_DONE);
 		dp.getButtonTypes().add(bt);
-		dp.getStylesheets().add(FrameHandler.currentDesign);
+		dp.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
 		TextField ip = new TextField();
-		ip.setPromptText("IP");
+		ip.setPromptText(I18N.translate("dialog_rcon_ip"));
 		NumberField port = new NumberField();
-		port.setPromptText("Port");
+		port.setPromptText(I18N.translate("dialog_rcon_port"));
 		PasswordField password = new PasswordField();
-		password.setPromptText("Passwort");
+		password.setPromptText(I18N.translate("dialog_rcon_password"));
 
-		grid.add(new Label("IP:"), 0, 0);
+		grid.add(new Label(I18N.translate("dialog_rcon_ip")), 0, 0);
 		grid.add(ip, 1, 0);
-		grid.add(new Label("Port:"), 0, 1);
+		grid.add(new Label(I18N.translate("dialog_rcon_port")), 0, 1);
 		grid.add(port, 1, 1);
-		grid.add(new Label("Passwort:"), 0, 2);
+		grid.add(new Label(I18N.translate("dialog_rcon_password")), 0, 2);
 		grid.add(password, 1, 2);
 		dp.setContent(grid);
 		loginDialog.setResultConverter(dialogButton -> {
@@ -294,7 +287,7 @@ public class FrameHandler implements IEventHandler {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
 		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		stage.setTitle("Lizenz");
+		stage.setTitle(I18N.translate("menu_item_license"));
 
 		VBox root = new VBox();
 
@@ -306,7 +299,7 @@ public class FrameHandler implements IEventHandler {
 		root.getChildren().add(wv);
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(FrameHandler.currentDesign);
+		scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 
 		stage.setResizable(false);
 		stage.setAlwaysOnTop(true);
@@ -316,20 +309,26 @@ public class FrameHandler implements IEventHandler {
 
 	private void init() {
 
-		designs = new HashMap<>();
+		designs = new ArrayList<>();
 
-		designs.put("Hell", ClassLoader.getSystemResource("css/style_bright.css").toExternalForm());
-		designs.put("Dunkel", ClassLoader.getSystemResource("css/style_dark.css").toExternalForm());
+		designs.add(new Design(ClassLoader.getSystemResource("css/style_bright.css").toExternalForm(), "bright"));
+		designs.add(new Design(ClassLoader.getSystemResource("css/style_dark.css").toExternalForm(), "dark"));
 
 		lView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> mainPane.getSelectionModel().select(newValue.intValue()));
 		main.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> lView.getSelectionModel().select(newValue.intValue()));
 
-		currentDesign = designs.get(ServerControllerPreferences
-				.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.keySet().iterator().next()));
+		String designID = ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.iterator().next().getId());
+
+		for (Design d : designs) {
+			if (d.getId().equals(designID)) {
+				currentDesign = d;
+				break;
+			}
+		}
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
-		vBox.getStyleClass().add("buttonlist");
+		vBox.getStyleClass().add("button-list");
 		credits.setText(ServerController.VERSION);
 
 		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -348,14 +347,14 @@ public class FrameHandler implements IEventHandler {
 
 		lView.setCellFactory(e -> new ServerCell());
 
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), "Server hinzufügen");
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), "Server entfernen");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), "Server starten");
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), "Server neustarten");
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer(), "Server stoppen");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), I18N.translate("tooltip_start_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), I18N.translate("tooltip_restart_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer(), I18N.translate("tooltip_stop_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), "Server bearbeiten");
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), I18N.translate("tooltip_edit_server"));
 
 		mainPane = main;
 		list = lView;
@@ -371,12 +370,11 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	private static void showSaveErrorDialog() {
-		DialogUtil.showErrorAlert("Fehler", "", "Es ist ein Fehler beim Laden/Speichern aufgetreten");
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_save_error"));
 	}
 
 	private static void showSaveStateErrorDialog() {
-		DialogUtil.showErrorAlert("Fehler", "",
-				"Die Datei ist nicht mit dieser Version des ServerControllers kompatibel");
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
 	}
 
 	private class ServerCell extends ListCell<BasicServer> {
@@ -445,13 +443,13 @@ public class FrameHandler implements IEventHandler {
 		cpuAxis.setAutoRanging(false);
 
 		NumberAxis ramAxisY = new NumberAxis();
-		ramAxisY.setAutoRanging(false);
+		ramAxisY.setAutoRanging(true);
 		ramAxisY.setLowerBound(0);
 		ramAxisY.setUpperBound(100);
 		ramAxisY.setTickUnit(20);
 
 		NumberAxis cpuAxisY = new NumberAxis();
-		cpuAxisY.setAutoRanging(false);
+		cpuAxisY.setAutoRanging(true);
 		cpuAxisY.setLowerBound(0);
 		cpuAxisY.setUpperBound(100);
 		cpuAxisY.setTickUnit(20);
@@ -477,8 +475,8 @@ public class FrameHandler implements IEventHandler {
 		ramSeries = new AreaChart.Series<>();
 		cpuSeries = new AreaChart.Series<>();
 
-		ramSeries.setName("RAM-Auslastung");
-		cpuSeries.setName("CPU-Auslastung");
+		ramSeries.setName(I18N.translate("ram_usage"));
+		cpuSeries.setName(I18N.translate("cpu_usage"));
 
 		ram.getData().add(ramSeries);
 		cpu.getData().add(cpuSeries);

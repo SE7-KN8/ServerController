@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,7 +29,7 @@ import java.util.Optional;
 public class Frame extends Application {
 
 	/**
-	 * The basic frame for the programm
+	 * The basic frame for the program
 	 */
 	public static Stage primaryStage;
 
@@ -79,11 +80,11 @@ public class Frame extends Application {
 	}
 
 	private void createPrimaryStage() throws IOException {
-		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"));
+		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getBundle());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(FrameHandler.currentDesign);
+		scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Minecraft Servercontroller by Sebe3012          " + ServerController.VERSION);
+		primaryStage.setTitle(I18N.format("window_title", ServerController.VERSION));
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		primaryStage.setOnCloseRequest(event -> {
@@ -93,7 +94,7 @@ public class Frame extends Application {
 				Platform.exit();
 			} else {
 				// Close Dialog
-				Optional<ButtonType> result = DialogUtil.showAlert("", "Beenden?", "Wollen sie wirklich beenden?", AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
+				Optional<ButtonType> result = DialogUtil.showAlert("", I18N.translate("dialog_close"), I18N.translate("dialog_close_desc"), AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
 
 				if (result.isPresent()) {
 					if (result.get().equals(ButtonType.OK)) {

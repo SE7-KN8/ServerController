@@ -5,6 +5,7 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +53,7 @@ public class Servers {
 			if (!server.isRunning()) {
 				EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
 			} else {
-				DialogUtil.showWaringAlert("Warnung", "", "Der Server muß erst gestoppt werden");
+				DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", I18N.translate("dialog_server_must_be_stopped"));
 			}
 		}
 	}

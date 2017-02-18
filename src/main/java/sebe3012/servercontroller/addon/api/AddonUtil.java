@@ -11,6 +11,7 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public class AddonUtil {
 		if (isEdit) {
 			int index = Tabs.getCurrentIndex();
 			FrameHandler.mainPane.getTabs().set(index, tab);
-			Servers.serversList.set(index, server);
+			    Servers.serversList.set(index, server);
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);
 			Servers.serversList.add(server);
@@ -92,10 +93,6 @@ public class AddonUtil {
 
 	}
 
-	public static boolean checkUserInput(String input) {
-		return input != null && input.trim().length() >= 1;
-	}
-
 	/**
 	 * Creates an dialog to create Addon-Specified server
 	 *
@@ -111,15 +108,15 @@ public class AddonUtil {
 
 		dialog.getDialogPane().setContent(root);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
-		dialog.setTitle(addon + "-Server erstellen");
+		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		dialog.setTitle(I18N.format("create_server", addon));
 		dialog.show();
 	}
 
 
 	private static GridPane getDialogLayout(String addon, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
-		DialogRow idRow = new DialogRow().setName("Server-ID").setPropertyName("name").setStringPredicate(StringPredicates.DEFAULT_CHECK);
-		DialogRow argsRow = new DialogRow().setName("Start-Argumente").setPropertyName("args").setStringPredicate(StringPredicates.DO_NOTHING);
+		DialogRow idRow = new DialogRow().setName(I18N.translate("dialog_create_server_name")).setPropertyName("name").setStringPredicate(StringPredicates.DEFAULT_CHECK);
+		DialogRow argsRow = new DialogRow().setName(I18N.translate("dialog_create_server_args")).setPropertyName("args").setStringPredicate(StringPredicates.DO_NOTHING);
 
 		if (parent != null) {
 			idRow.setDefaultValue(parent.getName());
@@ -154,7 +151,7 @@ public class AddonUtil {
 		GUIUtil.addColumnConstraints(layout, 10, 238, 253, Priority.SOMETIMES);
 
 		//Add header text
-		Label header = new Label(addon + "-Server erstellen");
+		Label header = new Label(I18N.format("create_server", addon));
 		header.setFont(new Font(50));
 		header.setPrefWidth(750);
 		header.setPrefHeight(73);
@@ -176,7 +173,7 @@ public class AddonUtil {
 		}
 
 		//Add confirm button
-		Button confirm = new Button("Fertig");
+		Button confirm = new Button(I18N.translate("dialog_finish"));
 		confirm.setPrefWidth(100);
 		confirm.setPrefHeight(50);
 		confirm.setOnAction(e -> {
@@ -196,7 +193,7 @@ public class AddonUtil {
 				//Test the values
 				if (!controlRow.getStringPredicate().test(v.get())) {
 					log.warn("Value '{}' do not match!", controlRow.getName());
-					DialogUtil.showWaringAlert("Warnung", "Falscher Inhalt", "Der Server kann nicht erstellt werden, da '" + controlRow.getName() + "' nicht gesetzt wurde");
+					DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), I18N.translate("dialog_wrong_content"), I18N.format("dialog_wrong_content_desc", controlRow.getName()));
 					flag.set(false);
 					return;
 				}
@@ -241,7 +238,7 @@ public class AddonUtil {
 		properties.put(dialogRow.getPropertyName(), field.textProperty());
 
 		if (dialogRow.isUsingFileChooser()) {
-			Button b = new Button("Auswählen...");
+			Button b = new Button(I18N.format("file_choose"));
 			b.setPrefWidth(dialogRow.getPrefWidth());
 			b.setPrefHeight(dialogRow.getPrefHeight());
 			b.setOnAction(e -> field.setText(AddonUtil.openFileChooser(dialogRow.getFileExtension(), dialogRow.getFileType())));

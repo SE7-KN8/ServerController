@@ -8,6 +8,7 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.server.monitoring.ServerMonitor;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -183,7 +184,7 @@ public abstract class BasicServer {
 	}
 
 	public String getServerInfo() {
-		return "Server-Name: " + name;
+		return I18N.format("server_name", getName());
 	}
 
 	public String getStopCommand() {
@@ -194,7 +195,7 @@ public abstract class BasicServer {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
 
-		DialogUtil.showExceptionAlert("Fehler", "Fehler von: " + getName(), "", errorMessage);
+		DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage);
 	}
 
 	public void sendCommand(String command) {
@@ -294,7 +295,7 @@ public abstract class BasicServer {
 		handler.refreshListState();
 	}
 
-	public ServerMonitor getMonitor(){
+	public ServerMonitor getMonitor() {
 		return this.monitor;
 	}
 

@@ -43,7 +43,7 @@
 }
 /*End Tool-button*/
 
-/*Start Textfield */
+/*Start TextField */
 .text-field {
     -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
     -fx-background-insets: 0.0 -1.0 -1.0 -1.0, 0.0 0.0 0.0 0.0, 0.0 -1.0 9.0 -1.0;
@@ -54,11 +54,11 @@
 	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
-/*End Textfield */
+/*End TextField */
 
 
 
-/*Start Textarea */
+/*Start TextArea */
 .text-area {
     -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
 }
@@ -68,14 +68,14 @@
 	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
-/*End Textarea */
+/*End TextArea */
 
 
 .pane {
 	-fx-background-color: -fx-base;
 }/*Pane */
 
-.buttonlist {
+.button-list {
 	-fx-background-color: -fx-base;
 }/*ButtonList */
 
@@ -88,7 +88,7 @@
 .list-view:focused{
 	-fx-background-color: #a9a9a9 , -fx-base, -fx-base;
 }
-/*End Listview */
+/*End ListView */
 
 
 /*Start TabPane */
@@ -183,7 +183,7 @@
     -fx-background-insets: 0.0, 1.0, 2.0;
     -fx-background-radius: 0.0 6.0 6.0 6.0, 0.0 5.0 5.0 5.0, 0.0 4.0 4.0 4.0;
     -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em;
-}/*Contexmenu */
+}/*ContextMenu */
 
 
 /*Start ListCell */
@@ -201,7 +201,7 @@
 }
 
 .list-cell:even {
-	-fx-background-color: lightgray;
+	-fx-background-color: lightgrey;
 }
 
 .list-cell:filled:hover {

@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.rcon.RCon;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,40 +29,38 @@ public class RConConsole {
 		try {
 			rcon.loadConnection();
 		} catch (UnknownHostException e) {
-			DialogUtil.showExceptionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung",
-					"Der Server konnte nicht gefunden werden", e);
+			DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.translate("dialog_rcon_error"),
+					I18N.translate("dialog_rcon_server_not_found"), e);
 		} catch (IOException e) {
-			DialogUtil.showExceptionAlert("Fehler", "Fehler beim Laden der RCon-Verbindung", "", e);
+			DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.translate("dialog_rcon_error"), "", e);
 		}
 
 		Stage stage = new Stage();
-		stage.setTitle("RCon-Verbindung zu: " + ip + ":" + port);
+		stage.setTitle(I18N.format("dialog_rcon_title", ip, port));
 
-		FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource("fxml/RConConsole.fxml"));
+		FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource("fxml/RConConsole.fxml"), I18N.getBundle());
 
 		loader.setController(new RConConsoleController(rcon));
 
 		SplitPane root = null;
 		try {
 			root = loader.load();
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+
+			stage.setOnCloseRequest(windowEvent -> {
+				try {
+					rcon.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+
+			stage.setScene(scene);
+			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		Scene scene = new Scene(root);
-		scene.getStylesheets().add(FrameHandler.currentDesign);
-
-		stage.setOnCloseRequest(windowEvent -> {
-			try {
-				rcon.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-
-		stage.setScene(scene);
-		stage.show();
-
 	}
 
 	private class RConConsoleController {
@@ -103,7 +102,7 @@ public class RConConsole {
 				String payload = rcon.sendCommand(text);
 				area.appendText(payload + "\n");
 			} catch (Exception e) {
-				DialogUtil.showExceptionAlert("Fehler", "", "Fehler bei der RCon-Verbindung", e);
+				DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_rcon_error"), e);
 			}
 
 			input.setText("");

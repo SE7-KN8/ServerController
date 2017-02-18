@@ -1,14 +1,12 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
-import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
@@ -88,19 +86,10 @@ public class PropertiesDialogHandler {
 			}
 			Files.write(file, lines, Charset.forName("UTF-8"));
 
-			Alert warning = new Alert(AlertType.WARNING,
-					"Der Server mu� neugestartet werden, damit die �nderungen wirksam werden", ButtonType.OK);
-			warning.getDialogPane().getStylesheets().add(Frame.class.getResource("style.css").toExternalForm());
-			warning.setHeaderText("");
-			warning.setTitle("Achtung");
-			warning.showAndWait();
+			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("addon_vanilla_properties_save_information"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			Alert dialog = new Alert(AlertType.ERROR, "Es ist ein Fehler beim Speichern aufgetreten", ButtonType.OK);
-			dialog.getDialogPane().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
-			dialog.setHeaderText("");
-			dialog.setTitle("Fehler");
-			dialog.showAndWait();
+			DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("addon_vanilla_properties_save_error"));
 		}
 
 	}

@@ -4,6 +4,7 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +84,7 @@ public class Tabs {
 	}
 
 	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert("Fehler", "", "Der Server muß erst gestoppt werden");
+		DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", I18N.translate("dialog_server_must_be_stopped"));
 	}
 
 }

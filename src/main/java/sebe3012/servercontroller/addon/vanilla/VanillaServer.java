@@ -9,6 +9,7 @@ import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -66,10 +67,10 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 			opsHandler = new OpsHandler();
 		}
 
-		Button propertiesButton = new Button("Properties");
+		Button propertiesButton = new Button(I18N.translate("addon_vanilla_properties"));
 		propertiesButton.setOnAction(e -> new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this));
 
-		Button opsButtons = new Button("Operatoren");
+		Button opsButtons = new Button(I18N.translate("addon_vanilla_operators"));
 		opsButtons.setOnAction(e -> new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this));
 
 		extraControls.add(propertiesButton);
@@ -78,8 +79,7 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 
 	@Override
 	public String getServerInfo() {
-		return "Port: " + propertiesHandler.getServerPort() + " World-Name: " + propertiesHandler.getLevelName()
-				+ "\nDifficulty: " + propertiesHandler.getDifficulty() + " Seed: " + propertiesHandler.getLevelSeed();
+		return I18N.format("addon_vanilla_server_description", propertiesHandler.getServerPort(), propertiesHandler.getLevelName(), propertiesHandler.getDifficulty(), propertiesHandler.getLevelSeed());
 	}
 
 	public String getPropertiesFile() {

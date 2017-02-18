@@ -4,6 +4,7 @@ import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class ServerDialog {
 		log.debug("Load ServerDialog");
 		Alert dialog = new Alert(AlertType.NONE);
 		DialogPane rootPane = new DialogPane();
-		rootPane.getStylesheets().add(FrameHandler.currentDesign);
+		rootPane.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 
 		VBox root = new VBox(10);
 		
@@ -35,7 +36,7 @@ public class ServerDialog {
 		box.setPrefHeight(50);
 		box.setStyle("-fx-font: 30px \"Arial\";");
 
-		Button b = new Button("Fertig");
+		Button b = new Button(I18N.translate("dialog_finish"));
 		b.setOnAction(event -> {
 			if (box.getSelectionModel().getSelectedItem() != null) {
 				dialog.close();
@@ -53,7 +54,7 @@ public class ServerDialog {
 
 		rootPane.setContent(root);
 		dialog.setDialogPane(rootPane);
-		dialog.setTitle("Servertyp auswählen");
+		dialog.setTitle(I18N.translate("dialog_choose_server_type"));
 		dialog.showAndWait();
 
 	}

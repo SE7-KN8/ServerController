@@ -6,6 +6,7 @@ import sebe3012.servercontroller.gui.tab.Tabs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +77,7 @@ public class ServerSave {
 
 		log.info("Finished saving");
 
-		DialogUtil.showInformationAlert("Information", "", "Speichern war erfolgreich");
+		DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
 	}
 
 	public static void loadServerController(String path) throws JDOMException, IOException, InstantiationException,
@@ -110,7 +111,7 @@ public class ServerSave {
 
 			if (serverClass == null) {
 				log.warn("No plugin found with name: {}", pluginName);
-				DialogUtil.showErrorAlert("Fehler", "", "Kein Plugin mit der ID '" + pluginName + "' gefunden!");
+				DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", pluginName));
 			}
 
 			HashMap<String, Object> map = new HashMap<>();
@@ -128,22 +129,22 @@ public class ServerSave {
 				BasicServer server = (BasicServer) serverObject;
 				log.info("Create server");
 				server.fromExternalForm();
-					if (server.getSaveVersion() != saveVersion) {
-						throw new IllegalStateException("The save type of the server has been changed");
-					}
+				if (server.getSaveVersion() != saveVersion) {
+					throw new IllegalStateException("The save type of the server has been changed");
+				}
 				AddonUtil.addServer(server, false);
 			}
 		}
 
 		fis.close();
 
-		DialogUtil.showInformationAlert("Information", "", "Laden war erfolgreich");
+		DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
 
 		log.info("Finished loading");
 
 	}
 
 	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert("Warnung", "", "Es müssen erst alle Server beendet werden");
+		DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", "dialog_save_servers_running");
 	}
 }

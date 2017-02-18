@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.gui.tab;
 
+import sebe3012.servercontroller.util.I18N;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
 
@@ -12,7 +14,7 @@ public class TabContent {
 
 	public TabContent() {
 		try {
-			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/TabGUI.fxml"));
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/TabGUI.fxml"), I18N.getBundle());
 			this.handler = new TabContentHandler(this);
 			loader.setController(handler);
 			root = loader.load();

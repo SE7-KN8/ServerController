@@ -90,18 +90,14 @@ public class ServerMonitor {
 					e.printStackTrace();
 				}
 			}
-		} else
-
-		{
+		} else {
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		return new
-
-				MonitorResult(cpuPercent, ramPercent, totalRam);
+		return new MonitorResult(cpuPercent, ramPercent, totalRam);
 	}
 
 }

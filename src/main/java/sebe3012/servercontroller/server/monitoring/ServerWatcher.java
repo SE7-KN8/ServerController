@@ -16,16 +16,16 @@ public class ServerWatcher implements Runnable {
 		while (running) {
 			BasicServer server = Tabs.getCurrentServer();
 
-			if (server != null && server.getMonitor() != null) {
+			if (server != null && server.getMonitor() != null && server.isRunning()) {
 
-				ServerMonitor.MonitorResult result = server.getMonitor().update(1000);
+				ServerMonitor.MonitorResult result = server.getMonitor().update(500);
 
 				FrameHandler.cpuData.add(result.getCpuPercent());
 				FrameHandler.ramData.add(result.getRamPercent());
 
 			} else {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

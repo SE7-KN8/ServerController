@@ -40,7 +40,7 @@ public class DialogUtil {
 		Alert a = new Alert(type, content, types);
 		a.setTitle(title);
 		a.setHeaderText(header);
-		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
+		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 		return a.showAndWait();
 	}
 
@@ -49,14 +49,14 @@ public class DialogUtil {
 		a.setTitle(title);
 		a.setHeaderText(header);
 		a.setContentText(content);
-		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign);
+		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		exception.printStackTrace(pw);
 		String exceptionText = sw.toString();
 
-		Label l = new Label("Fehlercode: ");
+		Label l = new Label(I18N.translate("dialog_error_code"));
 
 		TextArea textArea = new TextArea(exceptionText);
 		textArea.setEditable(false);
