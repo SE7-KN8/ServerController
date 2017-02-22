@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.sun.jna.Pointer;
 
+import javafx.application.Platform;
 import javafx.scene.control.Control;
 
 import java.io.BufferedReader;
@@ -26,7 +27,10 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.function.Consumer;
 
 public abstract class BasicServer {
 	protected BufferedReader inputReader;
@@ -45,6 +49,7 @@ public abstract class BasicServer {
 	private Logger log = LogManager.getLogger();
 	private ServerState state = ServerState.STOPPED;
 	private ServerMonitor monitor = new ServerMonitor();
+	private Queue<OutputCallback> outputCallbackQueue = new LinkedList<>();
 
 	public BasicServer(String name, String jarFilePath, String args) {
 		this.name = name;
@@ -144,6 +149,18 @@ public abstract class BasicServer {
 					String line = inputReader.readLine();
 
 					if (line != null) {
+
+
+						int size = outputCallbackQueue.size();
+
+						for (int i = 0; i < size; i++) {
+
+							OutputCallback callback = outputCallbackQueue.remove();
+
+							if (!callback.testLine(line)) {
+								outputCallbackQueue.add(callback);
+							}
+						}
 						EventHandler.EVENT_BUS.post(new ServerMessageEvent(server, line));
 					}
 				} catch (Exception e) {
@@ -195,7 +212,9 @@ public abstract class BasicServer {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
 
-		DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage);
+		Platform.runLater(() -> {
+			DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage);
+		});
 	}
 
 	public void sendCommand(String command) {
@@ -297,6 +316,18 @@ public abstract class BasicServer {
 
 	public ServerMonitor getMonitor() {
 		return this.monitor;
+	}
+
+
+	public OutputCallback waitForCommandResponse(String regex, Consumer<String> callback) {
+		OutputCallback outputCallback = new OutputCallback(regex, callback, this);
+
+		this.outputCallbackQueue.add(outputCallback);
+		return outputCallback;
+	}
+
+	public void removeCallback(OutputCallback callback) {
+		this.outputCallbackQueue.remove(callback);
 	}
 
 }

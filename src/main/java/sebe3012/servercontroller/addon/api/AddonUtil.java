@@ -46,7 +46,6 @@ public class AddonUtil {
 	private static final Logger log = LogManager.getLogger();
 
 	public static void addServer(BasicServer server, boolean isEdit) {
-
 		log.debug("Added server {}", server);
 
 		TabContent content = new TabContent();
