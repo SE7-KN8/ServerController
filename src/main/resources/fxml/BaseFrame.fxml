@@ -19,8 +19,9 @@
                <menus>
                   <Menu mnemonicParsing="false" text="%menu_file">
                      <items>
-                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="%menu_item_save_settings" />
-                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="%menu_item_load_settings" />
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="%menu_item_save_servers" />
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="%menu_item_load_servers" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSettingsClicked" text="%menu_item_settings" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="%menu_server">

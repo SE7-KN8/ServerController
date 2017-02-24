@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.addon.api;
 
-import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.event.ServerCreateEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -8,6 +7,8 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.preferences.PreferencesConstants;
+import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
@@ -80,9 +81,9 @@ public class AddonUtil {
 
 		FileChooser fc = new FileChooser();
 
-		log.debug("Path: {}", ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, "nulll"));
+		log.debug("Path: {}", ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, "nulll"));
 
-		File path = new File(ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, System.getProperty("user.home")));
+		File path = new File(ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, System.getProperty("user.home")));
 
 		if (path.exists()) {
 			fc.setInitialDirectory(path);
@@ -94,7 +95,7 @@ public class AddonUtil {
 
 		if (f != null) {
 
-			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.FILE_ADDON_UTIL, f.getParent());
+			ServerControllerPreferences.saveSetting(PreferencesConstants.FILE_ADDON_UTIL, f.getParent());
 
 			return f.getAbsolutePath();
 		}

@@ -11,6 +11,8 @@ import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
+import sebe3012.servercontroller.settings.SettingsConstants;
+import sebe3012.servercontroller.settings.SettingsRow;
 import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +38,7 @@ public class ServerController {
 	 * A list where all addons of the servercontroller listed
 	 */
 	public static HashMap<String, Class<? extends BasicServer>> serverAddon = new HashMap<>();
+	public static HashMap<String, SettingsRow> settings = new HashMap<>();
 
 	public static boolean DEBUG = false;
 
@@ -71,6 +74,8 @@ public class ServerController {
 			log.info("Start-Argument-" + i + " : " + args[i]);
 		}
 
+		addSetting(SettingsConstants.AUTO_LOAD_SERVERS, false);
+
 		I18N.init();
 
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
@@ -97,6 +102,13 @@ public class ServerController {
 				}
 			}
 		});
+	}
+
+	public static void addSetting(String id, boolean defaultValue) {
+		log.info("Load settings : {}", id);
+		SettingsRow row = new SettingsRow(id, defaultValue);
+		row.load();
+		settings.put(row.getId(), row);
 	}
 
 	public static String loadStringContent(String path) {

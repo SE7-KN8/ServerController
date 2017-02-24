@@ -3,6 +3,8 @@ package sebe3012.servercontroller.save;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.preferences.PreferencesConstants;
+import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
@@ -29,9 +31,9 @@ public class ServerSave {
 
 	private static Logger log = LogManager.getLogger();
 
-	public static void saveServerController(String path) throws IOException {
-
+	public static void saveServerController(String path, boolean showDialog) throws IOException {
 		log.info("Start saving");
+		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
 		Servers.serversList.forEach(server -> {
 			if (server.isRunning()) {
@@ -62,7 +64,6 @@ public class ServerSave {
 				Element keyElement = new Element(key);
 				keyElement.setText(value.toString());
 				serverElement.addContent(keyElement);
-
 			});
 
 			rootElement.addContent(serverElement);
@@ -77,13 +78,14 @@ public class ServerSave {
 
 		log.info("Finished saving");
 
-		DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
+		if (showDialog) {
+			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
+		}
 	}
 
-	public static void loadServerController(String path) throws JDOMException, IOException, InstantiationException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-
+	public static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		log.info("Start loading");
+		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
 		Servers.serversList.forEach(server -> {
 			if (server.isRunning()) {
@@ -138,7 +140,9 @@ public class ServerSave {
 
 		fis.close();
 
-		DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
+		if (showDialog) {
+			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
+		}
 
 		log.info("Finished loading");
 

@@ -1,20 +1,23 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.ServerControllerPreferences;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
+import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.preferences.PreferencesConstants;
+import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
+import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.util.Design;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
@@ -37,7 +40,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
@@ -47,7 +49,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -104,27 +105,6 @@ public class FrameHandler implements IEventHandler {
 	private TabPane main;
 
 	@FXML
-	private MenuItem creditsItem;
-
-	@FXML
-	private MenuItem addServer;
-
-	@FXML
-	private MenuItem saveItem;
-
-	@FXML
-	private MenuItem openItem;
-
-	@FXML
-	private Button btnRestartAll;
-
-	@FXML
-	private Button btnStartAll;
-
-	@FXML
-	private Button btnStopAll;
-
-	@FXML
 	private ToolBar toolbar;
 
 	@FXML
@@ -148,6 +128,11 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	@FXML
+	void onSettingsClicked() {
+		new SettingsDialog().show();
+	}
+
+	@FXML
 	void onCreditsItemClicked(ActionEvent event) {
 		DialogUtil.showInformationAlert(I18N.translate("menu_item_credits"), "", I18N.format("credits", ServerController.VERSION));
 	}
@@ -162,7 +147,7 @@ public class FrameHandler implements IEventHandler {
 		String file = AddonUtil.openFileChooser("*.xml", ".xml");
 
 		try {
-			ServerSave.saveServerController(file);
+			ServerSave.saveServerController(file, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
@@ -174,7 +159,7 @@ public class FrameHandler implements IEventHandler {
 		String file = AddonUtil.openFileChooser("*.xml", ".xml");
 
 		try {
-			ServerSave.loadServerController(file);
+			ServerSave.loadServerController(file, true);
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -217,7 +202,7 @@ public class FrameHandler implements IEventHandler {
 
 			Design design = result.get();
 
-			ServerControllerPreferences.saveSetting(ServerControllerPreferences.Constants.KEY_DESIGN, design.getId());
+			ServerControllerPreferences.saveSetting(PreferencesConstants.KEY_DESIGN, design.getId());
 
 			Frame.primaryStage.getScene().getStylesheets().clear();
 			Frame.primaryStage.getScene().getStylesheets().add(design.getStylesheet());
@@ -317,7 +302,7 @@ public class FrameHandler implements IEventHandler {
 		lView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> mainPane.getSelectionModel().select(newValue.intValue()));
 		main.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> lView.getSelectionModel().select(newValue.intValue()));
 
-		String designID = ServerControllerPreferences.loadSetting(ServerControllerPreferences.Constants.KEY_DESIGN, designs.iterator().next().getId());
+		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, designs.iterator().next().getId());
 
 		for (Design d : designs) {
 			if (d.getId().equals(designID)) {
@@ -366,7 +351,23 @@ public class FrameHandler implements IEventHandler {
 		monitoringThread.setName("Server Monitoring Thread");
 		monitoringThread.start();
 
+
 		log.info("FXML initialized");
+
+		Platform.runLater(() -> {
+			if (ServerController.settings.get(SettingsConstants.AUTO_LOAD_SERVERS).getValue()) {
+				try {
+					ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+					showSaveStateErrorDialog();
+				} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
+					e.printStackTrace();
+					showSaveErrorDialog();
+				}
+			}
+		});
+
 	}
 
 	private static void showSaveErrorDialog() {
