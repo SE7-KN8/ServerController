@@ -100,7 +100,6 @@ public abstract class BasicServer {
 
 				}
 
-
 				setState(ServerState.STARTING);
 				this.monitor.setPid(pid);
 			} catch (Exception e) {

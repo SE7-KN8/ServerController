@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.util;
 
+import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.gui.FrameHandler;
 
 import javafx.scene.control.Alert;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -41,6 +43,8 @@ public class DialogUtil {
 		a.setTitle(title);
 		a.setHeaderText(header);
 		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		a.initModality(Modality.APPLICATION_MODAL);
+		a.initOwner(Frame.primaryStage);
 		return a.showAndWait();
 	}
 

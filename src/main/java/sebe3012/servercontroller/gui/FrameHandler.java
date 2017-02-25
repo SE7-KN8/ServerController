@@ -354,20 +354,28 @@ public class FrameHandler implements IEventHandler {
 
 		log.info("FXML initialized");
 
-		Platform.runLater(() -> {
-			if (ServerController.settings.get(SettingsConstants.AUTO_LOAD_SERVERS).getValue()) {
-				try {
-					ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-					showSaveStateErrorDialog();
-				} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-					e.printStackTrace();
-					showSaveErrorDialog();
-				}
-			}
-		});
 
+		if (ServerController.settings.get(SettingsConstants.AUTO_LOAD_SERVERS).getValue()) {
+			new Thread(() -> {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				Platform.runLater(() -> {
+					try {
+						ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+						showSaveStateErrorDialog();
+					} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
+						e.printStackTrace();
+						showSaveErrorDialog();
+					}
+				});
+			}).start();
+		}
 	}
 
 	private static void showSaveErrorDialog() {

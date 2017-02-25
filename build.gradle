@@ -21,7 +21,7 @@ dependencies {
     compile 'com.github.dblock:oshi-core:3.3'
 }
 
-version = '0.3.10.9_alpha'
+version = '0.3.11.9_alpha'
 
 jar {
    manifest {
