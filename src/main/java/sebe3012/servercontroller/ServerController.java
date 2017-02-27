@@ -3,7 +3,7 @@ package sebe3012.servercontroller;
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
-import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
+import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.gui.FrameHandler;
@@ -33,6 +33,10 @@ import java.util.Locale;
  * @author Sebastian Knackstedt
  */
 public class ServerController {
+
+	static {
+		System.setProperty("log4j.configurationFile", ClassLoader.getSystemResource("xml/log4j2.xml").toExternalForm());
+	}
 
 	/**
 	 * A list where all addons of the servercontroller listed
@@ -115,6 +119,7 @@ public class ServerController {
 		log.info("Load content: " + path);
 		StringBuilder result = new StringBuilder();
 		try {
+
 			BufferedReader reader = new BufferedReader(
 					new InputStreamReader(ClassLoader.getSystemResourceAsStream(path)));
 			String buffer;

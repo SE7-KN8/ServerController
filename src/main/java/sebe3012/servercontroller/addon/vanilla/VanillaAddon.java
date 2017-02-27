@@ -1,10 +1,9 @@
-package sebe3012.servercontroller.addon.vanilla.dialog;
+package sebe3012.servercontroller.addon.vanilla;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.addon.api.DialogRow;
 import sebe3012.servercontroller.addon.api.StringPredicates;
-import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 import sebe3012.servercontroller.event.ServerEditEvent;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;

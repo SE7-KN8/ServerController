@@ -64,7 +64,6 @@
 /*Start TextArea */
 .text-area {
 	-fx-background-color: derive(-fx-base, 10.0%);
-    -fx-border-color: -base-normal;
     -fx-text-fill: white;
     -fx-border-radius: 0.0px;
 }
@@ -76,7 +75,6 @@
 .text-area:focused {
 	-fx-prompt-text-fill: white;
 	-fx-text-fill: white;
-	-fx-border-color: derive(-base-normal, -20.0%);
 }
 /*End TextArea */
 

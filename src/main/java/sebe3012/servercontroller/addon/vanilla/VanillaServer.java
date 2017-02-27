@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.addon.vanilla;
 
-import sebe3012.servercontroller.addon.vanilla.dialog.VanillaAddon;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;

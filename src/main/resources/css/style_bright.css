@@ -61,11 +61,11 @@
 /*Start TextArea */
 .text-area {
     -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
+    -fx-border-radius: 0.0px;
 }
 
 .text-area:focused {
 	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
-	-fx-border-color: -base-normal;
 	-fx-background-insets: 0.0;
 }
 /*End TextArea */

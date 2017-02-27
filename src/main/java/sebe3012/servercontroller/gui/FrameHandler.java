@@ -188,7 +188,6 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onDesignClicked(ActionEvent event) {
-
 		ChoiceDialog<Design> cd = new ChoiceDialog<>();
 		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
 		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
@@ -335,6 +334,10 @@ public class FrameHandler implements IEventHandler {
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_start_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_restart_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_stop_all_servers"));
+		GUIUtil.addSeparatorToToolbar(toolbar);
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), I18N.translate("tooltip_start_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), I18N.translate("tooltip_restart_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer(), I18N.translate("tooltip_stop_server"));
@@ -409,12 +412,9 @@ public class FrameHandler implements IEventHandler {
 
 	@Subscribe
 	public void changeExtraButton(ChangeControlsEvent event) {
-
 		Platform.runLater(() -> {
 
-			for (int i = 3; i < vBox.getChildren().size(); i++) {
-				vBox.getChildren().remove(i);
-			}
+			vBox.getChildren().clear();
 
 			event.getNewControls().forEach(control -> {
 				control.setPrefWidth(1000);

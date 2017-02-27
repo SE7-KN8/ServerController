@@ -6,6 +6,7 @@
         xmlns:cc="http://creativecommons.org/ns#"
         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
         xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
         xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
         width="210mm"
@@ -22,20 +23,118 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="-18.317161"
-     inkscape:cy="773.19375"
+     inkscape:zoom="1.4142135"
+     inkscape:cx="400.81018"
+     inkscape:cy="782.80059"
      inkscape:document-units="px"
-     inkscape:current-layer="svg2"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="1272"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     showguides="false" />
+     showguides="true" />
   <defs
-     id="defs4" />
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4213">
+      <stop
+         style="stop-color:#bd0000;stop-opacity:1"
+         offset="0"
+         id="stop4215" />
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1"
+         offset="1"
+         id="stop4217" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4173">
+      <stop
+         style="stop-color:#009900;stop-opacity:1"
+         offset="0"
+         id="stop4175" />
+      <stop
+         style="stop-color:#00ff00;stop-opacity:1"
+         offset="1"
+         id="stop4177" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4173"
+       id="linearGradient4179"
+       x1="76.622551"
+       y1="78.300018"
+       x2="76.622551"
+       y2="28.551279"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4173"
+       id="linearGradient4195"
+       x1="19.393862"
+       y1="516.883"
+       x2="82.469757"
+       y2="302.31357"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4173"
+       id="linearGradient4211"
+       x1="174.17981"
+       y1="161.98169"
+       x2="174.17981"
+       y2="114.44312"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4213"
+       id="linearGradient4219"
+       x1="168.4187"
+       y1="58.64957"
+       x2="168.4187"
+       y2="48.513844"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4213"
+       id="linearGradient4263"
+       x1="261.01941"
+       y1="161.8438"
+       x2="261.01941"
+       y2="112.9688"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4173"
+       id="linearGradient4267"
+       gradientUnits="userSpaceOnUse"
+       x1="19.393862"
+       y1="516.883"
+       x2="82.469757"
+       y2="302.31357" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4173"
+       id="linearGradient4307"
+       gradientUnits="userSpaceOnUse"
+       x1="174.17981"
+       y1="161.98169"
+       x2="174.17981"
+       y2="114.44312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4213"
+       id="linearGradient4315"
+       gradientUnits="userSpaceOnUse"
+       x1="261.01941"
+       y1="161.8438"
+       x2="261.01941"
+       y2="112.9688"
+       gradientTransform="translate(312.50001,2.1861739)" />
+  </defs>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -94,7 +193,7 @@
        sodipodi:cx="29.27062"
        sodipodi:sides="3"
        id="path4356"
-       style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:url(#linearGradient4195);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        sodipodi:type="star"
        inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\start.png"
        inkscape:export-xdpi="45"
@@ -174,27 +273,10 @@
          id="g4396"
          transform="matrix(0.25881905,-0.96592583,-0.96592583,-0.25881905,330.66636,435.55012)">
         <path
-           inkscape:connector-curvature="0"
-           id="path4358"
-           d="m 310.19119,119.65588 a 30.082608,30.082608 0 0 0 -36.14528,-22.437596 30.082608,30.082608 0 0 0 -22.4376,36.145276 30.082608,30.082608 0 0 0 36.14528,22.4376 l -1.52308,-6.50921 a 23.397584,23.397584 0 0 1 -28.11299,-17.45147 23.397584,23.397584 0 0 1 17.45147,-28.11299 23.397584,23.397584 0 0 1 28.11299,17.45147 l 6.50921,-1.52308 z"
-           style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-        <path
-           inkscape:transform-center-y="-11.667931"
-           d="m 80.27968,338.1134 40.4189,70.00759 -80.837803,0 z"
-           inkscape:randomized="0"
-           inkscape:rounded="0"
-           inkscape:flatsided="true"
-           sodipodi:arg2="-0.52359878"
-           sodipodi:arg1="-1.5707963"
-           sodipodi:r2="23.335863"
-           sodipodi:r1="46.671726"
-           sodipodi:cy="384.78513"
-           sodipodi:cx="80.279678"
-           sodipodi:sides="3"
-           id="path4360"
-           style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:type="star"
-           transform="matrix(0.07615374,0.3254604,-0.3254604,0.07615374,413.47279,94.731497)" />
+           style="opacity:1;fill:url(#linearGradient4211);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="M 166.0332 113.58008 L 148.38477 124.53516 L 154.8418 127.99219 A 23.126585 23.126585 0 0 0 164.33984 159.23633 A 23.126585 23.126585 0 0 0 195.64453 149.76562 A 23.126585 23.126585 0 0 0 186.17578 118.46094 L 183.75 122.99219 A 17.987344 17.987344 0 0 1 191.11523 147.33984 A 17.987344 17.987344 0 0 1 166.76758 154.70508 A 17.987344 17.987344 0 0 1 159.37109 130.41797 L 166.69727 134.3418 L 166.0332 113.58008 z "
+           transform="matrix(0.33666674,-1.2564574,-1.2564574,-0.33666674,396.3539,393.45992)"
+           id="path4358" />
       </g>
     </g>
     <g
@@ -255,7 +337,7 @@
       </g>
     </g>
     <rect
-       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:url(#linearGradient4219);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4161"
        width="50"
        height="10"
@@ -269,25 +351,16 @@
        transform="matrix(0.5,0,0,0.5,10.355347,-174.7682)"
        inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\add.png"
        inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
-      <rect
-         style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-ydpi="45"
+       style="fill-opacity:1;fill:#00ff00">
+      <path
+         style="opacity:1;fill:url(#linearGradient4179);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 71.710938 28.462891 L 71.710938 48.462891 L 51.710938 48.462891 L 51.710938 58.462891 L 71.710938 58.462891 L 71.710938 78.462891 L 81.710938 78.462891 L 81.710938 58.462891 L 101.71094 58.462891 L 101.71094 48.462891 L 81.710938 48.462891 L 81.710938 28.462891 L 71.710938 28.462891 z "
          id="rect4163"
-         width="100"
-         height="20"
-         x="82.710693"
-         y="446.46359" />
-      <rect
-         transform="matrix(0,1,-1,0,0,0)"
-         y="-142.71069"
-         x="406.46359"
-         height="20"
-         width="100"
-         id="rect4165"
-         style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         transform="matrix(2,0,0,2,-20.710694,349.5364)" />
     </g>
     <rect
-       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:url(#linearGradient4263);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4172"
        width="50"
        height="50"
@@ -296,6 +369,112 @@
        inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\stop.png"
        inkscape:export-xdpi="45"
        inkscape:export-ydpi="45" />
+    <g
+       id="g4321"
+       inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\start_all.png"
+       inkscape:export-xdpi="45"
+       inkscape:export-ydpi="45">
+      <path
+         transform="matrix(0.20642705,0,0,0.22646951,371.75269,31.409676)"
+         inkscape:transform-center-x="-6.5781878"
+         d="M -34.463155,299.38272 156.73817,409.77286 -34.463156,520.163 Z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="-1.0471976"
+         sodipodi:arg1="-2.0943951"
+         sodipodi:r2="63.73378"
+         sodipodi:r1="127.46755"
+         sodipodi:cy="409.77286"
+         sodipodi:cx="29.27062"
+         sodipodi:sides="3"
+         id="path4265"
+         style="opacity:1;fill:url(#linearGradient4267);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:type="star"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\start.png"
+         inkscape:export-xdpi="45"
+         inkscape:export-ydpi="45" />
+      <g
+         id="g4277"
+         transform="matrix(0.1941763,0,0,0.1941763,389.9109,35.576597)"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\add.png"
+         inkscape:export-xdpi="45"
+         inkscape:export-ydpi="45"
+         style="fill:#ff6600;fill-opacity:1">
+        <path
+           inkscape:connector-curvature="0"
+           style="opacity:1;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 71.710938,28.462891 0,20 -20,0 0,10 20,0 0,20 10,0 0,-20 20.000002,0 0,-10 -20.000002,0 0,-20 -10,0 z"
+           id="path4279"
+           transform="matrix(2,0,0,2,-20.710694,349.5364)" />
+      </g>
+    </g>
+    <g
+       id="g4326"
+       transform="translate(-1.2500001,7.5000003)"
+       inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\restart_all.png"
+       inkscape:export-xdpi="46.492329"
+       inkscape:export-ydpi="46.492329">
+      <g
+         id="g4301"
+         transform="matrix(0.76876928,0,0,0.76876928,256.30554,21.089276)"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\restart.png"
+         inkscape:export-xdpi="45"
+         inkscape:export-ydpi="45">
+        <g
+           id="g4303"
+           transform="matrix(0.25881905,-0.96592583,-0.96592583,-0.25881905,330.66636,435.55012)">
+          <path
+             inkscape:connector-curvature="0"
+             style="opacity:1;fill:url(#linearGradient4307);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             d="m 166.0332,113.58008 -17.64843,10.95508 6.45703,3.45703 a 23.126585,23.126585 0 0 0 9.49804,31.24414 23.126585,23.126585 0 0 0 31.30469,-9.47071 23.126585,23.126585 0 0 0 -9.46875,-31.30468 l -2.42578,4.53125 a 17.987344,17.987344 0 0 1 7.36523,24.34765 17.987344,17.987344 0 0 1 -24.34765,7.36524 17.987344,17.987344 0 0 1 -7.39649,-24.28711 l 7.32618,3.92383 -0.66407,-20.76172 z"
+             transform="matrix(0.33666674,-1.2564574,-1.2564574,-0.33666674,396.3539,393.45992)"
+             id="path4305" />
+        </g>
+      </g>
+      <g
+         style="fill:#ff6600;fill-opacity:1"
+         inkscape:export-ydpi="45"
+         inkscape:export-xdpi="45"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\add.png"
+         transform="matrix(0.1941763,0,0,0.1941763,481.14313,31.960642)"
+         id="g4309">
+        <path
+           id="path4311"
+           d="m 134.29859,409.03716 0,40 -39.999998,0 0,20 39.999998,0 0,40 20,0 0,-40 40,0 0,-20 -40,0 0,-40 -20,0 z"
+           style="opacity:1;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g4333"
+       inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\stop_all.png"
+       inkscape:export-xdpi="45"
+       inkscape:export-ydpi="45">
+      <rect
+         style="opacity:1;fill:url(#linearGradient4315);fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4313"
+         width="50"
+         height="50"
+         x="549.39441"
+         y="113.15498"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\stop.png"
+         inkscape:export-xdpi="45"
+         inkscape:export-ydpi="45" />
+      <g
+         id="g4317"
+         transform="matrix(0.1941763,0,0,0.1941763,584.98197,49.77084)"
+         inkscape:export-filename="C:\Users\Sebe3012\Projects\ServerController\src\main\resources\png\toolbar\add.png"
+         inkscape:export-xdpi="45"
+         inkscape:export-ydpi="45"
+         style="fill:#ff6600;fill-opacity:1">
+        <path
+           inkscape:connector-curvature="0"
+           style="opacity:1;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:0.80000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 135.58608,405.17469 0,40 -40,0 0,20 40,0 0,40 20,0 0,-40 40,0 0,-20 -40,0 0,-40 -20,0 z"
+           id="path4319" />
+      </g>
+    </g>
   </g>
   <g
      id="g5430"
