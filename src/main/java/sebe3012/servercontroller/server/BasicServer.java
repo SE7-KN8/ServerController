@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -127,9 +126,7 @@ public abstract class BasicServer {
 		return args;
 	}
 
-	private final class MessageReader extends Thread implements Serializable {
-
-		private static final long serialVersionUID = -2412119001299121572L;
+	private final class MessageReader extends Thread {
 
 		private BasicServer server;
 
@@ -170,9 +167,7 @@ public abstract class BasicServer {
 		}
 	}
 
-	private final class WaitForExit extends Thread implements Serializable {
-
-		private static final long serialVersionUID = -4874386762623677601L;
+	private final class WaitForExit extends Thread{
 
 		private BasicServer server;
 
@@ -238,7 +233,7 @@ public abstract class BasicServer {
 		return handler != null;
 	}
 
-	public abstract String getPluginName();
+	public abstract String getAddonName();
 
 	public boolean isRunning() {
 		return getState() != ServerState.STOPPED;

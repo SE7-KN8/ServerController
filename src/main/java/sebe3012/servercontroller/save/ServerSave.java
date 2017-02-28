@@ -54,8 +54,8 @@ public class ServerSave {
 			log.info("Start saving server {}", server.getName());
 			final Element serverElement = new Element("server");
 
-			log.debug("Addon name from server {} is {}", server.getName(), server.getPluginName());
-			serverElement.setAttribute("addon", server.getPluginName());
+			log.debug("Addon name from server {} is {}", server.getName(), server.getAddonName());
+			serverElement.setAttribute("addon", server.getAddonName());
 			serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
 			log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 

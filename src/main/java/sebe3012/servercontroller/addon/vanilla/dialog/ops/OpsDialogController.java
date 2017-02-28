@@ -6,17 +6,16 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -32,9 +31,6 @@ public class OpsDialogController {
 	private ListView<String> mainList;
 
 	@FXML
-	private Button saveBtn;
-
-	@FXML
 	private ListView<String> leftList;
 
 	@FXML
@@ -47,38 +43,34 @@ public class OpsDialogController {
 	private ObservableList<String> left;
 	private ObservableList<String> right;
 
-	@FXML
-	void onLeftClicked() {
-		rightList.getSelectionModel().select(leftList.getSelectionModel().getSelectedIndex());
-	}
-
-	@FXML
-	void onRightClicked() {
-		leftList.getSelectionModel().select(rightList.getSelectionModel().getSelectedIndex());
-	}
-
-	@FXML
-	void onMiddleClicked() {
+	public void changedMain(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 		left.clear();
 		right.clear();
 
-		int index = mainList.getSelectionModel().getSelectedIndex();
+		int index = newValue.intValue();
 
 		if (index >= handler.getAllValues().size() || index < 0) {
 			return;
 		}
 
-		Map<String, ?> map = handler.getAllValues().get(index);
+		Operator op = handler.getAllValues().get(index);
 
-		map.keySet().forEach(key -> left.add(key));
-		map.values().forEach(o -> right.add(o.toString()));
+		left.addAll("uuid", "name", "level", "bypassesPlayerLimit");
+		right.addAll(op.getUuid(), op.getName(), String.valueOf(op.getLevel()), String.valueOf(op.isBypassesPlayerLimit()));
 
 		leftList.setItems(null);
 		rightList.setItems(null);
 
 		leftList.setItems(left);
 		rightList.setItems(right);
+	}
 
+	public void changedLeft(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		rightList.getSelectionModel().select(leftList.getSelectionModel().getSelectedIndex());
+	}
+
+	public void changedRight(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		leftList.getSelectionModel().select(rightList.getSelectionModel().getSelectedIndex());
 	}
 
 	public OpsDialogController(OpsHandler handler, BasicServer server) {
@@ -97,10 +89,13 @@ public class OpsDialogController {
 		left = FXCollections.observableArrayList();
 		right = FXCollections.observableArrayList();
 
-		for (Map<String, ?> map : handler.getAllValues()) {
-			main.add(map.get("name").toString());
+		for (Operator op : handler.getAllValues()) {
+			main.add(op.getName());
 		}
 		mainList.setItems(main);
+		mainList.getSelectionModel().selectedIndexProperty().addListener(this::changedMain);
+		leftList.getSelectionModel().selectedIndexProperty().addListener(this::changedLeft);
+		rightList.getSelectionModel().selectedIndexProperty().addListener(this::changedRight);
 
 		MenuItem addOp = new MenuItem(I18N.translate("addon_vanilla_add_operator"));
 
@@ -132,8 +127,8 @@ public class OpsDialogController {
 					Platform.runLater(() -> {
 						mainList.setItems(null);
 						main.clear();
-						for (Map<String, ?> map : handler.getAllValues()) {
-							main.add(map.get("name").toString());
+						for (Operator op : handler.getAllValues()) {
+							main.add(op.getName());
 						}
 						mainList.setItems(main);
 					});
@@ -158,8 +153,8 @@ public class OpsDialogController {
 				Platform.runLater(() -> {
 					mainList.setItems(null);
 					main.clear();
-					for (Map<String, ?> map : handler.getAllValues()) {
-						main.add(map.get("name").toString());
+					for (Operator op : handler.getAllValues()) {
+						main.add(op.getName());
 					}
 					mainList.setItems(main);
 				});

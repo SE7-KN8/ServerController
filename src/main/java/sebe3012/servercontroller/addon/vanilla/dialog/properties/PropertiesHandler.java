@@ -2,13 +2,10 @@ package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class PropertiesHandler implements Serializable {
-
-	private static final long serialVersionUID = 3393641812130248260L;
+public class PropertiesHandler {
 	private File properitesFile;
 
 	public PropertiesHandler(File propertiesFile) {

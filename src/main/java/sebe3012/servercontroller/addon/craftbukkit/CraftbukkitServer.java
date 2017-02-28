@@ -34,7 +34,7 @@ public class CraftbukkitServer extends VanillaServer {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getAddonName() {
 		return CraftbukkitAddon.ADDON_NAME;
 	}
 

@@ -6,7 +6,7 @@ import sebe3012.servercontroller.util.I18N;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class OpsDialog {
 			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/OpsDialog.fxml"), I18N.getBundle());
 			loader.setController(new OpsDialogController(handler, server));
 
-			GridPane root = loader.load();
+			SplitPane root = loader.load();
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 			stage.setScene(scene);

@@ -94,7 +94,7 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getAddonName() {
 		return VanillaAddon.ADDON_NAME;
 	}
 

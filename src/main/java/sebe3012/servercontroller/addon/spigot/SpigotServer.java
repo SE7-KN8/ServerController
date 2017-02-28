@@ -37,7 +37,7 @@ public class SpigotServer extends CraftbukkitServer {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getAddonName() {
 		return SpigotAddon.ADDON_NAME;
 	}
 

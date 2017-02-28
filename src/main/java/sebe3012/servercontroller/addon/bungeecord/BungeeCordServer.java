@@ -53,7 +53,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public String getPluginName() {
+	public String getAddonName() {
 		return BungeeCordAddon.ADDON_NAME;
 	}
 

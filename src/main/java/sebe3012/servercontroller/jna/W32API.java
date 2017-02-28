@@ -14,17 +14,12 @@ import java.util.Map;
 public interface W32API extends StdCallLibrary, W32Errors {
 
 	Map<?, ?> UNICODE_OPTIONS = new HashMap() {
-
-		private static final long serialVersionUID = -6491787836736337699L;
-
 		{
 			put(OPTION_TYPE_MAPPER, W32APITypeMapper.UNICODE);
 			put(OPTION_FUNCTION_MAPPER, W32APIFunctionMapper.UNICODE);
 		}
 	};
 	Map ASCII_OPTIONS = new HashMap() {
-		private static final long serialVersionUID = 8543195960167947093L;
-
 		{
 			put(OPTION_TYPE_MAPPER, W32APITypeMapper.ASCII);
 			put(OPTION_FUNCTION_MAPPER, W32APIFunctionMapper.ASCII);

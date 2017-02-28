@@ -51,7 +51,7 @@ public class Servers {
 		BasicServer server = Tabs.getCurrentServer();
 		if (server != null) {
 			if (!server.isRunning()) {
-				EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getPluginName(), server));
+				EventHandler.EVENT_BUS.post(new ServerEditEvent(server.getAddonName(), server));
 			} else {
 				DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", I18N.translate("dialog_server_must_be_stopped"));
 			}
