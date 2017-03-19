@@ -5,6 +5,7 @@ import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
+import sebe3012.servercontroller.gui.dialog.CreditsDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
@@ -134,7 +135,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onCreditsItemClicked(ActionEvent event) {
-		DialogUtil.showInformationAlert(I18N.translate("menu_item_credits"), "", I18N.format("credits", ServerController.VERSION));
+		CreditsDialog.showDialog();
 	}
 
 	@FXML

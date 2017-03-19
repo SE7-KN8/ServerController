@@ -1,5 +1,6 @@
 package sebe3012.servercontroller;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,10 +12,13 @@ import java.io.PrintStream;
  */
 public class ConsoleLog extends PrintStream {
 
-	private Logger log = LogManager.getLogger("SYSOUT");
+	private Logger log;
+	private Level level;
 
-	public ConsoleLog() {
-		super(System.out);
+	public ConsoleLog(String name, PrintStream old, Level level) {
+		super(old);
+		log = LogManager.getLogger(name);
+		this.level = level;
 	}
 
 	@Override
@@ -22,7 +26,8 @@ public class ConsoleLog extends PrintStream {
 		StackTraceElement stack = Thread.currentThread().getStackTrace()[2];
 
 		String append = "[" + stack.getFileName() + ":" + stack.getLineNumber() + "] ";
-		log.info(append + x);
+
+		log.log(level, append + x);
 	}
 
 }

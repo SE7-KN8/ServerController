@@ -3,8 +3,9 @@ package sebe3012.servercontroller.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -14,30 +15,43 @@ import java.util.ResourceBundle;
 public class I18N {
 
 	private static ResourceBundle bundle;
+	private static List<ResourceBundle> bundleExtensions;
 	private static Logger log = LogManager.getLogger();
 
 	public static void init() {
 		bundle = ResourceBundle.getBundle("lang/lang", Locale.getDefault());
+		bundleExtensions = new ArrayList<>();
+	}
+
+	public static void addBundle(String location) {
+		bundleExtensions.add(ResourceBundle.getBundle(location, Locale.getDefault()));
 	}
 
 	public static String translate(String key) {
-		String result;
-
-		try{
-			result = bundle.getString(key);
-		}catch (MissingResourceException e){
-			result = key;
-			log.warn("Can't find translation for {}, using default value", key);
+		if (bundle.containsKey(key)) {
+			return bundle.getString(key);
+		} else {
+			for (ResourceBundle bundleExtension : bundleExtensions) {
+				if (bundleExtension.containsKey(key)) {
+					return bundleExtension.getString(key);
+				}
+			}
 		}
 
-		return result;
+		log.warn("No bundle found to translate '{}'", key);
+
+		return "%" + key + "%";
 	}
 
-	public static String format(String key, Object... args){
+	public static String format(String key, Object... args) {
 		return String.format(translate(key), args);
 	}
 
-	public static ResourceBundle getBundle() {
+	public static ResourceBundle getDefaultBundle() {
 		return bundle;
+	}
+
+	public static List<ResourceBundle> getBundleExtensions() {
+		return bundleExtensions;
 	}
 }

@@ -14,7 +14,7 @@ public class TabContent {
 
 	public TabContent() {
 		try {
-			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/TabGUI.fxml"), I18N.getBundle());
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/TabGUI.fxml"), I18N.getDefaultBundle());
 			this.handler = new TabContentHandler(this);
 			loader.setController(handler);
 			root = loader.load();

@@ -80,7 +80,7 @@ public class Frame extends Application {
 	}
 
 	private void createPrimaryStage() throws IOException {
-		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getBundle());
+		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
 		primaryStage.setScene(scene);

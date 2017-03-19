@@ -18,7 +18,7 @@ public class PropertiesDialog {
 
 			stage.setTitle(I18N.format("addon_vanilla_properties_title", server.getName()));
 
-			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/PropertiesDialog.fxml"), I18N.getBundle());
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/PropertiesDialog.fxml"), I18N.getDefaultBundle());
 			loader.setController(new PropertiesDialogHandler(handler));
 
 			GridPane root = loader.load();

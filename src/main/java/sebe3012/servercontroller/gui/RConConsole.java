@@ -38,11 +38,11 @@ public class RConConsole {
 		Stage stage = new Stage();
 		stage.setTitle(I18N.format("dialog_rcon_title", ip, port));
 
-		FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource("fxml/RConConsole.fxml"), I18N.getBundle());
+		FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemClassLoader().getResource("fxml/RConConsole.fxml"), I18N.getDefaultBundle());
 
 		loader.setController(new RConConsoleController(rcon));
 
-		SplitPane root = null;
+		SplitPane root;
 		try {
 			root = loader.load();
 			Scene scene = new Scene(root);

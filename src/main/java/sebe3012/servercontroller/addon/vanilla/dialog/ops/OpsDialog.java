@@ -17,7 +17,7 @@ public class OpsDialog {
 		try {
 			stage.setTitle(I18N.format("addon_vanilla_operators_title", server.getName()));
 
-			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/OpsDialog.fxml"), I18N.getBundle());
+			FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource("fxml/OpsDialog.fxml"), I18N.getDefaultBundle());
 			loader.setController(new OpsDialogController(handler, server));
 
 			SplitPane root = loader.load();

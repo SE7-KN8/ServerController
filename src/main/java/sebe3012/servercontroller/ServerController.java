@@ -1,5 +1,6 @@
 package sebe3012.servercontroller;
 
+import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon;
 import sebe3012.servercontroller.addon.spigot.SpigotAddon;
@@ -15,6 +16,7 @@ import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.settings.SettingsRow;
 import sebe3012.servercontroller.util.I18N;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +52,7 @@ public class ServerController {
 
 
 	private static final Logger log = LogManager.getLogger();
+	private static final Logger logTest = LogManager.getLogger("SpongeAddon");
 
 	/**
 	 * The main method
@@ -58,9 +61,10 @@ public class ServerController {
 	 */
 	public static void main(String[] args) {
 		log.info("ServerController is starting!");
+		logTest.debug("test");
 
-		System.setOut(new ConsoleLog());
-
+		System.setOut(new ConsoleLog("SYSOUT", System.out, Level.INFO));
+		System.setErr(new ConsoleLog("SYSERR", System.err, Level.ERROR));
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-debug")) {
@@ -83,6 +87,8 @@ public class ServerController {
 		I18N.init();
 
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
+		AddonLoader.searchAddons();
+		AddonLoader.loadAddons();
 
 		VanillaAddon.loadAddon();
 		CraftbukkitAddon.loadAddon();
@@ -94,6 +100,7 @@ public class ServerController {
 
 	public static void stop() {
 		log.info("ServerController is stopping");
+		AddonLoader.unloadAddons();
 		ServerWatcher.running = false;
 		FrameHandler.mainPane.getTabs().forEach(tab -> {
 			if (tab instanceof ServerTab) {
@@ -105,6 +112,7 @@ public class ServerController {
 					handler.onStopClicked();
 				}
 			}
+
 		});
 	}
 
