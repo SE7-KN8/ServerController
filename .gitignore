@@ -1,11 +1,21 @@
 #All gradle files
 .gradle
 
-!/build/launch4j/icons/icon.ico
-
 #Build files
 /build/
 /versions/
+
+/vanilla/versions/
+/vanilla/build/
+
+/bungeecord/versions/
+/bungeecord/build/
+
+/spigot/versions/
+/spigot/build/
+
+/craftbukkit/versions/
+/craftbukkit/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting

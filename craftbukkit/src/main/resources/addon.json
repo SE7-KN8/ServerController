@@ -1,0 +1,8 @@
+{
+  "id": "craftbukkit",
+  "name": "Craftbukkit",
+  "version": "0.0.1.0",
+  "mainClass": "sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon",
+  "authors": ["Sebe3012"],
+  "dependencies": ["vanilla"]
+}
