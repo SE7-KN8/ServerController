@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sebe3012.servercontroller.gui.FrameHandler">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="mBar">
+               <menus>
+                  <Menu mnemonicParsing="false" text="%menu_file">
+                     <items>
+                        <MenuItem fx:id="saveItem" mnemonicParsing="false" onAction="#onSaveItemClicked" text="%menu_item_save_servers" />
+                        <MenuItem fx:id="openItem" mnemonicParsing="false" onAction="#onOpenItemClicked" text="%menu_item_load_servers" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSettingsClicked" text="%menu_item_settings" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_server">
+                    <items>
+                      <MenuItem fx:id="addServer" mnemonicParsing="false" onAction="#onAddServerItemClicked" text="%menu_item_add_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="%menu_item_edit_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="%menu_item_remove_server" />
+                        <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="%menu_item_rcon_connection" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="%menu_help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="%menu_item_license" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="%menu_item_design" />
+                      <MenuItem fx:id="creditsItem" mnemonicParsing="false" onAction="#onCreditsItemClicked" text="%menu_item_credits" />
+                    </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <ToolBar fx:id="toolbar" prefHeight="20.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </top>
+   <bottom>
+      <Label fx:id="credits" alignment="CENTER" text="" BorderPane.alignment="CENTER" />
+   </bottom>
+   <right>
+      <VBox fx:id="vBox" prefHeight="697.0" prefWidth="206.0" spacing="15.0" styleClass="vbox" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+         </padding>
+      </VBox>
+   </right>
+   <center>
+      <TabPane fx:id="main" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <VBox fx:id="leftBox" prefHeight="697.0" prefWidth="272.0" styleClass="vbox" BorderPane.alignment="CENTER">
+         <children>
+            <ListView fx:id="lView" prefHeight="662.0" prefWidth="209.0" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>

@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':craftbukkit')
+}
+
+version = '0.0.1.0'
+
+jar{
+    baseName = 'ServerController-Addon-Spigot'
+}

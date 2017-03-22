@@ -1,51 +1,30 @@
-plugins {
-	id 'java'
-	id 'eclipse'
-	id 'edu.sc.seis.launch4j' version '2.3.0'
-}
-
-
-repositories {
-    jcenter()
-	mavenCentral()
-}
-
-dependencies {
-    compile 'com.google.guava:guava:21.0'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'org.jdom:jdom2:2.0.6'
-    compile 'net.java.dev.jna:jna:4.2.2'
-    compile 'org.apache.logging.log4j:log4j-core:2.8.1'
-    compile 'org.apache.logging.log4j:log4j-api:2.8.1'
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'com.github.dblock:oshi-core:3.3'
-}
-
 version = '0.3.11.9_alpha'
+group = 'servercontroller'
 
-jar {
-   manifest {
-       attributes 'Version' : version
-       attributes 'Main-Class' : 'sebe3012.servercontroller.ServerController'
-   }
+allprojects {
+    task info doLast { task -> println "Task $task.project.name loaded"}
+}
 
-    //Standalone jar
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    uploadArchives {
+        repositories {
+            flatDir {
+                dirs 'versions'
+            }
+        }
     }
 }
 
-uploadArchives {
-   repositories {
-      flatDir {
-	     dirs 'versions'
-	  }
-   }
-}
 
-launch4j {
-	mainClassName = 'sebe3012.servercontroller.ServerController'
-	icon = "${projectDir}/raw/icon.ico"
-	copyright = '2016-2017 by Sebastian Knackstedt'
-	outfile = project.name + '-' + project.version + '.exe'
+task copyJars(type: Copy) {
+    from subprojects.collect { it.tasks.withType(Jar) }
+    into "$buildDir/jarCopys"
 }

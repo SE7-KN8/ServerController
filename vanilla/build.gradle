@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':servercontroller')
+}
+
+version = '0.0.1.0'
+
+jar{
+    baseName = 'ServerController-Addon-Vanilla'
+}
