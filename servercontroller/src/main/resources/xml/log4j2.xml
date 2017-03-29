@@ -2,6 +2,7 @@
 <Configuration status="warn">
     <Appenders>
 
+        <!-- Console output with filename -->
         <Console name="ConsoleFull" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%logger{36}]: %msg%n"/>
             <Filters>
@@ -13,6 +14,7 @@
             </Filters>
         </Console>
 
+        <!-- Console-error output with filename -->
         <Console name="ConsoleFullError" target="SYSTEM_ERR">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%logger{36}]: %msg%n"/>
             <Filters>
@@ -24,6 +26,7 @@
             </Filters>
         </Console>
 
+        <!-- Console output -->
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%C{1}]: %msg%n"/>
             <Filters>
@@ -35,6 +38,7 @@
             </Filters>
         </Console>
 
+        <!-- Console output -->
         <Console name="ConsoleError" target="SYSTEM_ERR">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] [%C{1}]: %msg%n"/>
             <Filters>
@@ -49,11 +53,13 @@
     </Appenders>
     <Loggers>
 
+        <!-- Currently no use -->
         <Logger name="ServerController" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="ConsoleError"/>
         </Logger>
 
+        <!--Default logger for all packages-->
         <Logger name="sebe3012.servercontroller" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="ConsoleError"/>
@@ -67,7 +73,7 @@
             <AppenderRef ref="ConsoleFullError"/>
         </Logger>
 
-        <Root level="WARN">
+        <Root level="DEBUG">
             <AppenderRef ref="ConsoleFull"/>
             <AppenderRef ref="ConsoleFullError"/>
         </Root>

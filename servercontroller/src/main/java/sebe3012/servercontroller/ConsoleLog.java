@@ -3,6 +3,7 @@ package sebe3012.servercontroller;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintStream;
 
@@ -23,11 +24,59 @@ public class ConsoleLog extends PrintStream {
 
 	@Override
 	public void println(String x) {
-		StackTraceElement stack = Thread.currentThread().getStackTrace()[2];
+		printlnInternal(x);
+	}
+
+	private void printlnInternal(String x) {
+		StackTraceElement stack = Thread.currentThread().getStackTrace()[3];
 
 		String append = "[" + stack.getFileName() + ":" + stack.getLineNumber() + "] ";
 
 		log.log(level, append + x);
 	}
 
+	@Override
+	public void println(boolean x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(char x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println() {
+		printlnInternal("");
+	}
+
+	@Override
+	public void println(int x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(long x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(float x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(double x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(@NotNull char[] x) {
+		printlnInternal(String.valueOf(x));
+	}
+
+	@Override
+	public void println(Object x) {
+		printlnInternal(x.toString());
+	}
 }

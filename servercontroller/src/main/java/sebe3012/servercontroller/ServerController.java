@@ -50,13 +50,15 @@ public class ServerController {
 	 *
 	 * @param args Arguments from the console
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		log.info("ServerController is starting!");
-		logTest.debug("test");
+		logTest.debug("test");//FIXME no output
 
 		System.setOut(new ConsoleLog("SYSOUT", System.out, Level.INFO));
 		System.setErr(new ConsoleLog("SYSERR", System.err, Level.ERROR));
+
+		System.out.println("Test");
+		System.err.println("Test");
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-debug")) {
@@ -119,8 +121,7 @@ public class ServerController {
 			String buffer;
 			while ((buffer = reader.readLine()) != null) {
 				result.append(buffer);
-				result
-						.append('\n');
+				result.append('\n');
 			}
 			reader.close();
 		} catch (IOException e) {

@@ -77,6 +77,7 @@ public class SpigotAddon extends Addon implements IEventHandler {
 				.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
 		if (edit) {
+
 			jarRow.setDefaultValue(jar);
 			propertiesRow.setDefaultValue(properties);
 			bukkitConfigRow.setDefaultValue(bukkitConfig);
