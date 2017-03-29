@@ -29,7 +29,10 @@ import java.util.jar.JarFile;
  * Created by Sebe3012 on 01.03.2017.
  * The loader class for all addons
  */
-public class AddonLoader {
+public final class AddonLoader {
+
+	AddonLoader() {
+	}
 
 	public static final Path ADDON_PATH = Paths.get(System.getProperty("user.home"), ".servercontroller", "addons");
 	public static final PathMatcher JAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");
@@ -44,12 +47,12 @@ public class AddonLoader {
 
 	private static boolean loadingFlag = false;
 
-	public void searchAddons() {
+	void searchAddons() {
 		searchJars();
 		searchAddonInfo();
 	}
 
-	public void loadAddons() {
+	void loadAddons() {
 
 		if (!loadingFlag) {
 			calculateDependencies();
@@ -101,7 +104,7 @@ public class AddonLoader {
 		}
 	}
 
-	public void unloadAddons() {
+	void unloadAddons() {
 		for (Addon addon : ADDONS.values()) {
 			addon.unload();
 		}
@@ -124,6 +127,9 @@ public class AddonLoader {
 	}
 
 	private void searchAddonInfo() {
+
+		List<String> loadedIds = new ArrayList<>();
+
 		for (Path jarPath : JAR_PATHS) {
 			try {
 				JarFile file = new JarFile(jarPath.toFile());
@@ -134,9 +140,17 @@ public class AddonLoader {
 					throw new RuntimeException("addon.json not found! Please check your addon");
 				}
 
+
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
 
 				info.setJarPath(jarPath);
+
+				if(loadedIds.contains(info.getId())){
+					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
+					return;
+				}
+
+				loadedIds.add(info.getId());
 
 				log.info("Loading addon info: {}", info.getId());
 
@@ -159,10 +173,9 @@ public class AddonLoader {
 			}
 		}
 
+
 		//Removed resolved dependencies
-		for (AddonInfo info : addonsToLoadSorted) {
-			addonsToLoad.remove(info);
-		}
+		addonsToLoad.removeAll(addonsToLoadSorted);
 
 		while (true) {
 
@@ -191,9 +204,7 @@ public class AddonLoader {
 				}
 			}
 
-			for (AddonInfo info : addonsToLoadSorted) {
-				addonsToLoad.remove(info);
-			}
+			addonsToLoad.removeAll(addonsToLoadSorted);
 
 			if (!thingsChanged) {
 				break;
