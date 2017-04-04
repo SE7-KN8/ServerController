@@ -3,7 +3,7 @@ package sebe3012.servercontroller.gui.dialog;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.event.ServerTypeChooseEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
-import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +26,7 @@ public class ServerDialog {
 		log.debug("Load ServerDialog");
 		Alert dialog = new Alert(AlertType.NONE);
 		DialogPane rootPane = new DialogPane();
-		rootPane.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(rootPane);
 
 		VBox root = new VBox(10);
 		

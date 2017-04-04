@@ -11,6 +11,7 @@ import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
@@ -91,7 +92,7 @@ public class AddonUtil {
 
 		FileChooser fc = new FileChooser();
 
-		log.debug("Path: {}", ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, "nulll"));
+		log.debug("Path: {}", ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, "null"));
 
 		File path = new File(ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, System.getProperty("user.home")));
 
@@ -129,7 +130,7 @@ public class AddonUtil {
 
 		dialog.getDialogPane().setContent(root);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(dialog);
 		dialog.setTitle(I18N.format("create_server", addon));
 		dialog.show();
 	}

@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
@@ -82,7 +83,7 @@ public class Frame extends Application {
 	private void createPrimaryStage() throws IOException {
 		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(scene);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle(I18N.format("window_title", ServerController.VERSION));
 		primaryStage.setMaximized(true);

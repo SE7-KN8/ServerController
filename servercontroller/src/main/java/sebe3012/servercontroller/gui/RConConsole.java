@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.rcon.RCon;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
@@ -46,7 +47,7 @@ public class RConConsole {
 		try {
 			root = loader.load();
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+			Designs.applyCurrentDesign(scene);
 
 			stage.setOnCloseRequest(windowEvent -> {
 				try {

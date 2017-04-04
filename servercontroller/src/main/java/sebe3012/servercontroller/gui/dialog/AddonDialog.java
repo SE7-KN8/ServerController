@@ -2,7 +2,7 @@ package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.api.AddonInfo;
-import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.beans.property.ObjectProperty;
@@ -136,7 +136,7 @@ public class AddonDialog {
 		dialog.setResizable(true);
 		dialog.setHeaderText(I18N.translate("dialog_addons"));
 		dialog.setTitle(I18N.translate("dialog_addons"));
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(dialog);
 
 		ObservableList<AddonInfoWrapper> infoWrappers = FXCollections.observableArrayList();
 
