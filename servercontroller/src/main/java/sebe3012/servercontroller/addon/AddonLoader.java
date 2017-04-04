@@ -137,7 +137,8 @@ public final class AddonLoader {
 				JarEntry addonInfo = file.getJarEntry("addon.json");
 
 				if (addonInfo == null) {
-					throw new RuntimeException("addon.json not found! Please check your addon");
+					log.warn("Can't load '{}', because addon.json was not found. Check your addon", jarPath);
+					continue;
 				}
 
 
@@ -147,7 +148,7 @@ public final class AddonLoader {
 
 				if(loadedIds.contains(info.getId())){
 					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
-					return;
+					continue;
 				}
 
 				loadedIds.add(info.getId());
@@ -165,7 +166,7 @@ public final class AddonLoader {
 
 		List<String> resolvedDependencies = new ArrayList<>();
 
-		//Test for addons with no dependencies
+		//Test to find  addons with no dependencies
 		for (AddonInfo info : addonsToLoad) {
 			if (info.getDependencies().isEmpty()) {
 				addonsToLoadSorted.add(info);

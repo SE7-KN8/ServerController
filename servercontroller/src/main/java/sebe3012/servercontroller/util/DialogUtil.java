@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.util;
 
 import sebe3012.servercontroller.gui.Frame;
-import sebe3012.servercontroller.gui.FrameHandler;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -42,7 +41,7 @@ public class DialogUtil {
 		Alert a = new Alert(type, content, types);
 		a.setTitle(title);
 		a.setHeaderText(header);
-		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(a);
 		a.initModality(Modality.APPLICATION_MODAL);
 		a.initOwner(Frame.primaryStage);
 		return a.showAndWait();
@@ -53,7 +52,7 @@ public class DialogUtil {
 		a.setTitle(title);
 		a.setHeaderText(header);
 		a.setContentText(content);
-		a.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(a);
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);

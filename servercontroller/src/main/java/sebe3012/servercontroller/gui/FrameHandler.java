@@ -20,6 +20,7 @@ import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.util.Design;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
@@ -41,9 +42,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -56,6 +57,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -65,10 +69,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -78,8 +81,6 @@ public class FrameHandler implements IEventHandler {
 	public static TabPane mainPane;
 	public static ListView<BasicServer> list;
 	public static VBox buttonList;
-	public static Design currentDesign;
-	public static List<Design> designs;
 	public static Thread monitoringThread;
 
 	private static final Logger log = LogManager.getLogger();
@@ -189,27 +190,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onDesignClicked(ActionEvent event) {
-		ChoiceDialog<Design> cd = new ChoiceDialog<>();
-		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
-		cd.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
-		cd.setTitle(I18N.translate("dialog_choose_design"));
-		cd.setHeaderText(I18N.translate("dialog_choose_design_desc"));
-		cd.getItems().setAll(FrameHandler.designs);
-
-		Optional<Design> result = cd.showAndWait();
-
-		if (result.isPresent()) {
-
-			Design design = result.get();
-
-			ServerControllerPreferences.saveSetting(PreferencesConstants.KEY_DESIGN, design.getId());
-
-			Frame.primaryStage.getScene().getStylesheets().clear();
-			Frame.primaryStage.getScene().getStylesheets().add(design.getStylesheet());
-			FrameHandler.currentDesign = design;
-
-		}
-
+		Designs.showDesignDialog();
 	}
 
 	@FXML
@@ -224,7 +205,7 @@ public class FrameHandler implements IEventHandler {
 		DialogPane dp = loginDialog.getDialogPane();
 		ButtonType bt = new ButtonType(I18N.translate("dialog_rcon_login"), ButtonData.OK_DONE);
 		dp.getButtonTypes().add(bt);
-		dp.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(dp);
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -268,6 +249,61 @@ public class FrameHandler implements IEventHandler {
 		}
 	}
 
+	@FXML
+	void onAddonInstallClicked(ActionEvent e){
+
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
+		stage.setTitle(I18N.translate("menu_item_addon_install"));
+
+		BorderPane root = new BorderPane();
+
+		Button openBtn = new Button(I18N.translate("file_choose"));
+		openBtn.setOnAction(event -> {
+
+			log.debug(AddonUtil.openFileChooser("*.jar", "JAR"));
+
+		});
+
+		root.setCenter(new Label(I18N.translate("dialog_addon_install_drag_and_drop"), openBtn));
+
+		Scene scene = new Scene(root);
+		Designs.applyCurrentDesign(scene);
+
+		scene.setOnDragOver(event -> {
+			if(event.getDragboard().hasFiles()){
+				event.acceptTransferModes(TransferMode.COPY);
+			}else{
+				event.consume();
+			}
+		});
+
+		scene.setOnDragDropped(event -> {
+			Dragboard dragboard = event.getDragboard();
+
+			if(dragboard.hasFiles()){
+				event.setDropCompleted(true);
+
+				for(File f: dragboard.getFiles()){
+					log.debug("Found file '{}'", f.getAbsoluteFile());
+				}
+
+			}else{
+				event.setDropCompleted(false);
+			}
+
+			event.consume();
+
+		});
+
+		root.setPrefWidth(800);
+		root.setPrefHeight(600);
+
+		stage.setAlwaysOnTop(true);
+		stage.setScene(scene);
+		stage.showAndWait();
+	}
+
 	private void showLicense() {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
@@ -284,7 +320,7 @@ public class FrameHandler implements IEventHandler {
 		root.getChildren().add(wv);
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(scene);
 
 		stage.setResizable(false);
 		stage.setAlwaysOnTop(true);
@@ -294,22 +330,21 @@ public class FrameHandler implements IEventHandler {
 
 	private void init() {
 
-		designs = new ArrayList<>();
-
-		designs.add(new Design(ClassLoader.getSystemResource("css/style_bright.css").toExternalForm(), "bright"));
-		designs.add(new Design(ClassLoader.getSystemResource("css/style_dark.css").toExternalForm(), "dark"));
+		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_bright.css").toExternalForm(), "bright"));
+		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_dark.css").toExternalForm(), "dark"));
 
 		lView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> mainPane.getSelectionModel().select(newValue.intValue()));
 		main.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> lView.getSelectionModel().select(newValue.intValue()));
 
-		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, designs.iterator().next().getId());
+		/*Tab mainTab = new Tab(); TODO Future use
+		mainTab.setClosable(true);
+		mainTab.setText(I18N.translate("tab_home"));
+		mainTab.setContent(new BorderPane(new Label(I18N.translate("tab_home"))));
+		main.getTabs().add(mainTab);*/
 
-		for (Design d : designs) {
-			if (d.getId().equals(designID)) {
-				currentDesign = d;
-				break;
-			}
-		}
+		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, Designs.getDesigns().iterator().next().getId());
+
+		Designs.setCurrentDesign(designID);
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 

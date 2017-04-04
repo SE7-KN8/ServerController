@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
-import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.fxml.FXMLLoader;
@@ -22,7 +22,7 @@ public class OpsDialog {
 
 			SplitPane root = loader.load();
 			Scene scene = new Scene(root);
-			scene.getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+			Designs.applyCurrentDesign(scene);
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

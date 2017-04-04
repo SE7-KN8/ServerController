@@ -1,8 +1,8 @@
 package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.settings.SettingsRow;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.beans.property.BooleanProperty;
@@ -61,7 +61,7 @@ public class SettingsDialog {
 		dialog.setHeaderText(I18N.translate("dialog_settings"));
 		dialog.setTitle(I18N.translate("dialog_settings"));
 
-		dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+		Designs.applyCurrentDesign(dialog);
 		VBox rows = new VBox();
 		rows.setPrefWidth(500);
 		rows.getChildren().addAll(settingsRows);

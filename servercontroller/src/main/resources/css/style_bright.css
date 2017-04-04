@@ -283,6 +283,7 @@
 .table-view:focused .table-row-cell:filled:focused:selected {
     -fx-background-color: -base-armed;
 }
+
 /*End Table*/
 
 .hyperlink{

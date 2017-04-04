@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.fxml.FXMLLoader;
@@ -30,7 +30,7 @@ public class CreditsDialog {
 
 			dialog.getDialogPane().setContent(content);
 			dialog.setHeaderText("");
-			dialog.getDialogPane().getStylesheets().add(FrameHandler.currentDesign.getStylesheet());
+			Designs.applyCurrentDesign(dialog);
 			dialog.setTitle(I18N.translate("menu_item_credits"));
 			dialog.setHeaderText(I18N.translate("menu_item_credits"));
 
