@@ -29,12 +29,17 @@ public class Designs {
 
 	private static HashMap<String, Design> designs = new HashMap<>();
 
+	public static Design getDefaultDesign(){
+		return designs.values().iterator().next();
+	}
+
 	public static Design getCurrentDesign() {
 		return currentDesign;
 	}
 
 	public static void registerDesign(Design design) {
 		designs.put(design.getId(), design);
+		log.debug("Register design with id '{}'", design.getId());
 	}
 
 	public static Collection<Design> getDesigns() {

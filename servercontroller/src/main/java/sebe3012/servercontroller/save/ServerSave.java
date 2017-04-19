@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class ServerSave {
@@ -85,6 +87,13 @@ public class ServerSave {
 
 	public static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		log.info("Start loading");
+
+
+		if(path == null || !Files.exists(Paths.get(path))){
+			log.info("Can't load servers, because xml path is invalid");
+			return;
+		}
+
 		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
 		Servers.serversList.forEach(server -> {
@@ -123,6 +132,10 @@ public class ServerSave {
 				map.put(e.getName(), e.getValue());
 			}
 
+			if(serverClass == null){
+				log.warn("Server-class is null. Can't load server");
+				continue;
+			}
 			Constructor<?> constructor = serverClass.getConstructors()[1];
 
 			Object serverObject = constructor.newInstance(map);
@@ -136,6 +149,7 @@ public class ServerSave {
 				}
 				AddonUtil.addServer(server, false);
 			}
+
 		}
 
 		fis.close();
