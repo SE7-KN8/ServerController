@@ -10,7 +10,6 @@ import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.settings.SettingsRow;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.Properties;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -42,9 +41,7 @@ public class ServerController {
 
 	public static final String VERSION = "0.4.11.9_alpha";
 
-
 	private static final Logger log = LogManager.getLogger();
-	private static final Logger logTest = LogManager.getLogger("SpongeAddon");
 
 	/**
 	 * The main method
@@ -53,16 +50,9 @@ public class ServerController {
 	 */
 	public static void main(String[] args) {
 		log.info("ServerController is starting!");
-		logTest.debug("test");//FIXME no output
-
-		Properties.setProperty("test","test");
-		Properties.setProperty("test2", false);
 
 		System.setOut(new ConsoleLog("SYSOUT", System.out, Level.INFO));
 		System.setErr(new ConsoleLog("SYSERR", System.err, Level.ERROR));
-
-		System.out.println("Test");
-		System.err.println("Test");
 
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-debug")) {

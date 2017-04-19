@@ -250,7 +250,7 @@ public class FrameHandler implements IEventHandler {
 	}
 
 	@FXML
-	void onAddonInstallClicked(ActionEvent e){
+	void onAddonInstallClicked(ActionEvent e) {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
 		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
@@ -271,9 +271,9 @@ public class FrameHandler implements IEventHandler {
 		Designs.applyCurrentDesign(scene);
 
 		scene.setOnDragOver(event -> {
-			if(event.getDragboard().hasFiles()){
+			if (event.getDragboard().hasFiles()) {
 				event.acceptTransferModes(TransferMode.COPY);
-			}else{
+			} else {
 				event.consume();
 			}
 		});
@@ -281,14 +281,14 @@ public class FrameHandler implements IEventHandler {
 		scene.setOnDragDropped(event -> {
 			Dragboard dragboard = event.getDragboard();
 
-			if(dragboard.hasFiles()){
+			if (dragboard.hasFiles()) {
 				event.setDropCompleted(true);
 
-				for(File f: dragboard.getFiles()){
+				for (File f : dragboard.getFiles()) {
 					log.debug("Found file '{}'", f.getAbsoluteFile());
 				}
 
-			}else{
+			} else {
 				event.setDropCompleted(false);
 			}
 
@@ -342,7 +342,7 @@ public class FrameHandler implements IEventHandler {
 		mainTab.setContent(new BorderPane(new Label(I18N.translate("tab_home"))));
 		main.getTabs().add(mainTab);*/
 
-		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, Designs.getDesigns().iterator().next().getId());
+		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, Designs.getDefaultDesign().getId());
 
 		Designs.setCurrentDesign(designID);
 
@@ -370,9 +370,9 @@ public class FrameHandler implements IEventHandler {
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_start_all_servers"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_restart_all_servers"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop_all.png").toExternalForm(), e-> Servers.startAllServers(), I18N.translate("tooltip_stop_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e -> Servers.startAllServers(), I18N.translate("tooltip_start_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart_all.png").toExternalForm(), e -> Servers.restartAllServers(), I18N.translate("tooltip_restart_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop_all.png").toExternalForm(), e -> Servers.stopAllServers(), I18N.translate("tooltip_stop_all_servers"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), I18N.translate("tooltip_start_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), I18N.translate("tooltip_restart_server"));
