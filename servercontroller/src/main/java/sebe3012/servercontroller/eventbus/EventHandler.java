@@ -18,17 +18,17 @@ public class EventHandler {
 	}
 
 	public void registerEventListener(IEventHandler handler) {
-		log.debug("Register: {}", handler.getClass().getSimpleName());
+		log.trace("Register: {}", handler.getClass().getSimpleName());
 		eventBus.register(handler);
 	}
 
 	public void unregisterEventListener(IEventHandler handler) {
-		log.debug("Unregister: {}", handler.getClass().getSimpleName());
+		log.trace("Unregister: {}", handler.getClass().getSimpleName());
 		eventBus.unregister(handler);
 	}
 
 	public void post(IEvent event) {
-		log.debug("Post: {}", event.getClass().getSimpleName());
+		log.trace("Post: {}", event.getClass().getSimpleName());
 		eventBus.post(event);
 	}
 

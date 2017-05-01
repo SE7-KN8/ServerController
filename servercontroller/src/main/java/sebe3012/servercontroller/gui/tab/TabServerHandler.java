@@ -6,6 +6,7 @@ import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
+import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
@@ -13,8 +14,6 @@ import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
-
-import javafx.application.Platform;
 
 public class TabServerHandler implements IEventHandler {
 	private BasicServer server;
@@ -129,7 +128,6 @@ public class TabServerHandler implements IEventHandler {
 			}
 
 			getContentHandler().lblInfo.setText(this.server.getServerInfo());
-
 		}
 	}
 
@@ -140,7 +138,6 @@ public class TabServerHandler implements IEventHandler {
 			if (StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())) {
 				server.setState(ServerState.RUNNING);
 			}
-
 		}
 	}
 
@@ -149,20 +146,25 @@ public class TabServerHandler implements IEventHandler {
 
 		if (event.getServer() == server) {
 
-			int index = Servers.serversList.indexOf(server);
+			TreeEntry<BasicServer> entry = Servers.findEntry(server);
 
 			server.stop();
 			server = server.createNew();
 			server.setServerHandler(this);
 
-			Platform.runLater(() -> Servers.serversList.set(index, server));
+			if (entry != null) {
+				entry.setItem(server);
+			} else {
+				throw new RuntimeException("Cannot find entry for server: " + server.getName());
+			}
 
 			if (restartServer) {
 				server.start();
 			}
 
 			handler.addTextToOutput(
-					"[" + serverName + "] " + "------------------------------------------------------------");
+					"[" + serverName + "] " + "--------" +
+							"----------------------------------------------------");
 
 			restartServer = false;
 		}

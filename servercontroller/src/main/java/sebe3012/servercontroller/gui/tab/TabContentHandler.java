@@ -52,7 +52,7 @@ public class TabContentHandler implements Initializable {
 	}
 
 	public void refreshListState(){
-		FrameHandler.list.refresh();
+		FrameHandler.tree.refresh();
 	}
 
 	public TabContentHandler(TabContent content) {

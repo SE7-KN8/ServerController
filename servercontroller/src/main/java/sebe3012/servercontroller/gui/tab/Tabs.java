@@ -48,7 +48,7 @@ public class Tabs {
 	public static int getCurrentIndex() {
 		int index = FrameHandler.mainPane.getSelectionModel().getSelectedIndex();
 
-		if (index == FrameHandler.list.getSelectionModel().getSelectedIndex()) {
+		if (index == FrameHandler.tree.getSelectionModel().getSelectedIndex()) {
 			return index;
 		}
 		throw new IllegalStateException("Tab index != List index");
@@ -57,11 +57,9 @@ public class Tabs {
 
 	public static void removeAllTabs() {
 		Servers.serversList.clear();
-		FrameHandler.list.setItems(null);
-		FrameHandler.list.setItems(Servers.serversList);
 
+		FrameHandler.tree.getRoot().getChildren().clear();
 		FrameHandler.mainPane.getTabs().clear();
-
 	}
 
 	public static void removeCurrentTab() {
@@ -78,7 +76,7 @@ public class Tabs {
 
 				Servers.serversList.remove(index);
 
-				FrameHandler.list.getSelectionModel().select(index);
+				FrameHandler.tree.getSelectionModel().select(index);
 			}
 		}
 	}

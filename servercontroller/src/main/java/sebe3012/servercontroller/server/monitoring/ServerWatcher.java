@@ -1,9 +1,5 @@
 package sebe3012.servercontroller.server.monitoring;
 
-import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.server.BasicServer;
-
 /**
  * Created by Sebe3012 on 30.01.2017.
  * Class to watch the current server monitor
@@ -12,7 +8,7 @@ public class ServerWatcher implements Runnable {
 	public static boolean running = true;
 
 	@Override
-	public void run() {
+	public void run() {/*FIXME
 		while (running) {
 			BasicServer server = Tabs.getCurrentServer();
 
@@ -30,6 +26,6 @@ public class ServerWatcher implements Runnable {
 					e.printStackTrace();
 				}
 			}
-		}
+		}*/
 	}
 }

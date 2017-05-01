@@ -7,24 +7,19 @@ import javafx.scene.paint.Color;
  * All states that a {@link BasicServer} can have
  */
 public enum ServerState {
-	STARTING,
-	RUNNING,
-	STOPPING,
-	STOPPED;
+	STARTING(Color.YELLOW),
+	RUNNING(Color.LIGHTGREEN),
+	STOPPING(Color.RED),
+	STOPPED(Color.GRAY);
 
-	public static Color getColor(ServerState state){
-		switch (state){
-			case STARTING:
-				return Color.YELLOW;
-			case RUNNING:
-				return Color.LIGHTGREEN;
-			case STOPPING:
-				return Color.RED;
-			case STOPPED:
-				return Color.GREY;
-			default:
-				return Color.WHITE;
-		}
+	private final Color color;
+
+	ServerState(Color color) {
+		this.color = color;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 }

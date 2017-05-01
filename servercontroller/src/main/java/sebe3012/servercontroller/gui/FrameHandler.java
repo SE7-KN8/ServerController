@@ -11,13 +11,14 @@ import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.gui.tree.RootTreeEntry;
+import sebe3012.servercontroller.gui.tree.StructureCell;
+import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
-import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.util.Design;
 import sebe3012.servercontroller.util.Designs;
@@ -32,56 +33,50 @@ import org.jdom2.JDOMException;
 
 import com.google.common.eventbus.Subscribe;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FrameHandler implements IEventHandler {
 
 	public static TabPane mainPane;
-	public static ListView<BasicServer> list;
+	public static TreeView<TreeEntry<?>> tree;
+	public static TreeItem<TreeEntry<?>> rootItem;
 	public static VBox buttonList;
-	public static Thread monitoringThread;
+	//FIXME public static Thread monitoringThread;
 
 	private static final Logger log = LogManager.getLogger();
 
@@ -95,7 +90,7 @@ public class FrameHandler implements IEventHandler {
 	private MenuBar mBar;
 
 	@FXML
-	private ListView<BasicServer> lView;
+	private TreeView<TreeEntry<?>> lView;
 
 	@FXML
 	private Label credits;
@@ -284,9 +279,21 @@ public class FrameHandler implements IEventHandler {
 			if (dragboard.hasFiles()) {
 				event.setDropCompleted(true);
 
-				for (File f : dragboard.getFiles()) {
-					log.debug("Found file '{}'", f.getAbsoluteFile());
-				}
+				/*for (File f : dragboard.getFiles()) {
+
+					if (f.getAbsolutePath().endsWith(".jar")) {
+
+						Path addonPath = f.toPath();
+						try {
+							Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.A);
+							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+
+					}
+
+				}*///FIXME
 
 			} else {
 				event.setDropCompleted(false);
@@ -333,8 +340,37 @@ public class FrameHandler implements IEventHandler {
 		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_bright.css").toExternalForm(), "bright"));
 		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_dark.css").toExternalForm(), "dark"));
 
-		lView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> mainPane.getSelectionModel().select(newValue.intValue()));
-		main.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> lView.getSelectionModel().select(newValue.intValue()));
+		lView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			Object o = newValue.getValue().getItem();
+
+			if (o instanceof BasicServer) {
+				BasicServer server = (BasicServer) o;
+				main.getSelectionModel().select(Servers.findTab(server));
+			}
+
+		});
+
+		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+			if (newValue instanceof ServerTab) {
+
+				ServerTab tab = (ServerTab) newValue;
+
+				BasicServer server = tab.getTabContent().getContentHandler().getServerHandler().getServer();
+
+				for (TreeItem<TreeEntry<?>> item : lView.getRoot().getChildren()) {
+
+					if (item.getValue().getItem() instanceof BasicServer) {
+
+						if (item.getValue().getItem().equals(server)) {
+							lView.getSelectionModel().select(item);
+						}
+					}
+				}
+			}
+
+		});
+
 
 		/*Tab mainTab = new Tab(); TODO Future use
 		mainTab.setClosable(true);
@@ -348,13 +384,14 @@ public class FrameHandler implements IEventHandler {
 
 		EventHandler.EVENT_BUS.registerEventListener(this);
 
-		vBox.getStyleClass().add("button-list");
+		vBox.getStyleClass().add("button-tree");
 		credits.setText(ServerController.VERSION);
 
 		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
+			/*FIXME
 			FrameHandler.this.dataCounterRam.set(0);
-			FrameHandler.this.dataCounterCpu.set(0);
+			FrameHandler.this.dataCounterCpu.set(0);*/
 
 			if (newValue instanceof ServerTab) {
 				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
@@ -365,7 +402,19 @@ public class FrameHandler implements IEventHandler {
 			}
 		});
 
-		lView.setCellFactory(e -> new ServerCell());
+		lView.setCellFactory(e -> new StructureCell());
+
+		lView.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY)) {
+
+				TreeItem<TreeEntry<?>> item = lView.getSelectionModel().getSelectedItem();
+
+				if (item != null && item.getValue().onDoubleClick()) {
+					event.consume();
+				}
+			}
+
+		});
 
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
@@ -381,14 +430,18 @@ public class FrameHandler implements IEventHandler {
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), I18N.translate("tooltip_edit_server"));
 
 		mainPane = main;
-		list = lView;
+		tree = lView;
 		buttonList = vBox;
-		lView.setItems(Servers.serversList);
-		initCharts();
+
+		rootItem = new TreeItem<>(new RootTreeEntry(I18N.translate("tree_servers")));
+		lView.setRoot(rootItem);
+		rootItem.setExpanded(true);
+
+		/*FIXME initCharts();
 
 		monitoringThread = new Thread(new ServerWatcher());
 		monitoringThread.setName("Server Monitoring Thread");
-		monitoringThread.start();
+		monitoringThread.start();*/
 
 
 		log.info("FXML initialized");
@@ -425,27 +478,6 @@ public class FrameHandler implements IEventHandler {
 		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
 	}
 
-	private class ServerCell extends ListCell<BasicServer> {
-
-		@Override
-		protected void updateItem(BasicServer item, boolean empty) {
-			super.updateItem(item, empty);
-
-			if (item == null || empty) {
-				setText("");
-				setGraphic(null);
-			} else {
-
-				Circle c = new Circle(10, ServerState.getColor(item.getState()));
-
-				setGraphic(c);
-				setText(item.getName());
-			}
-
-		}
-
-	}
-
 	@Subscribe
 	public void changeExtraButton(ChangeControlsEvent event) {
 		Platform.runLater(() -> {
@@ -463,7 +495,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	private VBox leftBox;
-
+/*FIXME Too many bugs
 	private NumberAxis ramAxis;
 	private NumberAxis cpuAxis;
 
@@ -558,5 +590,5 @@ public class FrameHandler implements IEventHandler {
 
 		axis.setLowerBound(dataCounter.get() - maxValues);
 		axis.setUpperBound(dataCounter.get() - 1);
-	}
+	}*/
 }

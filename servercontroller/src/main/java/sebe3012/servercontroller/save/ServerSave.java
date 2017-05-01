@@ -37,8 +37,8 @@ public class ServerSave {
 		log.info("Start saving");
 		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
-		Servers.serversList.forEach(server -> {
-			if (server.isRunning()) {
+		Servers.serversList.forEach(item -> {
+			if (item.getItem().isRunning()) {
 				log.warn("Can't save while server is running");
 				showServerIsRunningDialog();
 				return;
@@ -52,7 +52,10 @@ public class ServerSave {
 
 		Document xml = new Document(rootElement);
 
-		Servers.serversList.forEach(server -> {
+		Servers.serversList.forEach(item -> {
+
+			BasicServer server = item.getItem();
+
 			log.info("Start saving server {}", server.getName());
 			final Element serverElement = new Element("server");
 
@@ -96,8 +99,8 @@ public class ServerSave {
 
 		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
-		Servers.serversList.forEach(server -> {
-			if (server.isRunning()) {
+		Servers.serversList.forEach(item -> {
+			if (item.getItem().isRunning()) {
 				log.warn("Can't load while server is running");
 				showServerIsRunningDialog();
 				return;
