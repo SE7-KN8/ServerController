@@ -7,12 +7,15 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabContent;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.gui.tree.ServerTreeEntry;
+import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
 
@@ -31,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
@@ -49,7 +53,7 @@ public class AddonUtil {
 
 	private static final HashMap<String, Class<? extends BasicServer>> serverTypes = new HashMap<>();
 
-	public static void registerServerType(String addonId, Class<? extends BasicServer> serverClass){
+	public static void registerServerType(String addonId, Class<? extends BasicServer> serverClass) {
 		serverTypes.put(addonId, serverClass);
 	}
 
@@ -67,10 +71,15 @@ public class AddonUtil {
 		if (isEdit) {
 			int index = Tabs.getCurrentIndex();
 			FrameHandler.mainPane.getTabs().set(index, tab);
-			Servers.serversList.set(index, server);
+			Servers.serversList.set(index, new ServerTreeEntry(server));
 		} else {
 			FrameHandler.mainPane.getTabs().add(tab);
-			Servers.serversList.add(server);
+			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(server));
+
+			FrameHandler.rootItem.getChildren().add(item);
+
+			FileUtil.searchSubFolders(server.getJarFile().getParentFile().toPath(), item);
+
 		}
 
 		FrameHandler.mainPane.getSelectionModel().select(tab);
@@ -148,7 +157,7 @@ public class AddonUtil {
 		Map<String, StringProperty> properties = new HashMap<>();
 		Map<String, DialogRow> rows = new HashMap<>();
 
-		//put the rows list in the rows map
+		//put the rows tree in the rows map
 		values.forEach(row -> rows.put(row.getPropertyName(), row));
 		rows.put(idRow.getPropertyName(), idRow);
 		rows.put(argsRow.getPropertyName(), argsRow);
@@ -158,7 +167,7 @@ public class AddonUtil {
 		layout.setMinWidth(1000);
 		layout.setMinHeight(500);
 
-		//Size of the list + header + id + args
+		//Size of the tree + header + id + args
 		int size = values.size() + 3;
 
 		//Add rows to layout
@@ -199,7 +208,6 @@ public class AddonUtil {
 		confirm.setPrefWidth(100);
 		confirm.setPrefHeight(50);
 		confirm.setOnAction(e -> {
-
 			//No primitive boolean because it must be effective-final
 			BooleanProperty flag = new SimpleBooleanProperty(true);
 
