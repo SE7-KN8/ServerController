@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -70,15 +71,17 @@ public class AddonUtil {
 
 		if (isEdit) {
 			int index = Tabs.getCurrentIndex();
-			FrameHandler.mainPane.getTabs().set(index, tab);
+
+			Platform.runLater(() -> FrameHandler.mainPane.getTabs().set(index, tab));
+
 			Servers.serversList.set(index, new ServerTreeEntry(server));
 		} else {
-			FrameHandler.mainPane.getTabs().add(tab);
+			Platform.runLater(() -> FrameHandler.mainPane.getTabs().add(tab));
+
 			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(server));
+			FileUtil.searchSubFolders(server.getJarFile().getParentFile().toPath(), item);
 
 			FrameHandler.rootItem.getChildren().add(item);
-
-			FileUtil.searchSubFolders(server.getJarFile().getParentFile().toPath(), item);
 
 		}
 
@@ -114,7 +117,6 @@ public class AddonUtil {
 		File f = fc.showOpenDialog(null);
 
 		if (f != null) {
-
 			ServerControllerPreferences.saveSetting(PreferencesConstants.FILE_ADDON_UTIL, f.getParent());
 
 			return f.getAbsolutePath();
@@ -277,7 +279,6 @@ public class AddonUtil {
 			GridPane.setRowIndex(b, row);
 			layout.getChildren().add(b);
 		}
-
 	}
 
 }

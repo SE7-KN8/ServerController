@@ -31,5 +31,4 @@ public class EventHandler {
 		log.trace("Post: {}", event.getClass().getSimpleName());
 		eventBus.post(event);
 	}
-
 }

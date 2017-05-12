@@ -15,6 +15,8 @@ import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.application.Platform;
+
 public class TabServerHandler implements IEventHandler {
 	private BasicServer server;
 	private boolean restartServer = false;
@@ -62,6 +64,8 @@ public class TabServerHandler implements IEventHandler {
 		} else {
 			showNoServerDialog();
 		}
+
+		getContentHandler().close();
 	}
 
 	public void onRestartClicked() {
@@ -127,7 +131,7 @@ public class TabServerHandler implements IEventHandler {
 				server.setServerHandler(this);
 			}
 
-			getContentHandler().lblInfo.setText(this.server.getServerInfo());
+			Platform.runLater(() -> getContentHandler().lblInfo.setText(this.server.getServerInfo()));
 		}
 	}
 
