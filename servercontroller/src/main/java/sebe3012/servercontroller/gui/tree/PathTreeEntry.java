@@ -1,9 +1,15 @@
 package sebe3012.servercontroller.gui.tree;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.awt.*;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -13,6 +19,8 @@ import java.nio.file.Path;
 public class PathTreeEntry implements TreeEntry<Path> {
 
 	private Path item;
+
+	public static final Image FOLDER_TEXTURE = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
 
 	public PathTreeEntry(Path path) {
 		this.item = path;
@@ -30,6 +38,18 @@ public class PathTreeEntry implements TreeEntry<Path> {
 
 		return false;
 
+	}
+
+	@Nullable
+	@Override
+	public Node getGraphic() {
+		if (item != null) {
+			if (Files.isDirectory(item)) {
+				return new ImageView(FOLDER_TEXTURE);
+			}
+
+		}
+		return null;
 	}
 
 	@NotNull

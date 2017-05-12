@@ -46,6 +46,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
@@ -75,6 +76,7 @@ public class FrameHandler implements IEventHandler {
 	public static TabPane mainPane;
 	public static TreeView<TreeEntry<?>> tree;
 	public static TreeItem<TreeEntry<?>> rootItem;
+	public static ProgressBar currentProgress;
 	public static VBox buttonList;
 	//FIXME public static Thread monitoringThread;
 
@@ -105,23 +107,11 @@ public class FrameHandler implements IEventHandler {
 	private ToolBar toolbar;
 
 	@FXML
+	private ProgressBar progressBar;
+
+	@FXML
 	void initialize() {
 		init();
-	}
-
-	@FXML
-	void onRestartAllClicked() {
-		Servers.restartAllServers();
-	}
-
-	@FXML
-	void onStartAllClicked() {
-		Servers.startAllServers();
-	}
-
-	@FXML
-	void onStopAllClicked() {
-		Servers.stopAllServers();
 	}
 
 	@FXML
@@ -416,6 +406,9 @@ public class FrameHandler implements IEventHandler {
 
 		});
 
+		currentProgress = progressBar;
+		FrameHandler.hideBar();
+
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
@@ -478,8 +471,22 @@ public class FrameHandler implements IEventHandler {
 		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
 	}
 
+	public static void showBar() {
+		log.debug("Showing the progress bar");
+		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(true));
+	}
+
+	public static void hideBar() {
+		log.debug("Hiding the progress bar");
+		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(false));
+	}
+
 	@Subscribe
 	public void changeExtraButton(ChangeControlsEvent event) {
+		if (!Platform.isFxApplicationThread()) {
+
+
+		}
 		Platform.runLater(() -> {
 
 			vBox.getChildren().clear();

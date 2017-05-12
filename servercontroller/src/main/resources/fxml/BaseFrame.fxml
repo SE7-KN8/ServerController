@@ -5,10 +5,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sebe3012.servercontroller.gui.FrameHandler">
    <top>
@@ -46,7 +48,16 @@
       </VBox>
    </top>
    <bottom>
-      <Label fx:id="credits" alignment="CENTER" text="" BorderPane.alignment="CENTER" />
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="credits" alignment="CENTER">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Label>
+            <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" />
+         </children>
+      </HBox>
    </bottom>
    <right>
       <VBox fx:id="vBox" prefHeight="697.0" prefWidth="206.0" spacing="15.0" styleClass="vbox" BorderPane.alignment="CENTER">

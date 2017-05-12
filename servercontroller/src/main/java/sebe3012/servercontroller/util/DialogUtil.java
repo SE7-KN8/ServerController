@@ -79,5 +79,4 @@ public class DialogUtil {
 
 		return a.showAndWait();
 	}
-
 }

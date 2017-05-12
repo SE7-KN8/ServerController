@@ -2,7 +2,9 @@ package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
@@ -19,6 +21,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import javafx.concurrent.Task;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,140 +32,183 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 
 public class ServerSave {
 
 	private static Logger log = LogManager.getLogger();
 
 	public static void saveServerController(String path, boolean showDialog) throws IOException {
-		log.info("Start saving");
-		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
-		Servers.serversList.forEach(item -> {
-			if (item.getItem().isRunning()) {
-				log.warn("Can't save while server is running");
-				showServerIsRunningDialog();
-				return;
+		Task<Void> saveTask = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				FrameHandler.showBar();
+				log.info("Start saving");
+				ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+
+				Servers.serversList.forEach(item -> {
+					if (item.getItem().isRunning()) {
+						log.warn("Can't save while server is running");
+						showServerIsRunningDialog();
+						return;
+					}
+				});
+
+				FileOutputStream fos = new FileOutputStream(new File(path));
+
+				final Element rootElement = new Element("servercontroller");
+				rootElement.setAttribute("servercontroller", ServerController.VERSION);
+
+				Document xml = new Document(rootElement);
+
+				int max = Servers.serversList.size();
+
+				for (int i = 0; i < max; i++) {
+					updateProgress(i, max);
+
+					TreeEntry<BasicServer> item = Servers.serversList.get(i);
+
+					BasicServer server = item.getItem();
+
+					log.info("Start saving server {}", server.getName());
+					final Element serverElement = new Element("server");
+
+					log.debug("Addon name from server {} is {}", server.getName(), server.getAddonName());
+					serverElement.setAttribute("addon", server.getAddonName());
+					serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
+					log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
+
+					server.toExternalForm().forEach((key, value) -> {
+						log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
+						Element keyElement = new Element(key);
+						keyElement.setText(value.toString());
+						serverElement.addContent(keyElement);
+					});
+
+					rootElement.addContent(serverElement);
+					log.info("Finished saving server {}", server.getName());
+
+				}
+
+				XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+
+				out.output(xml, fos);
+
+				fos.close();
+
+				log.info("Finished saving");
+
+				if (showDialog) {
+					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
+				}
+
+				FrameHandler.hideBar();
+				return null;
 			}
-		});
+		};
 
-		FileOutputStream fos = new FileOutputStream(new File(path));
+		FrameHandler.currentProgress.progressProperty().bind(saveTask.progressProperty());
 
-		final Element rootElement = new Element("servercontroller");
-		rootElement.setAttribute("servercontroller", ServerController.VERSION);
-
-		Document xml = new Document(rootElement);
-
-		Servers.serversList.forEach(item -> {
-
-			BasicServer server = item.getItem();
-
-			log.info("Start saving server {}", server.getName());
-			final Element serverElement = new Element("server");
-
-			log.debug("Addon name from server {} is {}", server.getName(), server.getAddonName());
-			serverElement.setAttribute("addon", server.getAddonName());
-			serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
-			log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
-
-			server.toExternalForm().forEach((key, value) -> {
-				log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
-				Element keyElement = new Element(key);
-				keyElement.setText(value.toString());
-				serverElement.addContent(keyElement);
-			});
-
-			rootElement.addContent(serverElement);
-			log.info("Finished saving server {}", server.getName());
-		});
-
-		XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-
-		out.output(xml, fos);
-
-		fos.close();
-
-		log.info("Finished saving");
-
-		if (showDialog) {
-			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
-		}
+		new Thread(saveTask).start();
 	}
 
 	public static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		log.info("Start loading");
 
+		Task<Void> loadTask = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				FrameHandler.showBar();
 
-		if(path == null || !Files.exists(Paths.get(path))){
-			log.info("Can't load servers, because xml path is invalid");
-			return;
-		}
+				log.info("Start loading");
 
-		ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
-
-		Servers.serversList.forEach(item -> {
-			if (item.getItem().isRunning()) {
-				log.warn("Can't load while server is running");
-				showServerIsRunningDialog();
-				return;
-			}
-		});
-
-		Tabs.removeAllTabs();
-
-		FileInputStream fis = new FileInputStream(new File(path));
-
-		Document xml = new SAXBuilder().build(fis);
-
-		Element serverController = xml.getRootElement();
-
-		for (Element serverElement : serverController.getChildren("server")) {
-			log.info("Start loading {}" + serverElement);
-			String pluginName = serverElement.getAttributeValue("addon");
-			log.debug("Plugin is {}", pluginName);
-			long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));
-
-			Class<? extends BasicServer> serverClass = AddonUtil.getServerTypes().get(pluginName);
-
-			if (serverClass == null) {
-				log.warn("No plugin found with name: {}", pluginName);
-				DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", pluginName));
-			}
-
-			HashMap<String, Object> map = new HashMap<>();
-
-			for (Element e : serverElement.getChildren()) {
-				log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
-				map.put(e.getName(), e.getValue());
-			}
-
-			if(serverClass == null){
-				log.warn("Server-class is null. Can't load server");
-				continue;
-			}
-			Constructor<?> constructor = serverClass.getConstructors()[1];
-
-			Object serverObject = constructor.newInstance(map);
-
-			if (serverObject instanceof BasicServer) {
-				BasicServer server = (BasicServer) serverObject;
-				log.info("Create server");
-				server.fromExternalForm();
-				if (server.getSaveVersion() != saveVersion) {
-					throw new IllegalStateException("The save type of the server has been changed");
+				if (path == null || !Files.exists(Paths.get(path))) {
+					log.info("Can't load servers, because xml path is invalid");
+					return null;
 				}
-				AddonUtil.addServer(server, false);
+
+				ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+
+				Servers.serversList.forEach(item -> {
+					if (item.getItem().isRunning()) {
+						log.warn("Can't load while server is running");
+						showServerIsRunningDialog();
+						return;
+					}
+				});
+
+				Tabs.removeAllTabs();
+
+				FileInputStream fis = new FileInputStream(new File(path));
+
+				Document xml = new SAXBuilder().build(fis);
+
+				Element serverController = xml.getRootElement();
+
+				List<Element> elementList = serverController.getChildren("server");
+
+				int counter = 0;
+				int max = elementList.size();
+
+				for (Element serverElement : elementList) {
+					counter++;
+
+					updateProgress(counter, max);
+					log.info("Start loading {}" + serverElement);
+					String pluginName = serverElement.getAttributeValue("addon");
+					log.debug("Plugin is {}", pluginName);
+					long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));
+
+					Class<? extends BasicServer> serverClass = AddonUtil.getServerTypes().get(pluginName);
+
+					if (serverClass == null) {
+						log.warn("No plugin found with name: {}", pluginName);
+						DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", pluginName));
+					}
+
+					HashMap<String, Object> map = new HashMap<>();
+
+					for (Element e : serverElement.getChildren()) {
+						log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
+						map.put(e.getName(), e.getValue());
+					}
+
+					if (serverClass == null) {
+						log.warn("Server-class is null. Can't load server");
+						continue;
+					}
+					Constructor<?> constructor = serverClass.getConstructors()[1];
+
+					Object serverObject = constructor.newInstance(map);
+
+					if (serverObject instanceof BasicServer) {
+						BasicServer server = (BasicServer) serverObject;
+						log.info("Create server");
+						server.fromExternalForm();
+						if (server.getSaveVersion() != saveVersion) {
+							throw new IllegalStateException("The save type of the server has been changed");
+						}
+						AddonUtil.addServer(server, false);
+					}
+
+				}
+
+				fis.close();
+
+				if (showDialog) {
+					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
+				}
+
+				log.info("Finished loading");
+
+				FrameHandler.hideBar();
+				return null;
 			}
+		};
 
-		}
+		FrameHandler.currentProgress.progressProperty().bind(loadTask.progressProperty());
+		new Thread(loadTask).start();
 
-		fis.close();
-
-		if (showDialog) {
-			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
-		}
-
-		log.info("Finished loading");
 
 	}
 

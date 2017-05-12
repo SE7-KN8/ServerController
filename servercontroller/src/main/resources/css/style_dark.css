@@ -318,5 +318,35 @@
 .tree-cell:expanded > .tree-disclosure-node > .arrow {
     -fx-background-color: white;
 }
-
 /*End Tree-View*/
+
+/*Progress-Bar*/
+.progress-bar > .bar {
+    -fx-background-color: -base-normal;
+    -fx-border-radius: 0.0px;
+    -fx-border-width: 1.0px;
+}
+/*End Progress-Bar*/
+
+/*Start CodeArea */
+.code-area {
+    -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
+    -fx-border-radius: 0.0px;
+}
+
+.code-area:focused {
+	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
+	-fx-background-insets: 0.0;
+}
+/*End CodeArea */
+.styled-text-area .text {
+    -fx-fill: white;
+}
+
+.styled-text-area .bracket{
+    -fx-fill: red;
+}
+
+.lineno {
+    -fx-background-color: -fx-base;
+}
