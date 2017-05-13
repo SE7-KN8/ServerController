@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.addon.craftbukkit;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaServer;
-import sebe3012.servercontroller.server.BasicServer;
 
 import java.util.HashMap;
 
@@ -36,12 +35,6 @@ public class CraftbukkitServer extends VanillaServer {
 	@Override
 	public String getAddonName() {
 		return CraftbukkitAddon.ADDON_ID;
-	}
-
-	@Override
-	public BasicServer createNew() {
-		return new CraftbukkitServer(name, super.getJarFile().getAbsolutePath(), super.getPropertiesFile(), super.args,
-				bukkitConfig);
 	}
 
 	@Override

@@ -58,11 +58,6 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public BasicServer createNew() {
-		return new BungeeCordServer(name, jarFile.getAbsolutePath(), configFile, args);
-	}
-
-	@Override
 	public List<Control> getExtraControls() {
 		return extraControls;
 	}

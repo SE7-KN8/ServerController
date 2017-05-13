@@ -63,8 +63,8 @@ public abstract class BasicServer {
 	public void start() {
 		if (getState() == ServerState.STOPPED) {
 			try {
-				messageReaderThread = new MessageReader(new MessageReader(), this);
-				waitForExitThread = new WaitForExit(new WaitForExit(), this);
+				messageReaderThread = new MessageReader();
+				waitForExitThread = new WaitForExit();
 				messageReaderThread.setName(name + "-Server reader");
 				waitForExitThread.setName(name + "-Server stop listener");
 
@@ -127,17 +127,6 @@ public abstract class BasicServer {
 	}
 
 	private final class MessageReader extends Thread {
-
-		private BasicServer server;
-
-		public MessageReader(Runnable runnable, BasicServer server) {
-			super(runnable);
-			this.server = server;
-		}
-
-		public MessageReader() {
-		}
-
 		@Override
 		public void run() {
 			while (!interrupted()) {
@@ -145,8 +134,6 @@ public abstract class BasicServer {
 					String line = inputReader.readLine();
 
 					if (line != null) {
-
-
 						int size = outputCallbackQueue.size();
 
 						for (int i = 0; i < size; i++) {
@@ -157,7 +144,7 @@ public abstract class BasicServer {
 								outputCallbackQueue.add(callback);
 							}
 						}
-						EventHandler.EVENT_BUS.post(new ServerMessageEvent(server, line));
+						EventHandler.EVENT_BUS.post(new ServerMessageEvent(BasicServer.this, line));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -167,26 +154,14 @@ public abstract class BasicServer {
 		}
 	}
 
-	private final class WaitForExit extends Thread{
-
-		private BasicServer server;
-
-		public WaitForExit(Runnable runnable, BasicServer server) {
-			super(runnable);
-			this.server = server;
-		}
-
-		public WaitForExit() {
-		}
-
+	private final class WaitForExit extends Thread {
 		@Override
 		public void run() {
 			try {
 				int code = serverProcess.waitFor();
-				EventHandler.EVENT_BUS.post(new ServerStopEvent(this.server, code));
+				EventHandler.EVENT_BUS.post(new ServerStopEvent(BasicServer.this, code));
 
 				messageReaderThread.interrupt();
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				onError(e);
@@ -276,8 +251,6 @@ public abstract class BasicServer {
 		args = (String) externalForm.get("args");
 
 	}
-
-	public abstract BasicServer createNew();
 
 	@Override
 	public String toString() {

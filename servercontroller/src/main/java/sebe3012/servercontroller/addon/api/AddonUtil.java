@@ -78,10 +78,12 @@ public class AddonUtil {
 		} else {
 			Platform.runLater(() -> FrameHandler.mainPane.getTabs().add(tab));
 
-			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(server));
+			ServerTreeEntry entry = new ServerTreeEntry(server);
+
+			TreeItem<TreeEntry<?>> item = new TreeItem<>(entry);
 			FileUtil.searchSubFolders(server.getJarFile().getParentFile().toPath(), item);
 
-			FrameHandler.rootItem.getChildren().add(item);
+			Servers.serversList.add(entry);
 
 		}
 
