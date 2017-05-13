@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.addon.spigot;
 
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
-import sebe3012.servercontroller.server.BasicServer;
 
 import java.util.HashMap;
 
@@ -39,12 +38,6 @@ public class SpigotServer extends CraftbukkitServer {
 	@Override
 	public String getAddonName() {
 		return SpigotAddon.ADDON_ID;
-	}
-
-	@Override
-	public BasicServer createNew() {
-		return new SpigotServer(name, jarFile.getAbsolutePath(), super.getPropertiesFile(), super.getArgs(),
-				super.getBukkitConfig(), spigotConfig);
 	}
 
 	@Override

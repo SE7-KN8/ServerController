@@ -153,8 +153,8 @@ public class TabServerHandler implements IEventHandler {
 			TreeEntry<BasicServer> entry = Servers.findEntry(server);
 
 			server.stop();
-			server = server.createNew();
-			server.setServerHandler(this);
+			//server = server.createNew();
+			//server.setServerHandler(this);
 
 			if (entry != null) {
 				entry.setItem(server);

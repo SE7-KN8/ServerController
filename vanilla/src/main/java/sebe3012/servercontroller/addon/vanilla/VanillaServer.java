@@ -99,11 +99,6 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public BasicServer createNew() {
-		return new VanillaServer(name, jarFile.getAbsolutePath(), propertiesFile, args);
-	}
-
-	@Override
 	public List<Control> getExtraControls() {
 		return extraControls;
 	}

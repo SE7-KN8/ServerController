@@ -43,6 +43,7 @@ public class Servers {
 
 	public static TreeEntry<BasicServer> findEntry(BasicServer server) {
 		for (TreeEntry<BasicServer> item : serversList) {
+
 			if (item.getItem().equals(server)) {
 				return item;
 			}
