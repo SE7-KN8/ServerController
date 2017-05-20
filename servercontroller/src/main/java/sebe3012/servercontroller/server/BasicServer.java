@@ -158,6 +158,7 @@ public abstract class BasicServer {
 		public void run() {
 			try {
 				int code = serverProcess.waitFor();
+				log.info("[{}]: Stopped with code {}", BasicServer.this.getName(), code);
 				EventHandler.EVENT_BUS.post(new ServerStopEvent(BasicServer.this, code));
 
 				messageReaderThread.interrupt();

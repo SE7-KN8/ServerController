@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Servers {
 	public static ObservableList<TreeEntry<BasicServer>> serversList = FXCollections.observableArrayList();
-	public static Map<BasicServer, Map<String, StringProperty>> serverProperties = new HashMap<>();
+	private static Map<BasicServer, Map<String, StringProperty>> serverProperties = new HashMap<>();
 
 
 	private static Logger log = LogManager.getLogger();
@@ -156,7 +156,7 @@ public class Servers {
 		return serverProperties.get(server);
 	}
 
-	public static void addServer(BasicServer server, boolean isEdit, Addon addon) {
+	public static void addServer(BasicServer server, Addon addon) {
 		log.debug("Add server {}", server);
 		server.setAddon(addon);
 
@@ -165,29 +165,20 @@ public class Servers {
 		tab.textProperty().bindBidirectional(server.nameProperty());
 		tab.setContent(content.getTabContent());
 
-		if (isEdit) {
-			int index = Tabs.getCurrentIndex();
+		Platform.runLater(() -> FrameHandler.mainPane.getTabs().add(tab));
 
-			Platform.runLater(() -> FrameHandler.mainPane.getTabs().set(index, tab));
+		ServerTreeEntry entry = new ServerTreeEntry(server);
 
-			serversList.set(index, new ServerTreeEntry(server));
-		} else {
-			Platform.runLater(() -> FrameHandler.mainPane.getTabs().add(tab));
+		TreeItem<TreeEntry<?>> item = new TreeItem<>(entry);
+		FileUtil.searchSubFolders(Paths.get(server.getJarPath()).getParent(), item);
 
-			ServerTreeEntry entry = new ServerTreeEntry(server);
-
-			TreeItem<TreeEntry<?>> item = new TreeItem<>(entry);
-			FileUtil.searchSubFolders(Paths.get(server.getJarPath()).getParent(), item);
-
-			FrameHandler.rootItem.getChildren().add(item);
-			serversList.add(entry);
-		}
+		FrameHandler.rootItem.getChildren().add(item);
+		serversList.add(entry);
 
 		FrameHandler.mainPane.getSelectionModel().select(tab);
 
-		if (!isEdit) {
-			EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
-		}
+		EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
+
 
 		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server));
 	}

@@ -1,11 +1,7 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import sebe3012.servercontroller.event.ServerStopEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
-
-import com.google.common.eventbus.Subscribe;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Control;
@@ -37,14 +33,6 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 
 	public String getConfigFile() {
 		return configFile.get();
-	}
-
-	@Subscribe
-	public void serverStopped(ServerStopEvent event) {
-		if (event.getServer() == this) {
-			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
-		}
-		EventHandler.EVENT_BUS.unregisterEventListener(this);
 	}
 
 	@Override
