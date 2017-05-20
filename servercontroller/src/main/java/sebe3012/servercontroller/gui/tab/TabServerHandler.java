@@ -71,6 +71,7 @@ public class TabServerHandler implements IEventHandler {
 			if (server.isRunning()) {
 				restartServer = true;
 				server.sendCommand(server.getStopCommand());
+				server.setState(ServerState.STOPPING);
 			} else {
 				showServerNotRunningDialog();
 			}
@@ -157,11 +158,12 @@ public class TabServerHandler implements IEventHandler {
 				throw new RuntimeException("Can't find entry for server: " + server.getName());
 			}
 
+			handler.addTextToOutput("[" + serverName + "] ------------------------------------------------------------");
+
 			if (restartServer) {
 				server.start();
 			}
 
-			handler.addTextToOutput("[" + serverName + "] ------------------------------------------------------------");
 
 			restartServer = false;
 		}

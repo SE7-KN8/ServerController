@@ -198,7 +198,7 @@ public class ServerSave {
 					if (server.getSaveVersion() != saveVersion) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
-					Servers.addServer(server, false, serverAddon);
+					Servers.addServer(server, serverAddon);
 
 
 				}

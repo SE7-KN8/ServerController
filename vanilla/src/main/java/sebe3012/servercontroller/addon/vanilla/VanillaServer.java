@@ -4,13 +4,9 @@ import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
-import sebe3012.servercontroller.event.ServerStopEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
-
-import com.google.common.eventbus.Subscribe;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
@@ -35,9 +31,6 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	public VanillaServer(Map<String, StringProperty> properties) {
 		super(properties);
 		propertiesFile = properties.get("properties");
-
-		EventHandler.EVENT_BUS.registerEventListener(this);
-
 
 		propertiesHandler = new PropertiesHandler(new File(getPropertiesFile()));
 		opsHandler = new OpsHandler(new File(new File(super.getJarPath()).getParentFile(), "ops.json").getAbsolutePath());
@@ -70,14 +63,6 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 
 	public String getPropertiesFile() {
 		return propertiesFile.get();
-	}
-
-	@Subscribe
-	public void serverStopped(ServerStopEvent event) {
-		if (event.getServer() == this) {
-			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
-		}
-		EventHandler.EVENT_BUS.unregisterEventListener(this);
 	}
 
 	@Override

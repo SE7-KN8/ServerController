@@ -64,7 +64,7 @@ public class AddonUtil {
 			try {
 
 				if (parent == null) {
-					Servers.addServer(Servers.createBasicServer(e, serverTypes.get(addon)), false, addon);
+					Servers.addServer(Servers.createBasicServer(e, serverTypes.get(addon)), addon);
 				} else {
 					Map<String, StringProperty> oldServerMap = Servers.getServerProperties(parent);
 					oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
@@ -78,8 +78,6 @@ public class AddonUtil {
 	}
 
 	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, StringProperty> properties, boolean useProperties) {
-
-		System.out.println(creator + " " + creator.getParent());
 		Addon parentCreatorAddon = Addons.addonForID(creator.getParent());
 		ServerCreator parentCreator = AddonUtil.getServerCreator(parentCreatorAddon);
 
