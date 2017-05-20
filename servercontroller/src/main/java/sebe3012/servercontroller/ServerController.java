@@ -93,6 +93,8 @@ public class ServerController {
 				if (handler.getServer().isRunning()) {
 					handler.onStopClicked();
 				}
+
+				handler.getContentHandler().close();
 			}
 
 		});

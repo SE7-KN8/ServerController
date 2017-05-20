@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -23,6 +22,7 @@ import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.util.Design;
 import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.NumberField;
@@ -131,7 +131,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onSaveItemClicked(ActionEvent event) {
-		String file = AddonUtil.openFileChooser("*.xml", ".xml");
+		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
 
 		try {
 			ServerSave.saveServerController(file, true);
@@ -143,7 +143,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onOpenItemClicked(ActionEvent event) {
-		String file = AddonUtil.openFileChooser("*.xml", ".xml");
+		String file = FileUtil.openFileChooser("*.xml", ".xml");
 
 		try {
 			ServerSave.loadServerController(file, true);
@@ -246,7 +246,7 @@ public class FrameHandler implements IEventHandler {
 		Button openBtn = new Button(I18N.translate("file_choose"));
 		openBtn.setOnAction(event -> {
 
-			log.debug(AddonUtil.openFileChooser("*.jar", "JAR"));
+			log.debug(FileUtil.openFileChooser("*.jar", "JAR"));
 
 		});
 

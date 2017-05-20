@@ -1,5 +1,14 @@
 package sebe3012.servercontroller.addon.api;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.function.Predicate;
 
 /**
@@ -7,114 +16,156 @@ import java.util.function.Predicate;
  * This class is a wrapper for parameters that can used
  */
 public class DialogRow {
+	private StringProperty name;
+	private StringProperty promptText;
+	private StringProperty fileType;
+	private StringProperty fileExtension;
+	private StringProperty propertyName;
+	private StringProperty defaultValue;
+	private BooleanProperty usingFileChooser;
+	private ObjectProperty<Predicate<String>> stringPredicate;
+	private IntegerProperty prefHeight;
+	private IntegerProperty prefWidth;
 
-	private String name;
-	private String promptText;
-	private String fileType;
-	private String fileExtension;
-	private String propertyName;
-	private String defaultValue;
-	private boolean usingFileChooser;
-	private Predicate<String> stringPredicate;
-	private int prefHeight;
-	private int prefWidth;
+	public DialogRow() {
+		stringPredicate = new SimpleObjectProperty<>(StringPredicates.DO_NOTHING);
+		promptText = new SimpleStringProperty();
+		name = new SimpleStringProperty();
+		defaultValue = new SimpleStringProperty();
+		prefWidth = new SimpleIntegerProperty(253);
+		prefHeight = new SimpleIntegerProperty(53);
+		propertyName = new SimpleStringProperty();
+		fileType = new SimpleStringProperty();
+		fileExtension = new SimpleStringProperty();
+		usingFileChooser = new SimpleBooleanProperty();
+	}
 
 	public String getName() {
+		return name.get();
+	}
+
+	public StringProperty nameProperty() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name.set(name);
+	}
+
+
 	public String getPromptText() {
+		return promptText.get();
+	}
+
+	public StringProperty promptTextProperty() {
 		return promptText;
 	}
 
-	public Predicate<String> getStringPredicate() {
-		return stringPredicate;
+	public void setPromptText(String promptText) {
+		this.promptText.set(promptText);
 	}
 
-	public boolean isUsingFileChooser() {
-		return usingFileChooser;
-	}
-
-	public int getPrefHeight() {
-		return prefHeight;
-	}
-
-	public int getPrefWidth() {
-		return prefWidth;
-	}
-
-	public String getFileExtension() {
-		return fileExtension;
-	}
 
 	public String getFileType() {
+		return fileType.get();
+	}
+
+	public StringProperty fileTypeProperty() {
 		return fileType;
 	}
 
+	public void setFileType(String fileType) {
+		this.fileType.set(fileType);
+	}
+
+
+	public String getFileExtension() {
+		return fileExtension.get();
+	}
+
+	public StringProperty fileExtensionProperty() {
+		return fileExtension;
+	}
+
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension.set(fileExtension);
+	}
+
+
 	public String getPropertyName() {
+		return propertyName.get();
+	}
+
+	public StringProperty propertyNameProperty() {
 		return propertyName;
 	}
 
+	public void setPropertyName(String propertyName) {
+		this.propertyName.set(propertyName);
+	}
+
+
 	public String getDefaultValue() {
+		return defaultValue.get();
+	}
+
+	public StringProperty defaultValueProperty() {
 		return defaultValue;
 	}
 
-	public DialogRow() {
-		stringPredicate = StringPredicates.DO_NOTHING;
-		promptText = "";
-		name = "";
-		defaultValue = "";
-		prefWidth = 235;
-		prefHeight = 53;
-		propertyName = "";
-	}
-
-	public DialogRow setName(String name) {
-		this.name = name;
-		return this;
-	}
-
-	public DialogRow setPromptText(String promptText) {
-		this.promptText = promptText;
-		return this;
-	}
-
-	public DialogRow setStringPredicate(Predicate<String> stringPredicate) {
-		this.stringPredicate = stringPredicate;
-		return this;
-	}
-
-	public DialogRow setUsingFileChooser(boolean usingFileChooser) {
-		this.usingFileChooser = usingFileChooser;
-		return this;
-	}
-
-	public DialogRow setPrefHeight(int prefHeight) {
-		this.prefHeight = prefHeight;
-		return this;
-	}
-
-	public DialogRow setPrefWidth(int prefWidth) {
-		this.prefWidth = prefWidth;
-		return this;
-	}
-
-	public DialogRow setFileExtension(String fileExtension) {
-		this.fileExtension = fileExtension;
-		return this;
-	}
-
-	public DialogRow setFileType(String fileType) {
-		this.fileType = fileType;
-		return this;
-	}
-
-	public DialogRow setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
-		return this;
-	}
-
 	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
+		this.defaultValue.set(defaultValue);
+	}
+
+
+	public boolean isUsingFileChooser() {
+		return usingFileChooser.get();
+	}
+
+	public BooleanProperty usingFileChooserProperty() {
+		return usingFileChooser;
+	}
+
+	public void setUsingFileChooser(boolean usingFileChooser) {
+		this.usingFileChooser.set(usingFileChooser);
+	}
+
+
+	public Predicate<String> getStringPredicate() {
+		return stringPredicate.get();
+	}
+
+	public ObjectProperty<Predicate<String>> stringPredicateProperty() {
+		return stringPredicate;
+	}
+
+	public void setStringPredicate(Predicate<String> stringPredicate) {
+		this.stringPredicate.set(stringPredicate);
+	}
+
+
+	public int getPrefHeight() {
+		return prefHeight.get();
+	}
+
+	public IntegerProperty prefHeightProperty() {
+		return prefHeight;
+	}
+
+	public void setPrefHeight(int prefHeight) {
+		this.prefHeight.set(prefHeight);
+	}
+
+
+	public int getPrefWidth() {
+		return prefWidth.get();
+	}
+
+	public IntegerProperty prefWidthProperty() {
+		return prefWidth;
+	}
+
+	public void setPrefWidth(int prefWidth) {
+		this.prefWidth.set(prefWidth);
 	}
 }

@@ -2,20 +2,17 @@ package sebe3012.servercontroller.addon.craftbukkit;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 
-import java.util.HashMap;
+import javafx.beans.property.StringProperty;
+
+import java.util.Map;
 
 public class CraftbukkitServer extends VanillaServer {
-	private String bukkitConfig;
-	private HashMap<String, Object> externalForm;
-	
-	public CraftbukkitServer(String name, String jarFile, String propertiesFile, String args, String bukkitConfig) {
-		super(name, jarFile, propertiesFile, args);
-		this.bukkitConfig = bukkitConfig;
-	}
+	private StringProperty bukkitConfig;
 
-	public CraftbukkitServer(HashMap<String, Object> externalForm) {
-		super(externalForm);
-		this.externalForm = externalForm;
+	public CraftbukkitServer(Map<String, StringProperty> properties){
+		super(properties);
+
+		bukkitConfig = properties.get("bukkit");
 	}
 
 	@Override
@@ -29,27 +26,7 @@ public class CraftbukkitServer extends VanillaServer {
 	}
 
 	public String getBukkitConfig() {
-		return bukkitConfig;
-	}
-
-	@Override
-	public String getAddonName() {
-		return CraftbukkitAddon.ADDON_ID;
-	}
-
-	@Override
-	public void fromExternalForm() {
-		super.fromExternalForm();
-		this.bukkitConfig = (String) externalForm.get("bukkit");
-	}
-
-	@Override
-	public HashMap<String, Object> toExternalForm() {
-		HashMap<String, Object> map = super.toExternalForm();
-
-		map.put("bukkit", bukkitConfig);
-
-		return map;
+		return bukkitConfig.get();
 	}
 
 }

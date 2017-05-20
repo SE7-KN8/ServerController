@@ -1,8 +1,7 @@
 package sebe3012.servercontroller.gui.dialog;
 
+import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
-import sebe3012.servercontroller.event.ServerTypeChooseEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
 
@@ -15,8 +14,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 public class ServerDialog {
 
@@ -25,12 +26,25 @@ public class ServerDialog {
 	public static void loadDialog() {
 		log.debug("Load ServerDialog");
 		Alert dialog = new Alert(AlertType.NONE);
-		DialogPane rootPane = new DialogPane();
-		Designs.applyCurrentDesign(rootPane);
+		Designs.applyCurrentDesign(dialog.getDialogPane());
 
 		VBox root = new VBox(10);
-		
-		ComboBox<String> box = new ComboBox<>();
+
+		Callback<ListView<Addon>, ListCell<Addon>> callback = e -> new ListCell<Addon>() {
+
+			@Override
+			protected void updateItem(Addon item, boolean empty) {
+				super.updateItem(item, empty);
+
+				if (item != null && !empty) {
+					setText(item.getAddonInfo().getName());
+				}
+			}
+		};
+
+		ComboBox<Addon> box = new ComboBox<>();
+		box.setButtonCell(callback.call(null));
+		box.setCellFactory(callback);
 		box.setItems(FXCollections.observableArrayList(AddonUtil.getServerTypes().keySet()));
 		box.setPrefWidth(300);
 		box.setPrefHeight(50);
@@ -40,20 +54,20 @@ public class ServerDialog {
 		b.setOnAction(event -> {
 			if (box.getSelectionModel().getSelectedItem() != null) {
 				dialog.close();
-				log.debug("Load addon for name {}", box.getSelectionModel().getSelectedItem());
-				EventHandler.EVENT_BUS.post(new ServerTypeChooseEvent(box.getSelectionModel().getSelectedItem()));
+				log.debug("Load addon for name {}", box.getSelectionModel().getSelectedItem().getAddonInfo().getId());
+				AddonUtil.loadServerCreateDialog(box.getSelectionModel().getSelectedItem(), null);
+				//EventHandler.EVENT_BUS.post(new ServerTypeChooseEvent(box.getSelectionModel().getSelectedItem()));
 			}
 		});
 		b.setPrefWidth(300);
 		b.setPrefHeight(75);
-		
+
 		root.getChildren().add(box);
 		root.getChildren().add(b);
-		
-		rootPane.getButtonTypes().add(ButtonType.CLOSE);
 
-		rootPane.setContent(root);
-		dialog.setDialogPane(rootPane);
+		dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+		dialog.getDialogPane().setContent(root);
 		dialog.setTitle(I18N.translate("dialog_choose_server_type"));
 		dialog.showAndWait();
 

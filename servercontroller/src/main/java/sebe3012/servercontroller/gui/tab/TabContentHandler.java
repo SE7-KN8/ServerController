@@ -67,7 +67,6 @@ public class TabContentHandler implements Initializable, Closeable {
 	public void initialize(URL location, ResourceBundle resources) {
 		server = new TabServerHandler(this);
 		cOutput.getStylesheets().clear();
-		//cOutput.getStylesheets().add(Designs.getCurrentDesign().getStylesheet());
 		formatter = new OutputFormatter();
 		formatter.start(cOutput);
 	}

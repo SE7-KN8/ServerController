@@ -3,89 +3,62 @@ package sebe3012.servercontroller.addon.vanilla;
 import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.addon.api.DialogRow;
+import sebe3012.servercontroller.addon.api.ServerCreator;
 import sebe3012.servercontroller.addon.api.StringPredicates;
-import sebe3012.servercontroller.event.ServerEditEvent;
-import sebe3012.servercontroller.event.ServerTypeChooseEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
-import sebe3012.servercontroller.server.BasicServer;
 
-import com.google.common.eventbus.Subscribe;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import javafx.beans.property.StringProperty;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-public class VanillaAddon extends Addon implements IEventHandler {
-
-	static final String ADDON_ID = "vanilla";
+public class VanillaAddon extends Addon implements IEventHandler, ServerCreator {
 
 	@Override
 	public void load() {
-		AddonUtil.registerServerType(VanillaAddon.ADDON_ID, VanillaServer.class);
-		EventHandler.EVENT_BUS.registerEventListener(this);
+		AddonUtil.registerServerType(this, VanillaServer.class, this);
 	}
 
 	@Override
-	public void unload(){
-		EventHandler.EVENT_BUS.unregisterEventListener(this);
+	public void unload() {
 	}
 
-	@Subscribe
-	public void serverTypeChoose(ServerTypeChooseEvent event) {
-		if (event.getServerType().equals(VanillaAddon.ADDON_ID)) {
-			loadDialog(false, null, null, null);
+	@Override
+	@NotNull
+	public List<DialogRow> createServerDialogRows(@NotNull Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
+		DialogRow jarRow = new DialogRow();
+		jarRow.setName("Jar-Pfad");
+		jarRow.setUsingFileChooser(true);
+		jarRow.setFileExtension("*.jar");
+		jarRow.setFileType("JAR-ARCHIVE");
+		jarRow.setPropertyName("jarfile");
+		jarRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
+
+		DialogRow propertiesRow = new DialogRow();
+		propertiesRow.setName("Properties-Pfad");
+		propertiesRow.setUsingFileChooser(true);
+		propertiesRow.setFileExtension("*.properties");
+		propertiesRow.setFileType("PROPERTIES");
+		propertiesRow.setPropertyName("properties");
+		propertiesRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
+
+		if (useProperties) {
+			jarRow.setDefaultValue(properties.get("jarfile").get());
+			propertiesRow.setDefaultValue(properties.get("properties").get());
 		}
+
+		Collections.addAll(parentRows, jarRow, propertiesRow);
+
+		return parentRows;
 	}
 
-	@Subscribe
-	public void serverEdit(ServerEditEvent event) {
-		if (event.getServerType().equals(VanillaAddon.ADDON_ID)) {
-
-			if (event.getServer() instanceof VanillaServer) {
-
-				VanillaServer server = (VanillaServer) event.getServer();
-
-				loadDialog(true, server.getJarFile().getAbsolutePath(), server.getPropertiesFile(), server);
-
-
-			}
-
-		}
-	}
-
-	private void loadDialog(boolean edit, String jar, String properties, BasicServer server) {
-		DialogRow jarRow = new DialogRow()
-				.setName("Jar-Pfad")
-				.setUsingFileChooser(true)
-				.setFileExtension("*.jar")
-				.setFileType("JAR-ARCHIVE")
-				.setPropertyName("jar")
-				.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-		DialogRow propertiesRow = new DialogRow()
-				.setName("Properties-Pfad")
-				.setUsingFileChooser(true)
-				.setFileExtension("*.properties")
-				.setFileType("PROPERTIES")
-				.setPropertyName("properties")
-				.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-
-		if (edit) {
-			jarRow.setDefaultValue(jar);
-			propertiesRow.setDefaultValue(properties);
-		}
-
-		List<DialogRow> rows = new ArrayList<>();
-		rows.add(jarRow);
-		rows.add(propertiesRow);
-
-		AddonUtil.openCreateDialog(ADDON_ID, rows, server, map -> {
-			String name = map.get("name").get();
-			String jarPath = map.get("jar").get();
-			String propertiesPath = map.get("properties").get();
-			String args = map.get("args").get();
-			AddonUtil.addServer(new VanillaServer(name, jarPath, propertiesPath, args), edit);
-
-		});
-
+	@Override
+	@Nullable
+	public String getParent() {
+		return null;
 	}
 }

@@ -12,6 +12,7 @@ import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.stage.Stage;
@@ -20,50 +21,31 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VanillaServer extends BasicServer implements IEventHandler {
-	private String propertiesFile;
+	private StringProperty propertiesFile;
 	private PropertiesHandler propertiesHandler;
 	private OpsHandler opsHandler;
 
 	private List<Control> extraControls = new ArrayList<>();
-	private HashMap<String, Object> externalForm;
 
-	public VanillaServer(String name, String jarFilePath, String properties, String args) {
-		super(name, jarFilePath, args);
-		this.propertiesFile = properties;
-		this.init(true);
-	}
 
-	public VanillaServer(HashMap<String, Object> externalForm) {
-		super(externalForm);
+	public VanillaServer(Map<String, StringProperty> properties) {
+		super(properties);
+		propertiesFile = properties.get("properties");
 
-		this.externalForm = externalForm;
-
-		this.init(false);
-	}
-
-	@Override
-	public int getSaveVersion() {
-		return 1;
-	}
-
-	private void init(boolean isNew) {
 		EventHandler.EVENT_BUS.registerEventListener(this);
-		if (isNew) {
-			propertiesHandler = new PropertiesHandler(new File(propertiesFile));
-			opsHandler = new OpsHandler(new File(super.getJarFile().getParentFile(), "ops.json").getAbsolutePath());
-			try {
-				propertiesHandler.readProperties();
-				opsHandler.readOps();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		} else {
-			propertiesHandler = new PropertiesHandler();
-			opsHandler = new OpsHandler();
+
+
+		propertiesHandler = new PropertiesHandler(new File(getPropertiesFile()));
+		opsHandler = new OpsHandler(new File(new File(super.getJarPath()).getParentFile(), "ops.json").getAbsolutePath());
+		try {
+			propertiesHandler.readProperties();
+			opsHandler.readOps();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 
 		Button propertiesButton = new Button(I18N.translate("addon_vanilla_properties"));
@@ -77,12 +59,17 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
+	public int getSaveVersion() {
+		return 1;
+	}
+
+	@Override
 	public String getServerInfo() {
 		return I18N.format("addon_vanilla_server_description", propertiesHandler.getServerPort(), propertiesHandler.getLevelName(), propertiesHandler.getDifficulty(), propertiesHandler.getLevelSeed());
 	}
 
 	public String getPropertiesFile() {
-		return propertiesFile;
+		return propertiesFile.get();
 	}
 
 	@Subscribe
@@ -94,23 +81,8 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	}
 
 	@Override
-	public String getAddonName() {
-		return VanillaAddon.ADDON_ID;
-	}
-
-	@Override
 	public List<Control> getExtraControls() {
 		return extraControls;
-	}
-
-	@Override
-	public HashMap<String, Object> toExternalForm() {
-		HashMap<String, Object> map = super.toExternalForm();
-
-		map.put("properties", propertiesFile);
-
-		return map;
-
 	}
 
 	@Override
@@ -118,18 +90,5 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 		return ".*Done \\(\\d*,\\d*s\\)! For help, type \"help\" or \"\\?\"";
 	}
 
-	@Override
-	public void fromExternalForm() {
-		super.fromExternalForm();
-		propertiesFile = (String) externalForm.get("properties");
-		propertiesHandler.setProperitesFile(new File(propertiesFile));
-		opsHandler.setPath(new File(super.getJarFile().getParentFile(), "ops.json").getAbsolutePath());
-		try {
-			propertiesHandler.readProperties();
-			opsHandler.readOps();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 
 }

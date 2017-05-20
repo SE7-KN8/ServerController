@@ -14,10 +14,10 @@ public abstract class Addon {
 
 
 	public final void loadAddon() {
-		if(!loaded){
+		if (!loaded) {
 			load();
 			loaded = true;
-		}else{
+		} else {
 			throw new RuntimeException("Addon is already loaded!");
 		}
 	}
@@ -26,7 +26,7 @@ public abstract class Addon {
 		if (loaded) {
 			unload();
 			loaded = false;
-		}else{
+		} else {
 			throw new RuntimeException("Addon is already unloaded");
 		}
 	}
@@ -35,9 +35,9 @@ public abstract class Addon {
 		return loaded;
 	}
 
-	public abstract void load();
+	protected abstract void load();
 
-	public abstract void unload();
+	protected abstract void unload();
 
 	public final void setAddonInfo(AddonInfo addonInfo) {
 		this.addonInfo = addonInfo;
@@ -46,6 +46,4 @@ public abstract class Addon {
 	public final AddonInfo getAddonInfo() {
 		return addonInfo;
 	}
-
-
 }
