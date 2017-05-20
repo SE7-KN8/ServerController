@@ -7,6 +7,7 @@ import java.util.List;
  * Created by Sebe3012 on 28.02.2017.
  * All information about an addon
  */
+@SuppressWarnings("unused")
 public class AddonInfo {
 
 	//This values will change by json-deserializer
@@ -18,7 +19,7 @@ public class AddonInfo {
 	private List<String> dependencies;
 
 	//This will not change by json-deserializer
-	private Path jarPath;
+	private transient Path jarPath;
 
 	public String getId() {
 		return id;

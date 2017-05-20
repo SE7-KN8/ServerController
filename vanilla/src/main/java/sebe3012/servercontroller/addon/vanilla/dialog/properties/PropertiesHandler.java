@@ -12,14 +12,6 @@ public class PropertiesHandler {
 		this.properitesFile = propertiesFile;
 	}
 
-	public PropertiesHandler() {
-
-	}
-
-	public void setProperitesFile(File properitesFile) {
-		this.properitesFile = properitesFile;
-	}
-
 	public void readProperties() throws FileNotFoundException {
 		Scanner s = new Scanner(properitesFile);
 

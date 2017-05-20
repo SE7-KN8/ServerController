@@ -1,6 +1,8 @@
 package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.Addons;
+import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.Tabs;
@@ -21,18 +23,21 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServerSave {
 
@@ -45,7 +50,10 @@ public class ServerSave {
 			protected Void call() throws Exception {
 				FrameHandler.showBar();
 				log.info("Start saving");
-				ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+
+				if (path != null) {
+					ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+				}
 
 				Servers.serversList.forEach(item -> {
 					if (item.getItem().isRunning()) {
@@ -74,15 +82,17 @@ public class ServerSave {
 					log.info("Start saving server {}", server.getName());
 					final Element serverElement = new Element("server");
 
-					log.debug("Addon name from server {} is {}", server.getName(), server.getAddonName());
-					serverElement.setAttribute("addon", server.getAddonName());
+					log.debug("Addon id from server {} is {}", server.getName(), server.getAddon().getAddonInfo().getId());
+					serverElement.setAttribute("addon", server.getAddon().getAddonInfo().getId());
 					serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
 					log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 
-					server.toExternalForm().forEach((key, value) -> {
+					Map<String, StringProperty> saveMap = Servers.getServerProperties(server);
+
+					saveMap.forEach((key, value) -> {
 						log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
 						Element keyElement = new Element(key);
-						keyElement.setText(value.toString());
+						keyElement.setText(value.get());
 						serverElement.addContent(keyElement);
 					});
 
@@ -100,7 +110,7 @@ public class ServerSave {
 				log.info("Finished saving");
 
 				if (showDialog) {
-					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful"));
+					Platform.runLater(() -> DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful")));
 				}
 
 				FrameHandler.hideBar();
@@ -110,6 +120,7 @@ public class ServerSave {
 
 		FrameHandler.currentProgress.progressProperty().bind(saveTask.progressProperty());
 
+		saveTask.setOnFailed(event -> log.error("Can't save servers", saveTask.getException()));
 		new Thread(saveTask).start();
 	}
 
@@ -137,7 +148,7 @@ public class ServerSave {
 					}
 				});
 
-				Tabs.removeAllTabs();
+				Platform.runLater(Tabs::removeAllTabs);
 
 				FileInputStream fis = new FileInputStream(new File(path));
 
@@ -155,48 +166,47 @@ public class ServerSave {
 
 					updateProgress(counter, max);
 					log.info("Start loading {}" + serverElement);
-					String pluginName = serverElement.getAttributeValue("addon");
-					log.debug("Plugin is {}", pluginName);
+					String addonId = serverElement.getAttributeValue("addon");
+					log.debug("Plugin is {}", addonId);
 					long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));
 
-					Class<? extends BasicServer> serverClass = AddonUtil.getServerTypes().get(pluginName);
+					Addon serverAddon = Addons.addonForID(addonId);
+
+					Class<? extends BasicServer> serverClass = AddonUtil.getServerTypes().get(serverAddon);
 
 					if (serverClass == null) {
-						log.warn("No plugin found with name: {}", pluginName);
-						DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", pluginName));
+						log.warn("No plugin found with name: {}", addonId);
+						Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", addonId)));
 					}
 
-					HashMap<String, Object> map = new HashMap<>();
+					Map<String, StringProperty> map = new HashMap<>();
 
 					for (Element e : serverElement.getChildren()) {
 						log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
-						map.put(e.getName(), e.getValue());
+						map.put(e.getName(), new SimpleStringProperty(e.getValue()));
 					}
 
 					if (serverClass == null) {
 						log.warn("Server-class is null. Can't load server");
 						continue;
 					}
-					Constructor<?> constructor = serverClass.getConstructors()[1];
 
-					Object serverObject = constructor.newInstance(map);
 
-					if (serverObject instanceof BasicServer) {
-						BasicServer server = (BasicServer) serverObject;
-						log.info("Create server");
-						server.fromExternalForm();
-						if (server.getSaveVersion() != saveVersion) {
-							throw new IllegalStateException("The save type of the server has been changed");
-						}
-						AddonUtil.addServer(server, false);
+					BasicServer server = Servers.createBasicServer(map, serverClass);
+
+					log.info("Create server");
+					if (server.getSaveVersion() != saveVersion) {
+						throw new IllegalStateException("The save type of the server has been changed");
 					}
+					Servers.addServer(server, false, serverAddon);
+
 
 				}
 
 				fis.close();
 
 				if (showDialog) {
-					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful"));
+					Platform.runLater(() -> DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful")));
 				}
 
 				log.info("Finished loading");
@@ -207,12 +217,13 @@ public class ServerSave {
 		};
 
 		FrameHandler.currentProgress.progressProperty().bind(loadTask.progressProperty());
+		loadTask.setOnFailed(event -> log.error("Can't save servers", loadTask.getException()));
 		new Thread(loadTask).start();
 
 
 	}
 
 	private static void showServerIsRunningDialog() {
-		DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", "dialog_save_servers_running");
+		Platform.runLater(() -> DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", "dialog_save_servers_running"));
 	}
 }

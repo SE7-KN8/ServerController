@@ -88,7 +88,7 @@ public final class AddonLoader {
 
 			if (!addon.isLoaded()) {
 				log.info("Start to load addon '{}'", info.getId());
-				addon.load();
+				addon.loadAddon();
 				log.info("Addon '{}' is loaded", info.getId());
 			} else {
 				log.warn("Addon '{}' is already loaded", info.getId());
@@ -106,7 +106,7 @@ public final class AddonLoader {
 
 	void unloadAddons() {
 		for (Addon addon : ADDONS.values()) {
-			addon.unload();
+			addon.unloadAddon();
 		}
 	}
 

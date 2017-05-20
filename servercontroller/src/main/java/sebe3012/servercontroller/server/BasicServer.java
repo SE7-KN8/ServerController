@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.server;
 
+import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.event.ServerMessageEvent;
 import sebe3012.servercontroller.event.ServerStopEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import com.sun.jna.Pointer;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Control;
 
 import java.io.BufferedReader;
@@ -25,9 +27,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.function.Consumer;
 
@@ -39,25 +41,22 @@ public abstract class BasicServer {
 	protected ProcessBuilder serverProcessBuilder;
 	protected Process serverProcess;
 	protected int pid = 0;
-	protected File jarFile;
-	protected String name;
-	protected String args;
-	protected String argsAfterJar = "";
-	protected TabServerHandler handler;
-	private HashMap<String, Object> externalForm;
+	protected StringProperty jarPath;
+	private StringProperty name;
+	private StringProperty args;
+	private String argsAfterJar = "";
+	private TabServerHandler handler;
 	private Logger log = LogManager.getLogger();
 	private ServerState state = ServerState.STOPPED;
 	private ServerMonitor monitor = new ServerMonitor();
 	private Queue<OutputCallback> outputCallbackQueue = new LinkedList<>();
+	private boolean isAddonSet = false;
+	private Addon addon;
 
-	public BasicServer(String name, String jarFilePath, String args) {
-		this.name = name;
-		this.jarFile = new File(jarFilePath);
-		this.args = args;
-	}
-
-	public BasicServer(HashMap<String, Object> externalForm) {
-		this.externalForm = externalForm;
+	public BasicServer(Map<String, StringProperty> properties) {
+		name = properties.get("name");
+		args = properties.get("args");
+		jarPath = properties.get("jarfile");
 	}
 
 	public void start() {
@@ -65,10 +64,10 @@ public abstract class BasicServer {
 			try {
 				messageReaderThread = new MessageReader();
 				waitForExitThread = new WaitForExit();
-				messageReaderThread.setName(name + "-Server reader");
-				waitForExitThread.setName(name + "-Server stop listener");
+				messageReaderThread.setName(getName() + "-Server reader");
+				waitForExitThread.setName(getName() + "-Server stop listener");
 
-				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", jarFile.getAbsolutePath(),
+				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", getJarPath(),
 						getArgsAfterJar() + "nogui");
 
 
@@ -79,7 +78,7 @@ public abstract class BasicServer {
 				}
 				log.info("[{}]: Start with command: '{}'", getName(), builder.toString());
 
-				serverProcessBuilder.directory(jarFile.getParentFile());
+				serverProcessBuilder.directory(new File(getJarPath()).getParentFile());
 				serverProcess = serverProcessBuilder.start();
 				inputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
 				outputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
@@ -123,7 +122,7 @@ public abstract class BasicServer {
 	}
 
 	public String getArgs() {
-		return args;
+		return args.get();
 	}
 
 	private final class MessageReader extends Thread {
@@ -208,7 +207,18 @@ public abstract class BasicServer {
 		return handler != null;
 	}
 
-	public abstract String getAddonName();
+	public final void setAddon(Addon addon){
+		if(!isAddonSet){
+			this.addon = addon;
+			isAddonSet = true;
+		}else{
+			throw new RuntimeException("Addon is already set");
+		}
+	}
+
+	public Addon getAddon() {
+		return addon;
+	}
 
 	public boolean isRunning() {
 		return getState() != ServerState.STOPPED;
@@ -219,11 +229,23 @@ public abstract class BasicServer {
 	}
 
 	public String getName() {
+		return name.get();
+	}
+
+	public void setName(String name) {
+		this.name.set(name);
+	}
+
+	public StringProperty nameProperty() {
 		return name;
 	}
 
-	public File getJarFile() {
-		return jarFile;
+	public String getJarPath() {
+		return jarPath.get();
+	}
+
+	public void setJarPath(String jarPath) {
+		this.jarPath.set(jarPath);
 	}
 
 	public String getArgsAfterJar() {
@@ -234,29 +256,11 @@ public abstract class BasicServer {
 		this.argsAfterJar = argsAfterJar;
 	}
 
-	public HashMap<String, Object> toExternalForm() {
-		HashMap<String, Object> map = new HashMap<>();
-
-		map.put("name", name);
-		map.put("jarfile", jarFile.getAbsolutePath());
-		map.put("args", args);
-
-		return map;
-	}
-
-	public void fromExternalForm() {
-
-		name = (String) externalForm.get("name");
-		jarFile = new File((String) externalForm.get("jarfile"));
-		args = (String) externalForm.get("args");
-
-	}
-
 	@Override
 	public String toString() {
 		return "BasicServer{" +
 				", state=" + state + '\'' +
-				", jarFile=" + jarFile + '\'' +
+				", jarPath=" + jarPath + '\'' +
 				", name='" + name + '\'' +
 				", args='" + args + '\'' +
 				", argsAfterJar='" + argsAfterJar + '\'' +

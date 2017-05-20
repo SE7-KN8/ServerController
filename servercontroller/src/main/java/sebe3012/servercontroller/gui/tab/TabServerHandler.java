@@ -64,8 +64,6 @@ public class TabServerHandler implements IEventHandler {
 		} else {
 			showNoServerDialog();
 		}
-
-		getContentHandler().close();
 	}
 
 	public void onRestartClicked() {
@@ -139,7 +137,7 @@ public class TabServerHandler implements IEventHandler {
 	public void serverReturnMessage(ServerMessageEvent event) {
 		if (event.getServer() == server) {
 			handler.addTextToOutput("[" + serverName + "] " + event.getMessage());
-			if (StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())) {
+			if (server.getState() == ServerState.STARTING && StringPredicates.SERVER_DONE_CHECK.test(event.getMessage(), event.getServer())) {
 				server.setState(ServerState.RUNNING);
 			}
 		}
@@ -147,28 +145,23 @@ public class TabServerHandler implements IEventHandler {
 
 	@Subscribe
 	public void serverStopped(ServerStopEvent event) {
-
 		if (event.getServer() == server) {
 
 			TreeEntry<BasicServer> entry = Servers.findEntry(server);
 
 			server.stop();
-			//server = server.createNew();
-			//server.setServerHandler(this);
 
 			if (entry != null) {
 				entry.setItem(server);
 			} else {
-				throw new RuntimeException("Cannot find entry for server: " + server.getName());
+				throw new RuntimeException("Can't find entry for server: " + server.getName());
 			}
 
 			if (restartServer) {
 				server.start();
 			}
 
-			handler.addTextToOutput(
-					"[" + serverName + "] " + "--------" +
-							"----------------------------------------------------");
+			handler.addTextToOutput("[" + serverName + "] ------------------------------------------------------------");
 
 			restartServer = false;
 		}

@@ -1,16 +1,7 @@
 package sebe3012.servercontroller.addon.api;
 
-import sebe3012.servercontroller.event.ChangeControlsEvent;
-import sebe3012.servercontroller.event.ServerCreateEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
+import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.ServerTab;
-import sebe3012.servercontroller.gui.tab.TabContent;
-import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.gui.tree.ServerTreeEntry;
-import sebe3012.servercontroller.gui.tree.TreeEntry;
-import sebe3012.servercontroller.preferences.PreferencesConstants;
-import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.Designs;
@@ -24,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -35,14 +25,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,80 +39,55 @@ public class AddonUtil {
 
 	private static final Logger log = LogManager.getLogger();
 
-	private static final HashMap<String, Class<? extends BasicServer>> serverTypes = new HashMap<>();
+	private static final HashMap<Addon, Class<? extends BasicServer>> serverTypes = new HashMap<>();
+	private static final HashMap<Addon, ServerCreator> serverCreators = new HashMap<>();
 
-	public static void registerServerType(String addonId, Class<? extends BasicServer> serverClass) {
-		serverTypes.put(addonId, serverClass);
+	public static void registerServerType(Addon addon, Class<? extends BasicServer> serverClass, ServerCreator serverCreator) {
+		serverTypes.put(addon, serverClass);
+		serverCreators.put(addon, serverCreator);
 	}
 
-	public static HashMap<String, Class<? extends BasicServer>> getServerTypes() {
+	public static ServerCreator getServerCreator(Addon addon) {
+		return serverCreators.get(addon);
+	}
+
+	public static HashMap<Addon, Class<? extends BasicServer>> getServerTypes() {
 		return serverTypes;
 	}
 
-	public static void addServer(BasicServer server, boolean isEdit) {
-		log.debug("Added server {}", server);
+	public static void loadServerCreateDialog(Addon addon, BasicServer parent) {
+		List<DialogRow> rows = new ArrayList<>();
 
-		TabContent content = new TabContent();
-		ServerTab tab = new ServerTab(server.getName(), content);
-		tab.setContent(content.getTabContent());
+		createRows(AddonUtil.getServerCreator(addon), rows, Servers.getServerProperties(parent), parent != null);
 
-		if (isEdit) {
-			int index = Tabs.getCurrentIndex();
+		openCreateDialog(addon, rows, parent, e -> {
+			try {
 
-			Platform.runLater(() -> FrameHandler.mainPane.getTabs().set(index, tab));
+				if (parent == null) {
+					Servers.addServer(Servers.createBasicServer(e, serverTypes.get(addon)), false, addon);
+				} else {
+					Map<String, StringProperty> oldServerMap = Servers.getServerProperties(parent);
+					oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
+					FrameHandler.tree.refresh();
+				}
+			} catch (Exception ex) {
+				log.error("Could not create the server, because: ", ex);
+			}
+		});
 
-			Servers.serversList.set(index, new ServerTreeEntry(server));
-		} else {
-			Platform.runLater(() -> FrameHandler.mainPane.getTabs().add(tab));
-
-			ServerTreeEntry entry = new ServerTreeEntry(server);
-
-			TreeItem<TreeEntry<?>> item = new TreeItem<>(entry);
-			FileUtil.searchSubFolders(server.getJarFile().getParentFile().toPath(), item);
-
-			Servers.serversList.add(entry);
-
-		}
-
-		FrameHandler.mainPane.getSelectionModel().select(tab);
-
-		if (!isEdit) {
-			EventHandler.EVENT_BUS.post(new ChangeControlsEvent(server.getExtraControls()));
-		}
-
-		EventHandler.EVENT_BUS.post(new ServerCreateEvent(server));
 	}
 
-	/**
-	 * @param fileType The file regex
-	 * @param fileName The file name
-	 * @return the path to the file or null if the user canceled the operation
-	 */
-	@Nullable
-	public static String openFileChooser(String fileType, String fileName) {
+	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, StringProperty> properties, boolean useProperties) {
 
-		FileChooser fc = new FileChooser();
+		System.out.println(creator + " " + creator.getParent());
+		Addon parentCreatorAddon = Addons.addonForID(creator.getParent());
+		ServerCreator parentCreator = AddonUtil.getServerCreator(parentCreatorAddon);
 
-		log.debug("Path: {}", ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, "null"));
-
-		File path = new File(ServerControllerPreferences.loadSetting(PreferencesConstants.FILE_ADDON_UTIL, System.getProperty("user.home")));
-
-		if (path.exists()) {
-			fc.setInitialDirectory(path);
+		if (parentCreator != null) {
+			createRows(parentCreator, parentRows, properties, useProperties);
 		}
 
-		fc.getExtensionFilters().add(new ExtensionFilter(fileName, fileType));
-
-		File f = fc.showOpenDialog(null);
-
-		if (f != null) {
-			ServerControllerPreferences.saveSetting(PreferencesConstants.FILE_ADDON_UTIL, f.getParent());
-
-			return f.getAbsolutePath();
-		}
-
-		return null;
-
+		creator.createServerDialogRows(properties, parentRows, useProperties);
 	}
 
 	/**
@@ -136,7 +98,7 @@ public class AddonUtil {
 	 * @param parent         A parent server if the dialog is used to edit. Can be null.
 	 * @param serverConsumer The function to create the server
 	 */
-	public static void openCreateDialog(@NotNull String addon, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, StringProperty>> serverConsumer) {
+	public static void openCreateDialog(@NotNull Addon addon, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, StringProperty>> serverConsumer) {
 		Alert dialog = new Alert(Alert.AlertType.NONE);
 
 		GridPane root = getDialogLayout(addon, values, serverConsumer, parent, v -> dialog.close());
@@ -144,14 +106,23 @@ public class AddonUtil {
 		dialog.getDialogPane().setContent(root);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 		Designs.applyCurrentDesign(dialog);
-		dialog.setTitle(I18N.format("create_server", addon));
+		dialog.setTitle(I18N.format("create_server", addon.getAddonInfo().getName()));
 		dialog.show();
 	}
 
 
-	private static GridPane getDialogLayout(String addon, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
-		DialogRow idRow = new DialogRow().setName(I18N.translate("dialog_create_server_name")).setPropertyName("name").setStringPredicate(StringPredicates.DEFAULT_CHECK);
-		DialogRow argsRow = new DialogRow().setName(I18N.translate("dialog_create_server_args")).setPropertyName("args").setStringPredicate(StringPredicates.DO_NOTHING);
+	private static GridPane getDialogLayout(Addon addon, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
+		DialogRow idRow = new DialogRow();
+
+		idRow.setName(I18N.translate("dialog_create_server_name"));
+		idRow.setPropertyName("name");
+		idRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
+
+
+		DialogRow argsRow = new DialogRow();
+		argsRow.setName(I18N.translate("dialog_create_server_args"));
+		argsRow.setPropertyName("args");
+		argsRow.setStringPredicate(StringPredicates.DO_NOTHING);
 
 		if (parent != null) {
 			idRow.setDefaultValue(parent.getName());
@@ -186,7 +157,7 @@ public class AddonUtil {
 		GUIUtil.addColumnConstraints(layout, 10, 238, 253, Priority.SOMETIMES);
 
 		//Add header text
-		Label header = new Label(I18N.format("create_server", addon));
+		Label header = new Label(I18N.format("create_server", addon.getAddonInfo().getName()));
 		header.setFont(new Font(50));
 		header.setPrefWidth(750);
 		header.setPrefHeight(73);
@@ -212,7 +183,7 @@ public class AddonUtil {
 		confirm.setPrefWidth(100);
 		confirm.setPrefHeight(50);
 		confirm.setOnAction(e -> {
-			//No primitive boolean because it must be effective-final
+			//No primitive boolean because it have to be effective-final
 			BooleanProperty flag = new SimpleBooleanProperty(true);
 
 			log.debug("Start property analysis");
@@ -275,7 +246,7 @@ public class AddonUtil {
 			Button b = new Button(I18N.format("file_choose"));
 			b.setPrefWidth(dialogRow.getPrefWidth());
 			b.setPrefHeight(dialogRow.getPrefHeight());
-			b.setOnAction(e -> field.setText(AddonUtil.openFileChooser(dialogRow.getFileExtension(), dialogRow.getFileType())));
+			b.setOnAction(e -> field.setText(FileUtil.openFileChooser(dialogRow.getFileExtension(), dialogRow.getFileType())));
 
 			GridPane.setColumnIndex(b, 2);
 			GridPane.setRowIndex(b, row);

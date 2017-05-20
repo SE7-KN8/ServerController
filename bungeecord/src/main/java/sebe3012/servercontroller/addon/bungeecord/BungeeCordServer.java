@@ -7,27 +7,22 @@ import sebe3012.servercontroller.server.BasicServer;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Control;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BungeeCordServer extends BasicServer implements IEventHandler {
-	private String configFile;
+	private StringProperty configFile;
 
 	private List<Control> extraControls = new ArrayList<>();
-	private HashMap<String, Object> externalForm;
 
-	public BungeeCordServer(String name, String jarFilePath, String configFile, String args) {
-		super(name, jarFilePath, "-Djline.terminal=jline.UnsupportedTerminal" + args);
-		this.configFile = configFile;
-		EventHandler.EVENT_BUS.registerEventListener(this);
-	}
+	public BungeeCordServer(Map<String, StringProperty> properties){
+		super(properties);
 
-	public BungeeCordServer(HashMap<String, Object> externalForm) {
-		super(externalForm);
-		this.externalForm = externalForm;
+		configFile = properties.get("bungeecord");
 	}
 
 	@Override
@@ -41,7 +36,7 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	}
 
 	public String getConfigFile() {
-		return configFile;
+		return configFile.get();
 	}
 
 	@Subscribe
@@ -50,11 +45,6 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 			System.out.println("[" + getName() + "] Stopped with code: " + event.getStopCode());
 		}
 		EventHandler.EVENT_BUS.unregisterEventListener(this);
-	}
-
-	@Override
-	public String getAddonName() {
-		return BungeeCordAddon.ADDON_ID;
 	}
 
 	@Override
@@ -70,23 +60,6 @@ public class BungeeCordServer extends BasicServer implements IEventHandler {
 	@Override
 	public String getDoneRegex() {
 		return ".*Listening on \\/\\d*.\\d*.\\d*.\\d*:\\d*";
-	}
-
-	@Override
-	public void fromExternalForm() {
-		super.fromExternalForm();
-		configFile = (String) externalForm.get("bungeecord");
-
-	}
-
-	@Override
-	public HashMap<String, Object> toExternalForm() {
-
-		HashMap<String, Object> map = super.toExternalForm();
-
-		map.put("bungeecord", configFile);
-
-		return map;
 	}
 
 }
