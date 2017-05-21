@@ -60,7 +60,7 @@
         </Logger>
 
         <!--Default logger for all packages-->
-        <Logger name="sebe3012.servercontroller" level="trace" additivity="false">
+        <Logger name="sebe3012.servercontroller" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="ConsoleError"/>
         </Logger>

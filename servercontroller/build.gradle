@@ -14,7 +14,7 @@ dependencies {
     compile 'org.fxmisc.richtext:richtextfx:0.6.10'
 }
 
-version = '0.4.12.9'
+version = '0.4.13.9'
 
 jar {
 

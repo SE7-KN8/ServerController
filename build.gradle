@@ -1,6 +1,3 @@
-version = '0.3.11.9_alpha'
-group = 'servercontroller'
-
 allprojects {
     task info doLast { task -> println "Task $task.project.name loaded"}
 }
