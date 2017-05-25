@@ -1,8 +1,9 @@
-package sebe3012.servercontroller.util;
+package sebe3012.servercontroller.util.design;
 
 import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +56,7 @@ public class Designs {
 	public static void applyCurrentDesign(Scene scene) {
 		if (scene != null) {
 			scene.getStylesheets().clear();
-			scene.getStylesheets().add(getCurrentDesign().getStylesheet());
+			scene.getStylesheets().addAll(getCurrentDesign().getStylesheets());
 		}
 	}
 
@@ -68,7 +69,7 @@ public class Designs {
 	public static void applyCurrentDesign(DialogPane dialog) {
 		if (dialog != null) {
 			dialog.getStylesheets().clear();
-			dialog.getStylesheets().add(getCurrentDesign().getStylesheet());
+			dialog.getStylesheets().addAll(getCurrentDesign().getStylesheets());
 		}
 	}
 
@@ -81,7 +82,7 @@ public class Designs {
 	public static void applyCurrentDesign(Dialog dialog){
 		if (dialog != null) {
 			dialog.getDialogPane().getStylesheets().clear();
-			dialog.getDialogPane().getStylesheets().add(getCurrentDesign().getStylesheet());
+			dialog.getDialogPane().getStylesheets().addAll(getCurrentDesign().getStylesheets());
 		}
 	}
 

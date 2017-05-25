@@ -1,0 +1,7 @@
+* {
+	-base-normal: rgb(90,127,180);
+}
+
+.root {
+	-fx-base : rgb(50.0,50.0,50.0);
+}/*Base Color */

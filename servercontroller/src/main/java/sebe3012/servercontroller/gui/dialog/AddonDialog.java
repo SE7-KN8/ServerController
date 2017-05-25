@@ -2,8 +2,8 @@ package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.api.AddonInfo;
-import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

@@ -19,13 +19,13 @@ import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.settings.SettingsConstants;
-import sebe3012.servercontroller.util.Design;
-import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.NumberField;
+import sebe3012.servercontroller.util.design.Design;
+import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -327,8 +327,8 @@ public class FrameHandler implements IEventHandler {
 
 	private void init() {
 
-		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_bright.css").toExternalForm(), "bright"));
-		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/style_dark.css").toExternalForm(), "dark"));
+		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/bright"), "bright"));
+		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/dark"), "dark"));
 
 		lView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			Object o = newValue.getValue().getItem();
