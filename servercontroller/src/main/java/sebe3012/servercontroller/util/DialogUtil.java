@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.util;
 
 import sebe3012.servercontroller.gui.Frame;
+import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

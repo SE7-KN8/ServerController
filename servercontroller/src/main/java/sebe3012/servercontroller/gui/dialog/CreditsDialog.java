@@ -1,8 +1,8 @@
 package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.util.Designs;
 import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
