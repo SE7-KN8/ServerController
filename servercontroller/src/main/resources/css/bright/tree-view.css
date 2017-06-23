@@ -1,7 +1,7 @@
 /*Tree-View*/
 .tree-view {
     -fx-border-radius: 0.0px;
-    -fx-border-width: 1.0px;
+    -fx-border-width: 0.0px;
     -fx-background-color: derive(-fx-base, 10%);
     -fx-border-color: -base-normal;
 }

@@ -6,6 +6,8 @@ import sebe3012.servercontroller.addon.api.AddonInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -19,9 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -37,7 +37,7 @@ public final class AddonLoader {
 	public static final Path ADDON_PATH = Paths.get(System.getProperty("user.home"), ".servercontroller", "addons");
 	public static final PathMatcher JAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");
 	public static final List<Path> JAR_PATHS = new ArrayList<>();
-	public static final Map<String, Addon> ADDONS = new HashMap<>();
+	public static final BiMap<String, Addon> ADDONS = HashBiMap.create();
 
 	private List<AddonInfo> addonsToLoad = new ArrayList<>();
 	private List<AddonInfo> addonsToLoadSorted = new ArrayList<>();

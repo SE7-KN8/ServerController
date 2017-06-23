@@ -4,4 +4,5 @@
 
 .root {
 	-fx-base : rgb(50.0,50.0,50.0);
+	-fx-focus-color: transparent;
 }/*Base Color */

@@ -3,11 +3,6 @@
 	-fx-background-color: -fx-base;
 }
 
-.tab-pane:focused{
-	-fx-border-color: -base-normal;
-	-fx-background-insets: 0.0;
-}
-
 .tab-pane .tab-header-area .tab-header-background{
     -fx-opacity: 0.0;
 }
