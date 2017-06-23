@@ -11,17 +11,21 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.Closeable;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class TabContentHandler implements Initializable, Closeable {
 
 	private TabServerHandler server;
 	private TabContent content;
+	private List<String> commandList;
+	private int maxCommands = 30;
+	private int currentListCounter;
 
 	@FXML
 	public ResourceBundle resources;
@@ -50,8 +54,24 @@ public class TabContentHandler implements Initializable, Closeable {
 
 	@FXML
 	void onEnterPressed(KeyEvent event) {
-		if (event.getCode() == KeyCode.ENTER) {
-			sendCommandToServer(cInput.getText());
+		switch (event.getCode()) {
+			case ENTER:
+				sendCommandToServer(cInput.getText());
+				break;
+			case UP:
+				if (currentListCounter < commandList.size() - 1) {
+					currentListCounter++;
+				}
+				cInput.setText(commandList.get(currentListCounter));
+				break;
+			case DOWN:
+				if (currentListCounter > 0) {
+					currentListCounter--;
+					cInput.setText(commandList.get(currentListCounter));
+				} else {
+					cInput.setText("");
+				}
+				break;
 		}
 	}
 
@@ -69,6 +89,8 @@ public class TabContentHandler implements Initializable, Closeable {
 		cOutput.getStylesheets().clear();
 		formatter = new OutputFormatter();
 		formatter.start(cOutput);
+		commandList = new ArrayList<>();
+		currentListCounter = 0;
 	}
 
 	protected void addTextToOutput(String text) {
@@ -79,6 +101,14 @@ public class TabContentHandler implements Initializable, Closeable {
 		if (command.trim().length() >= 1) {
 			server.sendCommand(command.trim());
 			cInput.setText("");
+			if (commandList.size() > maxCommands) {
+				commandList.remove(commandList.size() - 1);
+			}
+
+			if (!(commandList.size() >= 1 && commandList.get(0).equals(command))) {
+				commandList.add(0, command);
+			}
+			currentListCounter = -1;
 		}
 	}
 
@@ -91,7 +121,7 @@ public class TabContentHandler implements Initializable, Closeable {
 	}
 
 	@Override
-	public void close(){
+	public void close() {
 		formatter.close();
 	}
 
