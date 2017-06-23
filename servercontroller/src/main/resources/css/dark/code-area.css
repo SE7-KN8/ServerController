@@ -18,5 +18,5 @@
 }
 
 .lineno {
-    -fx-background-color: -fx-base;
+    -fx-background-color: derive(-fx-base, 20%);
 }

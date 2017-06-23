@@ -312,7 +312,7 @@ public class FrameHandler implements IEventHandler {
 		WebView wv = new WebView();
 		WebEngine engine = wv.getEngine();
 
-		engine.loadContent(ServerController.loadStringContent("html/license.html"));
+		engine.loadContent(FileUtil.loadStringContent("html/license.html"));
 
 		root.getChildren().add(wv);
 

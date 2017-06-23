@@ -165,7 +165,7 @@ public class ServerSave {
 					counter++;
 
 					updateProgress(counter, max);
-					log.info("Start loading {}" + serverElement);
+					log.info("Start loading {}", serverElement.getName());
 					String addonId = serverElement.getAttributeValue("addon");
 					log.debug("Plugin is {}", addonId);
 					long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));

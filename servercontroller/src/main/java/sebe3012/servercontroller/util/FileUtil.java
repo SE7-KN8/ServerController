@@ -12,8 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import javafx.scene.control.TreeItem;
 import javafx.stage.FileChooser;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -113,4 +115,26 @@ public class FileUtil {
 	public static String openFileChooser(String fileType, String fileName) {
 		return openFileChooser(fileType, fileName, false);
 	}
+
+
+	public static String loadStringContent(String path) {
+		log.info("Load content: " + path);
+		StringBuilder result = new StringBuilder();
+		try {
+
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(ClassLoader.getSystemResourceAsStream(path)));
+			String buffer;
+			while ((buffer = reader.readLine()) != null) {
+				result.append(buffer);
+				result.append('\n');
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result.toString();
+	}
+
 }
