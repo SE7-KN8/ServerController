@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by Sebe3012 on 19.04.2017.
@@ -30,6 +31,8 @@ public class FileUtil {
 	private static DirectoryStream.Filter<Path> isFile = p -> (!Files.isDirectory(p));
 
 	private static Logger log = LogManager.getLogger();
+
+	public static final Path ROOT_PATH = Paths.get(System.getProperty("user.home"), ".servercontroller");
 
 	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem) {
 		try {
@@ -135,6 +138,10 @@ public class FileUtil {
 		}
 
 		return result.toString();
+	}
+
+	public static Path createRelativePath(String path){
+		return ROOT_PATH.resolve(path);
 	}
 
 }

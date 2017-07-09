@@ -2,6 +2,7 @@ package sebe3012.servercontroller.addon;
 
 import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonInfo;
+import sebe3012.servercontroller.util.FileUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
+
+import javafx.concurrent.Task;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,9 +22,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -34,7 +37,7 @@ public final class AddonLoader {
 	AddonLoader() {
 	}
 
-	public static final Path ADDON_PATH = Paths.get(System.getProperty("user.home"), ".servercontroller", "addons");
+	public static final Path ADDON_PATH = FileUtil.createRelativePath("addons");
 	public static final PathMatcher JAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");
 	public static final List<Path> JAR_PATHS = new ArrayList<>();
 	public static final BiMap<String, Addon> ADDONS = HashBiMap.create();
@@ -47,36 +50,60 @@ public final class AddonLoader {
 
 	private static boolean loadingFlag = false;
 
+	private static Task<Void> loadingTask;
+
 	void searchAddons() {
 		searchJars();
 		searchAddonInfo();
 	}
 
 	void loadAddons() {
+		loadingTask = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				log.info("Start searching addons");
+				searchAddons();
 
-		if (!loadingFlag) {
-			calculateDependencies();
+				log.info("Start loading addons");
+				if (!loadingFlag) {
+					calculateDependencies();
 
-			URL[] urls = new URL[addonsToLoadSorted.size()];
+					URL[] urls = new URL[addonsToLoadSorted.size()];
 
-			for (int i = 0; i < urls.length; i++) {
-				try {
-					urls[i] = addonsToLoadSorted.get(i).getJarPath().toUri().toURL();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
+					for (int i = 0; i < urls.length; i++) {
+						try {
+							urls[i] = addonsToLoadSorted.get(i).getJarPath().toUri().toURL();
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+					}
+
+					URLClassLoader loader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+					for (AddonInfo info : addonsToLoadSorted) {
+						loadAddon(info, loader);
+					}
+
+					loadingFlag = true;
+				} else {
+					throw new RuntimeException("Addons already loaded");
 				}
+				return null;
 			}
+		};
 
-			URLClassLoader loader = new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
-			for (AddonInfo info : addonsToLoadSorted) {
-				loadAddon(info, loader);
-			}
+		loadingTask.setOnFailed(e->log.error("Failed to load addons", loadingTask.getException()));
 
-			loadingFlag = true;
-		} else {
-			throw new RuntimeException("Addons already loaded");
+		new Thread(loadingTask).start();
+	}
+
+	public void finishLoading(){
+		try{
+			loadingTask.get();
+		}catch (ExecutionException|InterruptedException e){
+			log.error("Can't finish the loading process", e);
 		}
 	}
+
 
 	private void loadAddon(AddonInfo info, URLClassLoader loader) {
 		try {

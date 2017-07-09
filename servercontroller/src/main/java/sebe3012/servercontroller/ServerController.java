@@ -7,16 +7,13 @@ import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.gui.tab.ServerTab;
 import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
-import sebe3012.servercontroller.settings.SettingsConstants;
-import sebe3012.servercontroller.settings.SettingsRow;
 import sebe3012.servercontroller.util.CLIOptions;
 import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.util.settings.Settings;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.HashMap;
 
 /**
  * ServerController is a program with which you can control
@@ -32,9 +29,8 @@ public class ServerController {
 		System.setProperty("log4j.configurationFile", ClassLoader.getSystemResource("xml/log4j2.xml").toExternalForm());
 	}
 
-	public static HashMap<String, SettingsRow> settings = new HashMap<>();
-
 	public static boolean DEBUG = false;
+	public static long START_TIME = 0;
 
 	public static final String VERSION = "0.4.13.9_alpha";
 
@@ -47,24 +43,23 @@ public class ServerController {
 	 */
 	public static void main(String[] args) {
 		log.info("ServerController is starting!");
+		START_TIME = System.currentTimeMillis();
 
 		CLIOptions.loadOptions(args);
 
 		System.setOut(new ConsoleLog("SYSOUT", System.out, Level.INFO));
 		System.setErr(new ConsoleLog("SYSERR", System.err, Level.ERROR));
 
-		addSetting(SettingsConstants.AUTO_LOAD_SERVERS, false);
-
 		I18N.init();
 
 		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
-		Addons.loadAddons();
 
 		Frame.load(args);
 	}
 
 	public static void stop() {
 		log.info("ServerController is stopping");
+		Settings.saveSettings();
 		Addons.unloadAddons();
 		ServerWatcher.running = false;
 		FrameHandler.mainPane.getTabs().forEach(tab -> {
@@ -81,12 +76,5 @@ public class ServerController {
 			}
 
 		});
-	}
-
-	public static void addSetting(String id, boolean defaultValue) {
-		log.info("Load settings : {}", id);
-		SettingsRow row = new SettingsRow(id, defaultValue);
-		row.load();
-		settings.put(row.getId(), row);
 	}
 }

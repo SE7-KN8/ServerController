@@ -1,9 +1,12 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
+
+import org.scenicview.ScenicView;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -40,6 +45,7 @@ public class Frame extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		Addons.loadAddons();
 
 		if (ServerController.DEBUG) {
 			splashTimeInMillis = 0;
@@ -59,7 +65,6 @@ public class Frame extends Application {
 			splash.close();
 			primaryStage.show();
 		});
-
 	}
 
 	private void createSplashScreen() {
@@ -83,6 +88,12 @@ public class Frame extends Application {
 	private void createPrimaryStage() throws IOException {
 		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+				if(event.getCode() == KeyCode.F12){
+					ScenicView.show(scene);
+				}
+			}
+		);
 		Designs.applyCurrentDesign(scene);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle(I18N.format("window_title", ServerController.VERSION));

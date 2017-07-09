@@ -20,7 +20,6 @@ public class Addons {
 
 	public static void loadAddons() {
 		try {
-			loader.searchAddons();
 			loader.loadAddons();
 		} catch (Exception e) {
 			log.error("Can't load addons because: ", e);
@@ -33,6 +32,10 @@ public class Addons {
 		} catch (Exception e) {
 			log.error("Can't unload addons because: ", e);
 		}
+	}
+
+	public static void waitForLoadingComplete() {
+		loader.finishLoading();
 	}
 
 	public static List<Addon> getParents(Addon child) {
