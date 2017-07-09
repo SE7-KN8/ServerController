@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -18,7 +19,6 @@ import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
-import sebe3012.servercontroller.settings.SettingsConstants;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
@@ -26,6 +26,7 @@ import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.NumberField;
 import sebe3012.servercontroller.util.design.Design;
 import sebe3012.servercontroller.util.design.Designs;
+import sebe3012.servercontroller.util.settings.Settings;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -439,14 +440,15 @@ public class FrameHandler implements IEventHandler {
 
 		log.info("FXML initialized");
 
+		Addons.waitForLoadingComplete();
 
-		if (ServerController.settings.get(SettingsConstants.AUTO_LOAD_SERVERS).getValue()) {
+		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
 			new Thread(() -> {
-				try {
+				/*try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
+				}*/
 
 				Platform.runLater(() -> {
 					try {

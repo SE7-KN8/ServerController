@@ -31,11 +31,15 @@ public class CLIOptions {
 			CommandLine cmd = parser.parse(options, args);
 
 			ServerController.DEBUG = cmd.hasOption("debug");
+			if(ServerController.DEBUG){
+				log.info("Debug-mode enabled");
+			}
 
 			String lang = cmd.getOptionValue("lang");
 			if(lang != null){
 				for (Locale locale : Locale.getAvailableLocales()) {
 					if (locale.getLanguage().equalsIgnoreCase(lang)) {
+						log.info("Set language to {}", locale);
 						Locale.setDefault(locale);
 						break;
 					}

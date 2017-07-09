@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui.tab;
 
 import sebe3012.servercontroller.gui.FrameHandler;
+import sebe3012.servercontroller.util.settings.Settings;
 
 import org.fxmisc.richtext.CodeArea;
 
@@ -24,7 +25,6 @@ public class TabContentHandler implements Initializable, Closeable {
 	private TabServerHandler server;
 	private TabContent content;
 	private List<String> commandList;
-	private int maxCommands = 30;
 	private int currentListCounter;
 
 	@FXML
@@ -101,7 +101,7 @@ public class TabContentHandler implements Initializable, Closeable {
 		if (command.trim().length() >= 1) {
 			server.sendCommand(command.trim());
 			cInput.setText("");
-			if (commandList.size() > maxCommands) {
+			if (commandList.size() > (int) Settings.readSetting(Settings.Constants.MAX_COMMAND_HISTORY)) {
 				commandList.remove(commandList.size() - 1);
 			}
 
