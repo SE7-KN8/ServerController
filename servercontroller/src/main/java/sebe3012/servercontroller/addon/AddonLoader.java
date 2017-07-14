@@ -91,15 +91,15 @@ public final class AddonLoader {
 			}
 		};
 
-		loadingTask.setOnFailed(e->log.error("Failed to load addons", loadingTask.getException()));
+		loadingTask.setOnFailed(e -> log.error("Failed to load addons", loadingTask.getException()));
 
 		new Thread(loadingTask).start();
 	}
 
-	public void finishLoading(){
-		try{
+	public void finishLoading() {
+		try {
 			loadingTask.get();
-		}catch (ExecutionException|InterruptedException e){
+		} catch (ExecutionException | InterruptedException e) {
 			log.error("Can't finish the loading process", e);
 		}
 	}
@@ -173,7 +173,7 @@ public final class AddonLoader {
 
 				info.setJarPath(jarPath);
 
-				if(loadedIds.contains(info.getId())){
+				if (loadedIds.contains(info.getId())) {
 					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
 					continue;
 				}

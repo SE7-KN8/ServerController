@@ -2,10 +2,16 @@ package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.Addons;
+import sebe3012.servercontroller.preferences.PreferencesConstants;
+import sebe3012.servercontroller.preferences.ServerControllerPreferences;
+import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
+import sebe3012.servercontroller.util.settings.Settings;
 
+import org.controlsfx.control.Notifications;
+import org.jdom2.JDOMException;
 import org.scenicview.ScenicView;
 
 import javafx.application.Application;
@@ -16,13 +22,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -41,15 +47,10 @@ public class Frame extends Application {
 
 	private Stage splash;
 
-	private int splashTimeInMillis = 5000;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Addons.loadAddons();
-
-		if (ServerController.DEBUG) {
-			splashTimeInMillis = 0;
-		}
 
 		Frame.primaryStage = primaryStage;
 
@@ -57,13 +58,22 @@ public class Frame extends Application {
 		createPrimaryStage();
 
 		Platform.runLater(() -> {
-			try {
-				Thread.sleep(splashTimeInMillis);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+			Addons.waitForLoadingComplete();
+
 			splash.close();
 			primaryStage.show();
+			if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
+				try {
+					ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+					FrameHandler.showSaveStateErrorDialog();
+				} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
+					e.printStackTrace();
+					FrameHandler.showSaveErrorDialog();
+				}
+			}
 		});
 	}
 
@@ -89,10 +99,36 @@ public class Frame extends Application {
 		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-				if(event.getCode() == KeyCode.F12){
-					ScenicView.show(scene);
+			System.out.println(event.getCode());
+					switch (event.getCode()) {
+						case F1:
+							break;
+						case F2:
+							break;
+						case F3:
+							break;
+						case F4:
+							break;
+						case F5:
+							break;
+						case F6:
+							break;
+						case F7:
+							break;
+						case F8:
+							break;
+						case F9:
+							break;
+						case F10:
+							break;
+						case F11:
+							Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(Frame.primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("Some Dialog", "", "Some information")).text("Some text with some information").showInformation();
+							break;
+						case F12:
+							ScenicView.show(scene);
+							break;
+					}
 				}
-			}
 		);
 		Designs.applyCurrentDesign(scene);
 		primaryStage.setScene(scene);

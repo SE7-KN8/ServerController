@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -26,7 +25,6 @@ import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.NumberField;
 import sebe3012.servercontroller.util.design.Design;
 import sebe3012.servercontroller.util.design.Designs;
-import sebe3012.servercontroller.util.settings.Settings;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -439,37 +437,13 @@ public class FrameHandler implements IEventHandler {
 
 
 		log.info("FXML initialized");
-
-		Addons.waitForLoadingComplete();
-
-		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
-			new Thread(() -> {
-				/*try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
-
-				Platform.runLater(() -> {
-					try {
-						ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-						showSaveStateErrorDialog();
-					} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-						e.printStackTrace();
-						showSaveErrorDialog();
-					}
-				});
-			}).start();
-		}
 	}
 
-	private static void showSaveErrorDialog() {
+	public static void showSaveErrorDialog() {
 		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_save_error"));
 	}
 
-	private static void showSaveStateErrorDialog() {
+	public static void showSaveStateErrorDialog() {
 		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
 	}
 
