@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,12 @@ public abstract class BasicServer {
 	public void start() {
 		if (getState() == ServerState.STOPPED) {
 			try {
+
+				if(!Files.exists(Paths.get(getJarPath()))){
+					DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_error"), I18N.format("dialog_jarfile_not_found", getJarPath()));
+					return;
+				}
+
 				messageReaderThread = new MessageReader();
 				waitForExitThread = new WaitForExit();
 				messageReaderThread.setName(getName() + "-Server reader");
