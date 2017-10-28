@@ -2,6 +2,7 @@ package sebe3012.servercontroller.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class I18N {
 		bundleExtensions.add(ResourceBundle.getBundle(location, Locale.getDefault()));
 	}
 
+	@NotNull
 	public static String translate(String key) {
 		if (bundle.containsKey(key)) {
 			return bundle.getString(key);
@@ -43,14 +45,17 @@ public class I18N {
 		return "%" + key + "%";
 	}
 
+	@NotNull
 	public static String format(String key, Object... args) {
 		return String.format(translate(key), args);
 	}
 
+	@NotNull
 	public static ResourceBundle getDefaultBundle() {
 		return bundle;
 	}
 
+	@NotNull
 	public static List<ResourceBundle> getBundleExtensions() {
 		return bundleExtensions;
 	}

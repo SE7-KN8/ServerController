@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.net.ssl.HttpsURLConnection;
 
 import java.awt.image.BufferedImage;
@@ -53,6 +55,7 @@ public class WebAPI {
 
 	}
 
+	@Nullable
 	public static BufferedImage getSkin(String uuid) {
 
 		if (!knownSkins.containsKey(uuid)) {
@@ -101,6 +104,7 @@ public class WebAPI {
 
 	}
 
+	@Nullable
 	public static BufferedImage getPlayerHead(String uuid) {
 		if (!knownHeads.containsKey(uuid)) {
 

@@ -38,7 +38,7 @@ public class AddonDialog {
 		public AddonInfoWrapper(AddonInfo info) {
 			id.set(info.getId());
 			name.set(info.getName());
-			version.set(info.getVersion());
+			version.set(info.getVersion().toString());
 			mainClass.set(info.getMainClass());
 			jarPath.set(info.getJarPath().toString());
 			authors.set(info.getAuthors());

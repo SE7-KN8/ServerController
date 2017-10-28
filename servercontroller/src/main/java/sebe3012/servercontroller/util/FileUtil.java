@@ -4,9 +4,11 @@ import sebe3012.servercontroller.gui.tree.PathTreeEntry;
 import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
+import sebe3012.servercontroller.server.BasicServer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javafx.scene.control.TreeItem;
@@ -43,7 +45,7 @@ public class FileUtil {
 	}
 
 	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem) throws IOException {
-		if(!Files.isDirectory(parent)){
+		if (!Files.isDirectory(parent)) {
 			return;
 		}
 
@@ -91,12 +93,11 @@ public class FileUtil {
 
 		File f;
 
-		if(save){
+		if (save) {
 			f = fc.showSaveDialog(null);
-		}else{
+		} else {
 			f = fc.showOpenDialog(null);
 		}
-
 
 
 		if (f != null) {
@@ -120,7 +121,8 @@ public class FileUtil {
 	}
 
 
-	public static String loadStringContent(String path) {
+	@NotNull
+	public static String loadStringContent(@NotNull String path) {
 		log.info("Load content: " + path);
 		StringBuilder result = new StringBuilder();
 		try {
@@ -140,8 +142,14 @@ public class FileUtil {
 		return result.toString();
 	}
 
-	public static Path createRelativePath(String path){
+	@NotNull
+	public static Path createRelativePath(@NotNull String path) {
 		return ROOT_PATH.resolve(path);
+	}
+
+	@NotNull
+	public static Path loadServerFile(@NotNull BasicServer server, @NotNull String path) {
+		return Paths.get(server.getJarPath()).resolve(path);
 	}
 
 }
