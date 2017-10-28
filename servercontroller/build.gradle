@@ -15,9 +15,11 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.controlsfx:controlsfx:8.40.12'
     compile fileTree(dir: '../tools', include: '*.jar')
+
+    testCompile 'junit:junit:4.12'
 }
 
-version = '0.4.13.9'
+version = '0.4.13.9_alpha'
 
 jar {
 
