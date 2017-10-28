@@ -99,7 +99,6 @@ public class Frame extends Application {
 		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-			System.out.println(event.getCode());
 					switch (event.getCode()) {
 						case F1:
 							break;

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javafx.concurrent.Task;
 
@@ -45,14 +46,14 @@ public final class AddonLoader {
 	private List<AddonInfo> addonsToLoad = new ArrayList<>();
 	private List<AddonInfo> addonsToLoadSorted = new ArrayList<>();
 
-	private Gson gson = new Gson();
+	private Gson gson;
 	private Logger log = LogManager.getLogger();
 
 	private static boolean loadingFlag = false;
 
 	private static Task<Void> loadingTask;
 
-	void searchAddons() {
+	private void searchAddons() {
 		searchJars();
 		searchAddonInfo();
 	}
@@ -155,38 +156,57 @@ public final class AddonLoader {
 
 	private void searchAddonInfo() {
 
-		List<String> loadedIds = new ArrayList<>();
+		List<AddonInfo> addonInfos = new ArrayList<>();
 
 		for (Path jarPath : JAR_PATHS) {
 			try {
+
+				//Creates JarFile object
 				JarFile file = new JarFile(jarPath.toFile());
 
+				//Read addon.json entry
 				JarEntry addonInfo = file.getJarEntry("addon.json");
 
+				//Test if addon.json exists
 				if (addonInfo == null) {
 					log.warn("Can't load '{}', because addon.json was not found. Check your addon", jarPath);
 					continue;
 				}
 
-
+				gson = new GsonBuilder().registerTypeAdapter(AddonInfo.AddonVersion.class, new AddonInfo.AddonVersionTypeAdapter()).create();
+				//Parse addon.json to AddonInfo
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
-
 				info.setJarPath(jarPath);
 
-				if (loadedIds.contains(info.getId())) {
-					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
-					continue;
+				for(int i = 0; i< addonInfos.size(); i++){
+					AddonInfo oldInfo = addonInfos.get(i);
+
+					if(oldInfo.getId().equals(info.getId())){
+						log.info("Addon '{}({})' was already registered, deciding by newest version.", info.getId(), info.getJarPath());
+
+						AddonInfo.AddonVersion oldVersion = oldInfo.getVersion();
+						AddonInfo.AddonVersion currentVersion = info.getVersion();
+
+						int value = oldVersion.compareTo(currentVersion);
+
+					}
+
 				}
 
-				loadedIds.add(info.getId());
+//				if (addonInfos.contains(info)) {
+//					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
+//					continue;
+//				}
+
+				addonInfos.add(info);
 
 				log.info("Loading addon info: {}", info.getId());
-
-				addonsToLoad.add(info);
 			} catch (IOException e) {
 				log.error("Can't continue searching addon.json in jarfile " + jarPath + ", because: ", e);
 			}
 		}
+
+		addonsToLoad.addAll(addonInfos);
 	}
 
 	private void calculateDependencies() {
@@ -232,14 +252,18 @@ public final class AddonLoader {
 				}
 			}
 
+			//Remove addons with dependencies that has found
 			addonsToLoad.removeAll(addonsToLoadSorted);
 
+			//If nothing has changed, break
 			if (!thingsChanged) {
 				break;
 			}
 
 		}
 
+
+		//Search for addons with unresolvable dependencies
 		for (AddonInfo info : addonsToLoad) {
 			log.warn("Couldn't find all dependencies for addon '{}'. The addon will not load", info.getId());
 		}
