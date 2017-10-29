@@ -1,5 +1,6 @@
 allprojects {
     task info doLast { task -> println "Task $task.project.name loaded"}
+    task clearJarCopys doLast { delete "${buildDir}/jarCopys" }
 }
 
 subprojects {
