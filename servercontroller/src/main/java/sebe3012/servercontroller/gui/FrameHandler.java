@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
@@ -65,8 +66,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -244,8 +250,19 @@ public class FrameHandler implements IEventHandler {
 
 		Button openBtn = new Button(I18N.translate("file_choose"));
 		openBtn.setOnAction(event -> {
+			String file = FileUtil.openFileChooser("*.jar", "JAR");
 
-			log.debug(FileUtil.openFileChooser("*.jar", "JAR"));
+			if (file != null && file.endsWith(".jar")) {
+
+				Path addonPath = Paths.get(file);
+				try {
+					Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
+			}
 
 		});
 
@@ -268,13 +285,13 @@ public class FrameHandler implements IEventHandler {
 			if (dragboard.hasFiles()) {
 				event.setDropCompleted(true);
 
-				/*for (File f : dragboard.getFiles()) {
+				for (File f : dragboard.getFiles()) {
 
 					if (f.getAbsolutePath().endsWith(".jar")) {
 
 						Path addonPath = f.toPath();
 						try {
-							Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.A);
+							Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
 							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
 						} catch (IOException ex) {
 							ex.printStackTrace();
@@ -282,7 +299,7 @@ public class FrameHandler implements IEventHandler {
 
 					}
 
-				}*///FIXME
+				}
 
 			} else {
 				event.setDropCompleted(false);
@@ -292,8 +309,8 @@ public class FrameHandler implements IEventHandler {
 
 		});
 
-		root.setPrefWidth(800);
-		root.setPrefHeight(600);
+		root.setPrefWidth(600);
+		root.setPrefHeight(400);
 
 		stage.setAlwaysOnTop(true);
 		stage.setScene(scene);
