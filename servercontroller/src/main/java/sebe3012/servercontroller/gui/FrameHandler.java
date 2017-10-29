@@ -326,8 +326,8 @@ public class FrameHandler implements IEventHandler {
 
 	private void init() {
 
-		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/bright"), "bright"));
-		Designs.registerDesign(new Design(ClassLoader.getSystemResource("css/dark"), "dark"));
+		Designs.registerDesign(new Design("css/bright", "bright"));
+		Designs.registerDesign(new Design("css/dark", "dark"));
 
 		lView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			Object o = newValue.getValue().getItem();
