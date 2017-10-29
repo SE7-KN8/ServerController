@@ -19,7 +19,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-version = '0.4.13.9_alpha'
+version = '0.4.13.10_alpha'
 
 jar {
 
