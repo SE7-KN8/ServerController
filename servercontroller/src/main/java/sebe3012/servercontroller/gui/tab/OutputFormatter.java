@@ -2,8 +2,8 @@ package sebe3012.servercontroller.gui.tab;
 
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleSpans;
-import org.fxmisc.richtext.StyleSpansBuilder;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import javafx.concurrent.Task;
 
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class OutputFormatter implements Closeable {
 
-	public static final String BRACKET_PATTERN = "\\[|\\]";
+	public static final String BRACKET_PATTERN = "[\\[\\]]";
 
 	public static final Pattern PATTERN = Pattern.compile("(?<BRACKET>" + BRACKET_PATTERN + ")");
 
