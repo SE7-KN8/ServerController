@@ -11,6 +11,7 @@ import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerState;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.ErrorCode;
 import sebe3012.servercontroller.util.I18N;
 
 import com.google.common.eventbus.Subscribe;
@@ -88,8 +89,14 @@ public class TabServerHandler implements IEventHandler {
 
 	private void startServer() {
 		if (server != null) {
-			server.start();
-			handler.addTextToOutput("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
+
+			ErrorCode code = server.start();
+
+			if (code == ErrorCode.SUCCESSFUL) {
+				handler.addTextToOutput("[" + serverName + "] " + "Server \"" + serverName + "\" starts\n");
+			} else {
+				handler.addTextToOutput("[" + serverName + "] " + "Server \"" + serverName + "\" can't start, because: " + code.name());
+			}
 		} else {
 			showNoServerDialog();
 		}

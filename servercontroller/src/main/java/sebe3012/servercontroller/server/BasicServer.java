@@ -9,6 +9,7 @@ import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.server.monitoring.ServerMonitor;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.ErrorCode;
 import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
@@ -61,13 +62,13 @@ public abstract class BasicServer {
 		jarPath = properties.get("jarfile");
 	}
 
-	public void start() {
+	public ErrorCode start() {
 		if (getState() == ServerState.STOPPED) {
 			try {
 
 				if(!Files.exists(Paths.get(getJarPath()))){
 					DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_error"), I18N.format("dialog_jarfile_not_found", getJarPath()));
-					return;
+					return ErrorCode.FILE_NOT_FOUND_ERROR;
 				}
 
 				messageReaderThread = new MessageReader();
@@ -103,7 +104,6 @@ public abstract class BasicServer {
 					W32API.HANDLE handle = new W32API.HANDLE();
 					handle.setPointer(Pointer.createConstant(id.getLong(serverProcess)));
 					pid = kernel.GetProcessId(handle);
-
 				}
 
 				setState(ServerState.STARTING);
@@ -111,8 +111,14 @@ public abstract class BasicServer {
 			} catch (Exception e) {
 				e.printStackTrace();
 				onError(e);
+				return ErrorCode.ERROR;
 			}
+
+			return ErrorCode.SUCCESSFUL;
 		}
+
+		return ErrorCode.ERROR;
+
 	}
 
 	public void stop() {
