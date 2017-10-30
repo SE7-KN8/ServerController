@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Paths;
+
 /**
  * ServerController is a program with which you can control
  * Minecraft-Server(e.g. Vanilla, Spigot)
@@ -26,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 public class ServerController {
 
 	static {
+		System.setProperty("logFolder", Paths.get(System.getProperty("user.home"), ".servercontroller").toString());
 		System.setProperty("log4j.configurationFile", ClassLoader.getSystemResource("xml/log4j2.xml").toExternalForm());
 	}
 
