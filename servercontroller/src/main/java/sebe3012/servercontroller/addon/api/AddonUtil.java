@@ -55,7 +55,7 @@ public class AddonUtil {
 		return serverTypes;
 	}
 
-	public static void loadServerCreateDialog(Addon addon, BasicServer parent) {
+	public static void  loadServerCreateDialog(Addon addon, BasicServer parent) {
 		List<DialogRow> rows = new ArrayList<>();
 
 		createRows(AddonUtil.getServerCreator(addon), rows, Servers.getServerProperties(parent), parent != null);

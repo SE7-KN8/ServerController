@@ -37,7 +37,6 @@ public class Servers {
 	public static ObservableList<TreeEntry<BasicServer>> serversList = FXCollections.observableArrayList();
 	private static Map<BasicServer, Map<String, StringProperty>> serverProperties = new HashMap<>();
 
-
 	private static Logger log = LogManager.getLogger();
 
 	static {

@@ -66,8 +66,8 @@ public abstract class BasicServer {
 		if (getState() == ServerState.STOPPED) {
 			try {
 
-				if(!Files.exists(Paths.get(getJarPath()))){
-					DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_error"), I18N.format("dialog_jarfile_not_found", getJarPath()));
+				if (!Files.exists(Paths.get(getJarPath()))) {
+					DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_error"), I18N.format("dialog_jarfile_not_found", getJarPath()), false);
 					return ErrorCode.FILE_NOT_FOUND_ERROR;
 				}
 
@@ -83,6 +83,7 @@ public abstract class BasicServer {
 				StringBuilder builder = new StringBuilder();
 				for (String s : serverProcessBuilder.command()) {
 					builder.append(s);
+
 					builder.append(" ");
 				}
 				log.info("[{}]: Start with command: '{}'", getName(), builder.toString());
@@ -195,9 +196,7 @@ public abstract class BasicServer {
 
 		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
 
-		Platform.runLater(() -> {
-			DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage);
-		});
+		Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage));
 	}
 
 	public void sendCommand(String command) {
@@ -222,11 +221,11 @@ public abstract class BasicServer {
 		return handler != null;
 	}
 
-	public final void setAddon(Addon addon){
-		if(!isAddonSet){
+	public final void setAddon(Addon addon) {
+		if (!isAddonSet) {
 			this.addon = addon;
 			isAddonSet = true;
-		}else{
+		} else {
 			throw new RuntimeException("Addon is already set");
 		}
 	}
