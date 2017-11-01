@@ -1,11 +1,12 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.event.ChangeControlsEvent;
 import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
+import sebe3012.servercontroller.gui.dialog.AddonInstallDialog;
 import sebe3012.servercontroller.gui.dialog.CreditsDialog;
+import sebe3012.servercontroller.gui.dialog.LicenseDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
@@ -37,8 +38,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -52,27 +51,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -175,7 +161,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onLicenseClicked(ActionEvent event) {
-		showLicense();
+		LicenseDialog.showDialog();
 	}
 
 	@FXML
@@ -241,104 +227,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onAddonInstallClicked(ActionEvent e) {
-
-		Stage stage = new Stage(StageStyle.UTILITY);
-		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		stage.setTitle(I18N.translate("menu_item_addon_install"));
-
-		BorderPane root = new BorderPane();
-
-		Button openBtn = new Button(I18N.translate("file_choose"));
-		openBtn.setOnAction(event -> {
-			String file = FileUtil.openFileChooser("*.jar", "JAR");
-
-			if (file != null && file.endsWith(".jar")) {
-
-				Path addonPath = Paths.get(file);
-				try {
-					Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-
-			}
-
-		});
-
-		root.setCenter(new Label(I18N.translate("dialog_addon_install_drag_and_drop"), openBtn));
-
-		Scene scene = new Scene(root);
-		Designs.applyCurrentDesign(scene);
-
-		scene.setOnDragOver(event -> {
-			if (event.getDragboard().hasFiles()) {
-				event.acceptTransferModes(TransferMode.COPY);
-			} else {
-				event.consume();
-			}
-		});
-
-		scene.setOnDragDropped(event -> {
-			Dragboard dragboard = event.getDragboard();
-
-			if (dragboard.hasFiles()) {
-				event.setDropCompleted(true);
-
-				for (File f : dragboard.getFiles()) {
-
-					if (f.getAbsolutePath().endsWith(".jar")) {
-
-						Path addonPath = f.toPath();
-						try {
-							Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
-
-					}
-
-				}
-
-			} else {
-				event.setDropCompleted(false);
-			}
-
-			event.consume();
-
-		});
-
-		root.setPrefWidth(600);
-		root.setPrefHeight(400);
-
-		stage.setAlwaysOnTop(true);
-		stage.setScene(scene);
-		stage.showAndWait();
-	}
-
-	private void showLicense() {
-
-		Stage stage = new Stage(StageStyle.UTILITY);
-		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		stage.setTitle(I18N.translate("menu_item_license"));
-
-		VBox root = new VBox();
-
-		WebView wv = new WebView();
-		WebEngine engine = wv.getEngine();
-
-		engine.loadContent(FileUtil.loadStringContent("html/license.html"));
-
-		root.getChildren().add(wv);
-
-		Scene scene = new Scene(root);
-		Designs.applyCurrentDesign(scene);
-
-		stage.setResizable(false);
-		stage.setAlwaysOnTop(true);
-		stage.setScene(scene);
-		stage.showAndWait();
+		AddonInstallDialog.showDialog();
 	}
 
 	private void init() {
@@ -476,10 +365,6 @@ public class FrameHandler implements IEventHandler {
 
 	@Subscribe
 	public void changeExtraButton(ChangeControlsEvent event) {
-		if (!Platform.isFxApplicationThread()) {
-
-
-		}
 		Platform.runLater(() -> {
 
 			vBox.getChildren().clear();

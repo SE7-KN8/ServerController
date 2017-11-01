@@ -52,7 +52,6 @@ public class FileUtil {
 		DirectoryStream<Path> paths = Files.newDirectoryStream(parent, isDirectory);
 
 		for (Path path : paths) {
-
 			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path));
 			parentItem.getChildren().add(childItem);
 
@@ -63,11 +62,8 @@ public class FileUtil {
 		paths = Files.newDirectoryStream(parent, isFile);
 
 		for (Path path : paths) {
-
 			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path));
 			parentItem.getChildren().add(childItem);
-
-			searchFiles(path, childItem);
 		}
 	}
 

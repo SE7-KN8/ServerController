@@ -2,25 +2,22 @@ package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.Addons;
+import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
+import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
-import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
 import sebe3012.servercontroller.util.settings.Settings;
 
-import org.controlsfx.control.Notifications;
 import org.jdom2.JDOMException;
-import org.scenicview.ScenicView;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -28,10 +25,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * The class construct the basic frame and starts the splash-screen
@@ -98,62 +93,13 @@ public class Frame extends Application {
 	private void createPrimaryStage() throws IOException {
 		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
 		Scene scene = new Scene(root);
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-					switch (event.getCode()) {
-						case F1:
-							break;
-						case F2:
-							break;
-						case F3:
-							break;
-						case F4:
-							break;
-						case F5:
-							break;
-						case F6:
-							break;
-						case F7:
-							break;
-						case F8:
-							break;
-						case F9:
-							break;
-						case F10:
-							break;
-						case F11:
-							Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(Frame.primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("Some Dialog", "", "Some information")).text("Some text with some information").showInformation();
-							break;
-						case F12:
-							ScenicView.show(scene);
-							break;
-					}
-				}
-		);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new DebugKeyHandler());
 		Designs.applyCurrentDesign(scene);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle(I18N.format("window_title", ServerController.VERSION));
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		primaryStage.setOnCloseRequest(event -> {
-
-			if (ServerController.DEBUG) {
-				ServerController.stop();
-				Platform.exit();
-			} else {
-				// Close Dialog
-				Optional<ButtonType> result = DialogUtil.showAlert("", I18N.translate("dialog_close"), I18N.translate("dialog_close_desc"), AlertType.CONFIRMATION, ButtonType.OK, ButtonType.CANCEL);
-
-				if (result.isPresent()) {
-					if (result.get().equals(ButtonType.OK)) {
-						ServerController.stop();
-						Platform.exit();
-					} else {
-						event.consume();
-					}
-				}
-			}
-
-		});
+		primaryStage.setOnCloseRequest(new ProgramExitHandler());
 	}
 
 	/**
