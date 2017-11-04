@@ -9,12 +9,9 @@ import sebe3012.servercontroller.util.design.Designs;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +20,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class AddonInstallDialog {
+public class AddonInstallDialog extends StageDialog {
 
-	public static void showDialog(){
-		Stage stage = new Stage(StageStyle.UTILITY);
-		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		stage.setTitle(I18N.translate("menu_item_addon_install"));
+	public AddonInstallDialog() {
+		super(I18N.translate("menu_item_addon_install"));
+	}
 
+	@Override
+	public Scene createDialog() {
 		BorderPane root = new BorderPane();
 
 		Button openBtn = new Button(I18N.translate("file_choose"));
@@ -96,9 +94,6 @@ public class AddonInstallDialog {
 		root.setPrefWidth(600);
 		root.setPrefHeight(400);
 
-		stage.setAlwaysOnTop(true);
-		stage.setScene(scene);
-		stage.showAndWait();
+		return scene;
 	}
-
 }

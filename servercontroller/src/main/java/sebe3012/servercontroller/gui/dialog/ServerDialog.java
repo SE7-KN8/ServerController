@@ -19,11 +19,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-public class ServerDialog {
+public class ServerDialog implements Dialog {
 
 	private static Logger log = LogManager.getLogger();
 
-	public static void loadDialog() {
+	public void showDialog() {
 		log.debug("Load ServerDialog");
 		Alert dialog = new Alert(AlertType.NONE);
 		Designs.applyCurrentDesign(dialog.getDialogPane());

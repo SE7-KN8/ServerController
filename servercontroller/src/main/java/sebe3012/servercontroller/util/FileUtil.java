@@ -21,7 +21,10 @@ import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sebe3012 on 19.04.2017.
@@ -35,6 +38,25 @@ public class FileUtil {
 	private static Logger log = LogManager.getLogger();
 
 	public static final Path ROOT_PATH = Paths.get(System.getProperty("user.home"), ".servercontroller");
+
+	public static List<Path> searchDirectory(Path directory, @Nullable PathMatcher allowedExtensions){
+		List<Path> foundPaths = new ArrayList<>();
+
+		try {
+			for (Path path : Files.newDirectoryStream(directory)) {
+				if(allowedExtensions != null){
+					if(allowedExtensions.matches(path)){
+						foundPaths.add(path);
+					}
+				}else{
+					foundPaths.add(path);
+				}
+			}
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		return foundPaths;
+	}
 
 	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem) {
 		try {

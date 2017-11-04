@@ -6,7 +6,9 @@ import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.AddonInstallDialog;
 import sebe3012.servercontroller.gui.dialog.CreditsDialog;
+import sebe3012.servercontroller.gui.dialog.Dialog;
 import sebe3012.servercontroller.gui.dialog.LicenseDialog;
+import sebe3012.servercontroller.gui.dialog.RConDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.tab.ServerTab;
@@ -20,49 +22,39 @@ import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
-import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.NumberField;
 import sebe3012.servercontroller.util.design.Design;
 import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jdom2.JDOMException;
 
 import com.google.common.eventbus.Subscribe;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Pair;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class FrameHandler implements IEventHandler {
+
+	private Dialog addonInstallDialog = new AddonInstallDialog();
+	private Dialog creditsDialog = new CreditsDialog();
+	private Dialog licenseDialog = new LicenseDialog();
+	private Dialog rconDialog = new RConDialog();
+	private Dialog settingsDialog = new SettingsDialog();
+	private Dialog serverDialog = new ServerDialog();
 
 	public static TabPane mainPane;
 	public static TreeView<TreeEntry<?>> tree;
@@ -107,131 +99,60 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onSettingsClicked() {
-		new SettingsDialog().show();
+		settingsDialog.showDialog();
 	}
 
 	@FXML
-	void onCreditsItemClicked(ActionEvent event) {
-		CreditsDialog.showDialog();
+	void onCreditsItemClicked() {
+		creditsDialog.showDialog();
 	}
 
 	@FXML
-	void onAddServerItemClicked(ActionEvent event) {
-		ServerDialog.loadDialog();
+	void onAddServerItemClicked() {
+		serverDialog.showDialog();
 	}
 
 	@FXML
-	void onSaveItemClicked(ActionEvent event) {
-		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
-
-		try {
-			ServerSave.saveServerController(file, true);
-		} catch (IOException e) {
-			e.printStackTrace();
-			showSaveErrorDialog();
-		}
+	void onSaveItemClicked() {
+		ServerSave.saveServerController();
 	}
 
 	@FXML
-	void onOpenItemClicked(ActionEvent event) {
-		String file = FileUtil.openFileChooser("*.xml", ".xml");
-
-		try {
-			ServerSave.loadServerController(file, true);
-
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			showSaveStateErrorDialog();
-		} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-			e.printStackTrace();
-			showSaveErrorDialog();
-		}
-
+	void onOpenItemClicked() {
+		ServerSave.loadServerController();
 	}
 
 	@FXML
-	void onServerEditItemClicked(ActionEvent event) {
+	void onServerEditItemClicked() {
 		Servers.editCurrentServer();
 	}
 
 	@FXML
-	void onServerRemoveItemClicked(ActionEvent event) {
+	void onServerRemoveItemClicked() {
 		Tabs.removeCurrentTab();
 	}
 
 	@FXML
-	void onLicenseClicked(ActionEvent event) {
-		LicenseDialog.showDialog();
+	void onLicenseClicked() {
+		licenseDialog.showDialog();
 	}
 
 	@FXML
-	void onDesignClicked(ActionEvent event) {
+	void onDesignClicked() {
 		Designs.showDesignDialog();
 	}
 
 	@FXML
-	void onRConClicked(ActionEvent event) {
-
-		Dialog<Pair<String, Pair<Integer, char[]>>> loginDialog = new Dialog<>();
-
-		loginDialog.setTitle(I18N.translate("dialog_rcon"));
-		loginDialog.setHeaderText(I18N.translate("dialog_rcon_desc"));
-		loginDialog.setGraphic(new ImageView(ClassLoader.getSystemClassLoader().getResource("png/icon.png").toExternalForm()));
-
-		DialogPane dp = loginDialog.getDialogPane();
-		ButtonType bt = new ButtonType(I18N.translate("dialog_rcon_login"), ButtonData.OK_DONE);
-		dp.getButtonTypes().add(bt);
-		Designs.applyCurrentDesign(dp);
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 150, 10, 10));
-
-		TextField ip = new TextField();
-		ip.setPromptText(I18N.translate("dialog_rcon_ip"));
-		NumberField port = new NumberField();
-		port.setPromptText(I18N.translate("dialog_rcon_port"));
-		PasswordField password = new PasswordField();
-		password.setPromptText(I18N.translate("dialog_rcon_password"));
-
-		grid.add(new Label(I18N.translate("dialog_rcon_ip")), 0, 0);
-		grid.add(ip, 1, 0);
-		grid.add(new Label(I18N.translate("dialog_rcon_port")), 0, 1);
-		grid.add(port, 1, 1);
-		grid.add(new Label(I18N.translate("dialog_rcon_password")), 0, 2);
-		grid.add(password, 1, 2);
-		dp.setContent(grid);
-		loginDialog.setResultConverter(dialogButton -> {
-			try {
-				if (dialogButton == bt) {
-					return new Pair<>(ip.getText(),
-							new Pair<>(Integer.valueOf(port.getText()), password.getText().toCharArray()));
-				}
-			} catch (Exception e) {
-				return null;
-			}
-			return null;
-		});
-
-		Optional<Pair<String, Pair<Integer, char[]>>> result = loginDialog.showAndWait();
-
-		if (result.isPresent()) {
-
-			if (result.get().getKey() != null && result.get().getValue() != null) {
-				new RConConsole(result.get().getKey(), result.get().getValue().getKey(),
-						result.get().getValue().getValue());
-			}
-
-		}
+	void onRConClicked() {
+		rconDialog.showDialog();
 	}
 
 	@FXML
-	void onAddonInstallClicked(ActionEvent e) {
-		AddonInstallDialog.showDialog();
+	void onAddonInstallClicked() {
+		addonInstallDialog.showDialog();
 	}
 
 	private void init() {
-
 		Designs.registerDesign(new Design("css/bright", "bright"));
 		Designs.registerDesign(new Design("css/dark", "dark"));
 
@@ -303,7 +224,6 @@ public class FrameHandler implements IEventHandler {
 			if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY)) {
 
 				TreeItem<TreeEntry<?>> item = lView.getSelectionModel().getSelectedItem();
-
 				if (item != null && item.getValue().onDoubleClick()) {
 					event.consume();
 				}
@@ -314,7 +234,7 @@ public class FrameHandler implements IEventHandler {
 		currentProgress = progressBar;
 		FrameHandler.hideBar();
 
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> ServerDialog.loadDialog(), I18N.translate("tooltip_add_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> serverDialog.showDialog(), I18N.translate("tooltip_add_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e -> Servers.startAllServers(), I18N.translate("tooltip_start_all_servers"));
@@ -345,14 +265,6 @@ public class FrameHandler implements IEventHandler {
 		log.info("FXML initialized");
 	}
 
-	public static void showSaveErrorDialog() {
-		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_save_error"));
-	}
-
-	public static void showSaveStateErrorDialog() {
-		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
-	}
-
 	public static void showBar() {
 		log.debug("Showing the progress bar");
 		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(true));
@@ -377,9 +289,6 @@ public class FrameHandler implements IEventHandler {
 		});
 
 	}
-
-	@FXML
-	private VBox leftBox;
 /*FIXME Too many bugs
 	private NumberAxis ramAxis;
 	private NumberAxis cpuAxis;

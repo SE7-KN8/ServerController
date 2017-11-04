@@ -12,7 +12,9 @@ import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.Servers;
 import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.util.settings.Settings;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,9 +43,20 @@ import java.util.Map;
 
 public class ServerSave {
 
+	public static void saveServerController(){
+		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
+
+		try {
+			ServerSave.saveServerController(file, true);
+		} catch (IOException e) {
+			e.printStackTrace();
+			showSaveErrorDialog();
+		}
+	}
+
 	private static Logger log = LogManager.getLogger();
 
-	public static void saveServerController(String path, boolean showDialog) throws IOException {
+	private static void saveServerController(String path, boolean showDialog) throws IOException {
 
 		Task<Void> saveTask = new Task<Void>() {
 			@Override
@@ -124,7 +137,22 @@ public class ServerSave {
 		new Thread(saveTask).start();
 	}
 
-	public static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void loadServerController(){
+		String file = FileUtil.openFileChooser("*.xml", ".xml");
+
+		try {
+			ServerSave.loadServerController(file, true);
+
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			showSaveStateErrorDialog();
+		} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
+			e.printStackTrace();
+			showSaveErrorDialog();
+		}
+	}
+
+	private static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		Task<Void> loadTask = new Task<Void>() {
 			@Override
@@ -223,7 +251,30 @@ public class ServerSave {
 
 	}
 
+	public static void loadServerControllerFromLastFile(){
+		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
+			try {
+				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				showSaveStateErrorDialog();
+			} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
+				e.printStackTrace();
+				showSaveErrorDialog();
+			}
+		}
+	}
+
 	private static void showServerIsRunningDialog() {
 		Platform.runLater(() -> DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", "dialog_save_servers_running"));
 	}
+
+	private static void showSaveErrorDialog() {
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_save_error"));
+	}
+
+	private static void showSaveStateErrorDialog() {
+		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
+	}
+
 }
