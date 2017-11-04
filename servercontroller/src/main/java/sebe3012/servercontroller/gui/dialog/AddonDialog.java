@@ -3,7 +3,6 @@ package sebe3012.servercontroller.gui.dialog;
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.api.AddonInfo;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -12,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by Sebe3012 on 05.03.2017.
  * The addon dialog
  */
-public class AddonDialog {
+public class AddonDialog extends AlertDialog {
 
 	@SuppressWarnings("unused")//Things are used by reflection
 	public static class AddonInfoWrapper {
@@ -130,13 +130,12 @@ public class AddonDialog {
 		}
 	}
 
-	public static void showDialog() {
+	public AddonDialog() {
+		super(I18N.translate("dialog_addons"), I18N.translate("dialog_addons"), "", Alert.AlertType.INFORMATION);
+	}
 
-		Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-		dialog.setResizable(true);
-		dialog.setHeaderText(I18N.translate("dialog_addons"));
-		dialog.setTitle(I18N.translate("dialog_addons"));
-		Designs.applyCurrentDesign(dialog);
+	@Override
+	public DialogPane createDialog(DialogPane dialogPane) {
 
 		ObservableList<AddonInfoWrapper> infoWrappers = FXCollections.observableArrayList();
 
@@ -169,13 +168,9 @@ public class AddonDialog {
 		table.getColumns().add(dependencies);
 		table.getColumns().add(mainClass);
 
-		dialog.getDialogPane().setContent(table);
+		dialogPane.setContent(table);
+		dialogPane.setPrefWidth(800);
 
-		dialog.getDialogPane().setPrefWidth(800);
-
-		dialog.show();
-
-
+		return dialogPane;
 	}
-
 }

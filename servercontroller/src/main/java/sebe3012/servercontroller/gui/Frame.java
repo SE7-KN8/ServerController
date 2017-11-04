@@ -4,17 +4,13 @@ import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
 import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
-import sebe3012.servercontroller.preferences.PreferencesConstants;
-import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
-import sebe3012.servercontroller.util.settings.Settings;
-
-import org.jdom2.JDOMException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -52,24 +48,20 @@ public class Frame extends Application {
 		createSplashScreen();
 		createPrimaryStage();
 
-		Platform.runLater(() -> {
+		new Thread(new Task<Void>(){
+			@Override
+			protected Void call() throws Exception {
+				Addons.waitForLoadingComplete();
 
-			Addons.waitForLoadingComplete();
+				Platform.runLater(() -> {
+					splash.close();
+					primaryStage.show();
+					ServerSave.loadServerControllerFromLastFile();
+				});
 
-			splash.close();
-			primaryStage.show();
-			if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
-				try {
-					ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-					FrameHandler.showSaveStateErrorDialog();
-				} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-					e.printStackTrace();
-					FrameHandler.showSaveErrorDialog();
-				}
+				return null;
 			}
-		});
+		}).start();
 	}
 
 	private void createSplashScreen() {

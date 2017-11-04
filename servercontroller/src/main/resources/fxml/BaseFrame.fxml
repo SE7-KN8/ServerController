@@ -75,10 +75,5 @@
              <TreeView fx:id="lView" prefHeight="400.0" prefWidth="250.0" />
          </children>
       </VBox>
-      <!--VBox fx:id="leftBox" prefHeight="697.0" prefWidth="272.0" styleClass="vbox" BorderPane.alignment="CENTER">
-         <children>
-            <ListView fx:id="lView" prefHeight="662.0" prefWidth="209.0" />
-         </children>
-      </VBox>-->
    </left>
 </BorderPane>
