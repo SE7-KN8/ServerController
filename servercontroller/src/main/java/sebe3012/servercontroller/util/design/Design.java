@@ -7,6 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -24,28 +27,30 @@ public class Design {
 	private String id;
 
 	public Design(String baseFolder, String id) {
+		log.info("Loading design {}, in folder: '{}'", id, baseFolder);
 		this.stylesheets = new ArrayList<>();
 		this.id = id;
 
 		try {
-			File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+			Path jarFile = Paths.get(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 
-			if (jarFile.isFile()) {  // Run with jar file
-				JarFile jar = new JarFile(jarFile);
+			if (!Files.isDirectory(jarFile)) {  // Run with jar file
+				JarFile jar = new JarFile(jarFile.toFile());
 				Enumeration<JarEntry> entries = jar.entries();
 				while (entries.hasMoreElements()) {
 					String name = entries.nextElement().getName();
 					if (name.startsWith(baseFolder + "/")) {
+						log.info("Add stylesheet: " + name);
 						this.stylesheets.add(name);
 					}
 				}
 				jar.close();
 			} else { // Run with IDE
 				URL url = ClassLoader.getSystemResource(baseFolder);
-				System.out.println(url);
 				if (url != null) {
 					File apps = new File(url.toURI());
 					for (File app : apps.listFiles()) {
+						log.info("Add stylesheet: " + app.toURI().toURL().toExternalForm());
 						this.stylesheets.add(app.toURI().toURL().toExternalForm());
 					}
 
