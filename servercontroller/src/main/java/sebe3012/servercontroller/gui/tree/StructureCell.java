@@ -15,9 +15,11 @@ public class StructureCell extends TreeCell<TreeEntry<?>>{
 		if(item == null || empty){
 			setText("");
 			setGraphic(null);
+			setContextMenu(null);
 		}else{
 			setText(item.getName());
 			setGraphic(item.getGraphic());
+			setContextMenu(item.getContextMenu());
 		}
 
 	}

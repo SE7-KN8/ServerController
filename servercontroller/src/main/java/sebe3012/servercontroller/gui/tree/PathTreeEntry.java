@@ -1,13 +1,17 @@
 package sebe3012.servercontroller.gui.tree;
 
+import sebe3012.servercontroller.util.I18N;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +24,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 
 	private Path item;
 
-	public static final Image FOLDER_TEXTURE = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
+	private static final Image FOLDER_ICON = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
 
 	public PathTreeEntry(Path path) {
 		this.item = path;
@@ -28,10 +32,15 @@ public class PathTreeEntry implements TreeEntry<Path> {
 
 	@Override
 	public boolean onDoubleClick() {
-
 		try {
-			Desktop.getDesktop().open(item.toFile());
-			return true;
+
+			if(!Files.isDirectory(item)){
+				Desktop.getDesktop().open(item.toFile());
+				return true;
+			}
+
+			return false;
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -45,11 +54,30 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	public Node getGraphic() {
 		if (item != null) {
 			if (Files.isDirectory(item)) {
-				return new ImageView(FOLDER_TEXTURE);
+				return new ImageView(PathTreeEntry.FOLDER_ICON);
 			}
 
 		}
 		return null;
+	}
+
+	@Nullable
+	@Override
+	public ContextMenu getContextMenu() {
+
+		MenuItem openWithSystem = new MenuItem(I18N.translate("context_menu_open_in_system"));
+		openWithSystem.setOnAction(e->{
+			try{
+				Desktop.getDesktop().open(item.toFile());
+			}catch (IOException ex){
+				ex.printStackTrace();
+			}
+		});
+
+		ContextMenu menu = new ContextMenu();
+		menu.getItems().add(openWithSystem);
+
+		return menu;
 	}
 
 	@NotNull
@@ -59,7 +87,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	}
 
 	@Override
-	public void setItem(Path item) {
+	public void setItem(@NotNull Path item) {
 		this.item = item;
 	}
 
