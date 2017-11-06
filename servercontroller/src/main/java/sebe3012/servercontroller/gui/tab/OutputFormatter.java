@@ -51,7 +51,7 @@ public class OutputFormatter implements Closeable {
 				.subscribe(this::applyHighlighting);
 	}
 
-	public Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
+	private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
 		String text = area.getText();
 		Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
 			@Override
