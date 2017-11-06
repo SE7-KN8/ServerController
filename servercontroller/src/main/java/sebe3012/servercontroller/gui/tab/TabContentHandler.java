@@ -33,8 +33,7 @@ public class TabContentHandler implements Initializable, Closeable {
 	@FXML
 	public URL location;
 
-	@FXML
-	public CodeArea cOutput;
+	private CodeArea cOutput;
 
 	@FXML
 	public TextField cInput;
@@ -83,18 +82,26 @@ public class TabContentHandler implements Initializable, Closeable {
 		this.content = content;
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		server = new TabServerHandler(this);
+	public void initCodeArea(CodeArea area) {
+		this.cOutput = area;
 		cOutput.getStylesheets().clear();
 		formatter = new OutputFormatter();
 		formatter.start(cOutput);
+
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		server = new TabServerHandler(this);
 		commandList = new ArrayList<>();
 		currentListCounter = 0;
 	}
 
 	protected void addTextToOutput(String text) {
-		Platform.runLater(() -> cOutput.appendText(text + "\n"));
+		Platform.runLater(() -> {
+			cOutput.appendText(text + "\n");
+			cOutput.showParagraphAtBottom(cOutput.getCurrentParagraph());
+		});
 	}
 
 	private void sendCommandToServer(String command) {
