@@ -22,7 +22,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-def getBuildNumber(){
+def static getBuildNumber(){
 
     def number = System.getenv('BUILD_NUMBER')
     if(number == null){
@@ -41,6 +41,8 @@ jar {
     manifest {
         attributes 'Version': project.version
         attributes 'Main-Class': 'sebe3012.servercontroller.ServerController'
+        attributes 'Implementation-Title' : project.name
+        attributes 'Implementation-Version' : project.version
     }
 
     //Standalone jar
