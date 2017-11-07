@@ -32,7 +32,7 @@ def static getBuildNumber(){
     return number
 }
 
-version = '0.4.13.' + getBuildNumber() + '_alpha'
+version = '0.4.14.' + getBuildNumber() + '_alpha'
 
 jar {
 
