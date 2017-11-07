@@ -33,13 +33,15 @@ public class TabContentHandler implements Initializable, Closeable {
 	@FXML
 	public URL location;
 
+
+	@FXML
 	private CodeArea cOutput;
 
 	@FXML
-	public TextField cInput;
+	private TextField cInput;
 
 	@FXML
-	public Button btnSend;
+	private Button btnSend;
 
 	@FXML
 	public Label lblInfo;
@@ -82,17 +84,12 @@ public class TabContentHandler implements Initializable, Closeable {
 		this.content = content;
 	}
 
-	public void initCodeArea(CodeArea area) {
-		this.cOutput = area;
-		cOutput.getStylesheets().clear();
-		formatter = new OutputFormatter();
-		formatter.start(cOutput);
-
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		server = new TabServerHandler(this);
+		cOutput.getStylesheets().clear();
+		formatter = new OutputFormatter();
+		formatter.start(cOutput);
 		commandList = new ArrayList<>();
 		currentListCounter = 0;
 	}
