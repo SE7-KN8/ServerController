@@ -39,6 +39,7 @@ public final class AddonLoader {
 	}
 
 	public static final Path ADDON_PATH = FileUtil.createRelativePath("addons");
+	public static final Path ADDON_TEMP_PATH = FileUtil.createRelativePath("temp/addons");
 	public static final PathMatcher JAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");
 	public static final List<Path> JAR_PATHS = new ArrayList<>();
 	public static final BiMap<String, Addon> ADDONS = HashBiMap.create();

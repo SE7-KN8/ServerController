@@ -1,9 +1,11 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
 import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
+import sebe3012.servercontroller.prelaunch.AddonInstallerTask;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
@@ -41,12 +43,13 @@ public class Frame extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Addons.loadAddons();
-
 		Frame.primaryStage = primaryStage;
 
 		createSplashScreen();
 		createPrimaryStage();
+
+		new AddonInstallerTask(AddonLoader.ADDON_TEMP_PATH, AddonLoader.ADDON_PATH, AddonLoader.JAR_FILE_MATCHER).installAddons();
+		Addons.loadAddons();
 
 		new Thread(new Task<Void>(){
 			@Override

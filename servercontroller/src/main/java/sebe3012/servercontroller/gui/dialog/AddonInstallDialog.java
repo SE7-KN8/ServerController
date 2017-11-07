@@ -38,8 +38,9 @@ public class AddonInstallDialog extends StageDialog {
 
 				Path addonPath = Paths.get(file);
 				try {
-					Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
+					Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
+					Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -73,8 +74,9 @@ public class AddonInstallDialog extends StageDialog {
 
 						Path addonPath = f.toPath();
 						try {
-							Files.copy(addonPath, AddonLoader.ADDON_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_file_copy", addonPath.getFileName().toString()));
+							Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
+							Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
