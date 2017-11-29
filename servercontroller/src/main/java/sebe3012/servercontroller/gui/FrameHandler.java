@@ -1,9 +1,6 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.event.ChangeControlsEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
-import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.gui.dialog.AddonInstallDialog;
 import sebe3012.servercontroller.gui.dialog.CreditsDialog;
 import sebe3012.servercontroller.gui.dialog.Dialog;
@@ -11,17 +8,17 @@ import sebe3012.servercontroller.gui.dialog.LicenseDialog;
 import sebe3012.servercontroller.gui.dialog.RConDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
-import sebe3012.servercontroller.gui.tab.ServerTab;
-import sebe3012.servercontroller.gui.tab.TabServerHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;
+import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
+import sebe3012.servercontroller.gui.tab.TabEntry;
+import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.gui.tree.RootTreeEntry;
-import sebe3012.servercontroller.gui.tree.StructureCell;
 import sebe3012.servercontroller.gui.tree.TreeEntry;
+import sebe3012.servercontroller.gui.tree.TreeHandler;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.server.BasicServerHandler;
+import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Design;
@@ -29,8 +26,6 @@ import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.eventbus.Subscribe;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -41,29 +36,41 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FrameHandler implements IEventHandler {
+public class FrameHandler {
 
-	private Dialog addonInstallDialog = new AddonInstallDialog();
-	private Dialog creditsDialog = new CreditsDialog();
-	private Dialog licenseDialog = new LicenseDialog();
-	private Dialog rconDialog = new RConDialog();
-	private Dialog settingsDialog = new SettingsDialog();
-	private Dialog serverDialog = new ServerDialog();
+	private Dialog addonInstallDialog;
+	private Dialog creditsDialog;
+	private Dialog licenseDialog;
+	private Dialog rconDialog;
+	private Dialog settingsDialog;
+	private Dialog serverDialog;
 
-	public static TabPane mainPane;
-	public static TreeView<TreeEntry<?>> tree;
-	public static TreeItem<TreeEntry<?>> rootItem;
+	//TODO use new system
+	//public static TabPane mainPane;
+	//public static TreeView<TreeEntry<?>> tree;
+	//public static TreeItem<TreeEntry<?>> rootItem;
 	public static ProgressBar currentProgress;
 	public static VBox buttonList;
 	//FIXME public static Thread monitoringThread;
 
+	private TabHandler<TabEntry<BasicServerHandler>> handler;
+	private TreeHandler<TreeEntry<?>> treeHandler;
+
+	private ServerManager serverManager;
+
 	private static final Logger log = LogManager.getLogger();
+
+	private Stage primaryStage;
+
+	public FrameHandler(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
 
 	@FXML
 	private ResourceBundle resources;
@@ -84,7 +91,7 @@ public class FrameHandler implements IEventHandler {
 	private VBox vBox;
 
 	@FXML
-	private TabPane main;
+	private TabPane rootTabPane;
 
 	@FXML
 	private ToolBar toolbar;
@@ -114,22 +121,23 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onSaveItemClicked() {
-		ServerSave.saveServerController();
+		ServerSave.saveServerController(serverManager);
 	}
 
 	@FXML
 	void onOpenItemClicked() {
-		ServerSave.loadServerController();
+		ServerSave.loadServerController(serverManager);
 	}
 
 	@FXML
 	void onServerEditItemClicked() {
-		Servers.editCurrentServer();
+		//TODO use new system
+		//Servers.editCurrentServer();
 	}
 
 	@FXML
 	void onServerRemoveItemClicked() {
-		Tabs.removeCurrentTab();
+		serverManager.removeSelectedServer();
 	}
 
 	@FXML
@@ -139,7 +147,7 @@ public class FrameHandler implements IEventHandler {
 
 	@FXML
 	void onDesignClicked() {
-		Designs.showDesignDialog();
+		Designs.showDesignDialog(primaryStage);
 	}
 
 	@FXML
@@ -156,110 +164,68 @@ public class FrameHandler implements IEventHandler {
 		Designs.registerDesign(new Design("css/bright", "bright"));
 		Designs.registerDesign(new Design("css/dark", "dark"));
 
-		lView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			Object o = newValue.getValue().getItem();
+		handler = new TabHandler<>("RootHandler", rootTabPane);
 
-			if (o instanceof BasicServer) {
-				BasicServer server = (BasicServer) o;
-				main.getSelectionModel().select(Servers.findTab(server));
-			}
+		TreeItem<TreeEntry<?>> rootItem = new TreeItem<>(new RootTreeEntry(I18N.translate("tree_servers")));
 
-		});
+		treeHandler = new TreeHandler<>(lView, rootItem, false);
 
-		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		serverManager = new ServerManager(handler, treeHandler);
 
-			if (newValue instanceof ServerTab) {
-
-				ServerTab tab = (ServerTab) newValue;
-
-				BasicServer server = tab.getTabContent().getContentHandler().getServerHandler().getServer();
-
-				for (TreeItem<TreeEntry<?>> item : lView.getRoot().getChildren()) {
-
-					if (item.getValue().getItem() instanceof BasicServer) {
-
-						if (item.getValue().getItem().equals(server)) {
-							lView.getSelectionModel().select(item);
-						}
-					}
-				}
-			}
-
-		});
-
-
-		/*Tab mainTab = new Tab(); TODO Future use
-		mainTab.setClosable(true);
-		mainTab.setText(I18N.translate("tab_home"));
-		mainTab.setContent(new BorderPane(new Label(I18N.translate("tab_home"))));
-		main.getTabs().add(mainTab);*/
+		this.primaryStage.setOnCloseRequest(new ProgramExitHandler(handler));
 
 		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, Designs.getDefaultDesign().getId());
 
 		Designs.setCurrentDesign(designID);
 
-		EventHandler.EVENT_BUS.registerEventListener(this);
-
 		vBox.getStyleClass().add("button-tree");
 		credits.setText(ServerController.VERSION);
 
-		main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-			/*FIXME
+		/*main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			TODO use new system
+			*//*FIXME
 			FrameHandler.this.dataCounterRam.set(0);
 			FrameHandler.this.dataCounterCpu.set(0);*/
-
-			if (newValue instanceof ServerTab) {
-				TabServerHandler handler = ((ServerTab) newValue).getTabContent().getContentHandler()
+/*
+			if (newValue instanceof _ServerTab) {
+				_TabServerHandler handler = ((_ServerTab) newValue).getTabContent().getContentHandler()
 						.getServerHandler();
 				if (handler.hasServer()) {
 					EventHandler.EVENT_BUS.post(new ChangeControlsEvent(handler.getServer().getExtraControls()));
 				}
-			}
-		});
-
-		lView.setCellFactory(e -> new StructureCell());
-
-		lView.setOnMouseClicked(event -> {
-			if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY)) {
-
-				TreeItem<TreeEntry<?>> item = lView.getSelectionModel().getSelectedItem();
-				if (item != null && item.getValue().onDoubleClick()) {
-					event.consume();
-				}
-			}
-
-		});
+			}TODO use new system
+		});*/
 
 		currentProgress = progressBar;
 		FrameHandler.hideBar();
 
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/add.png").toExternalForm(), e -> serverDialog.showDialog(), I18N.translate("tooltip_add_server"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> Tabs.removeCurrentTab(), I18N.translate("tooltip_remove_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/remove.png").toExternalForm(), e -> serverManager.removeSelectedServer(), I18N.translate("tooltip_remove_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e -> Servers.startAllServers(), I18N.translate("tooltip_start_all_servers"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart_all.png").toExternalForm(), e -> Servers.restartAllServers(), I18N.translate("tooltip_restart_all_servers"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop_all.png").toExternalForm(), e -> Servers.stopAllServers(), I18N.translate("tooltip_stop_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start_all.png").toExternalForm(), e -> serverManager.startAllServers(), I18N.translate("tooltip_start_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart_all.png").toExternalForm(), e -> serverManager.restartAllServers(), I18N.translate("tooltip_restart_all_servers"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop_all.png").toExternalForm(), e -> serverManager.stopAllServers(), I18N.translate("tooltip_stop_all_servers"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> Servers.startCurrentServer(), I18N.translate("tooltip_start_server"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> Servers.restartCurrentServer(), I18N.translate("tooltip_restart_server"));
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> Servers.stopCurrentServer(), I18N.translate("tooltip_stop_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/start.png").toExternalForm(), e -> serverManager.startSelectedServer(), I18N.translate("tooltip_start_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> serverManager.restartSelectedServer(), I18N.translate("tooltip_restart_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> serverManager.stopSelectedServer(), I18N.translate("tooltip_stop_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), I18N.translate("tooltip_edit_server"));
+		//GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), I18N.translate("tooltip_edit_server"));
 
-		mainPane = main;
-		tree = lView;
 		buttonList = vBox;
 
-		rootItem = new TreeItem<>(new RootTreeEntry(I18N.translate("tree_servers")));
-		lView.setRoot(rootItem);
-		rootItem.setExpanded(true);
-
 		/*FIXME initCharts();
-
 		monitoringThread = new Thread(new ServerWatcher());
 		monitoringThread.setName("Server Monitoring Thread");
 		monitoringThread.start();*/
+
+
+		serverDialog = new ServerDialog(serverManager);
+		settingsDialog = new SettingsDialog();
+		rconDialog = new RConDialog();
+		licenseDialog = new LicenseDialog();
+		creditsDialog = new CreditsDialog();
+		addonInstallDialog = new AddonInstallDialog();
 
 
 		log.info("FXML initialized");
@@ -273,21 +239,6 @@ public class FrameHandler implements IEventHandler {
 	public static void hideBar() {
 		log.debug("Hiding the progress bar");
 		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(false));
-	}
-
-	@Subscribe
-	public void changeExtraButton(ChangeControlsEvent event) {
-		Platform.runLater(() -> {
-
-			vBox.getChildren().clear();
-
-			event.getNewControls().forEach(control -> {
-				control.setPrefWidth(1000);
-				vBox.getChildren().add(control);
-			});
-
-		});
-
 	}
 /*FIXME Too many bugs
 	private NumberAxis ramAxis;

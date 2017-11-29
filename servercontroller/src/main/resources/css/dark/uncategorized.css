@@ -2,6 +2,10 @@
 	-fx-background-color: derive(-fx-base, 10.0%);
 }/*Pane */
 
+.info-pane {
+    -fx-background-color: derive(-fx-base, 20.0%);
+}
+
 .tool-bar{
     -fx-background-color: derive(-fx-base, 20.0%);
 }/*Toolbar*/

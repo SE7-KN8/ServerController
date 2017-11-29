@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.server;
 
+import org.jetbrains.annotations.NotNull;
+
 import javafx.scene.paint.Color;
 
 /**
@@ -14,10 +16,11 @@ public enum ServerState {
 
 	private final Color color;
 
-	ServerState(Color color) {
+	ServerState(@NotNull Color color) {
 		this.color = color;
 	}
 
+	@NotNull
 	public Color getColor() {
 		return color;
 	}

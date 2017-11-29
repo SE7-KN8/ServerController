@@ -26,7 +26,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 
 	private static final Image FOLDER_ICON = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
 
-	public PathTreeEntry(Path path) {
+	public PathTreeEntry(@NotNull Path path) {
 		this.item = path;
 	}
 
@@ -61,6 +61,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 		return null;
 	}
 
+
 	@Nullable
 	@Override
 	public ContextMenu getContextMenu() {
@@ -73,6 +74,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 				ex.printStackTrace();
 			}
 		});
+		openWithSystem.setGraphic(new ImageView(PathTreeEntry.FOLDER_ICON));
 
 		ContextMenu menu = new ContextMenu();
 		menu.getItems().add(openWithSystem);

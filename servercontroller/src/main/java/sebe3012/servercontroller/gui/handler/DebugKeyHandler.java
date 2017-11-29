@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.gui.handler;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.util.DialogUtil;
 
 import org.controlsfx.control.Notifications;
@@ -9,10 +8,18 @@ import org.scenicview.ScenicView;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
 public class DebugKeyHandler implements EventHandler<KeyEvent> {
+
+	private Stage primaryStage;
+
+	public DebugKeyHandler(Stage primaryStage){
+		this.primaryStage = primaryStage;
+	}
+
 	@Override
 	public void handle(KeyEvent event) {
 		if (ServerController.DEBUG) {
@@ -38,10 +45,10 @@ public class DebugKeyHandler implements EventHandler<KeyEvent> {
 				case F10:
 					break;
 				case F11:
-					Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(Frame.primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("Some Dialog", "", "Some information")).text("Some text with some information").showInformation();
+					Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("Some Dialog", "", "Some information")).text("Some text with some information").showInformation();
 					break;
 				case F12:
-					ScenicView.show(Frame.primaryStage.getScene());
+					ScenicView.show(primaryStage.getScene());
 					break;
 			}
 

@@ -1,10 +1,7 @@
 package sebe3012.servercontroller.server;
 
 import sebe3012.servercontroller.addon.api.Addon;
-import sebe3012.servercontroller.event.ServerMessageEvent;
-import sebe3012.servercontroller.event.ServerStopEvent;
-import sebe3012.servercontroller.eventbus.EventHandler;
-import sebe3012.servercontroller.gui.tab.TabServerHandler;
+import sebe3012.servercontroller.addon.api.StringPredicates;
 import sebe3012.servercontroller.jna.Kernel32;
 import sebe3012.servercontroller.jna.W32API;
 import sebe3012.servercontroller.server.monitoring.ServerMonitor;
@@ -14,10 +11,14 @@ import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.sun.jna.Pointer;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Control;
 
@@ -30,6 +31,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,17 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 public abstract class BasicServer {
+
+	@FunctionalInterface
+	public interface StopListener {
+		void onStop(int code);
+	}
+
+	@FunctionalInterface
+	public interface MessageListener {
+		void onMessage(String message);
+	}
+
 	protected BufferedReader inputReader;
 	protected BufferedWriter outputWriter;
 	protected WaitForExit waitForExitThread;
@@ -48,21 +61,45 @@ public abstract class BasicServer {
 	private StringProperty name;
 	private StringProperty args;
 	private String argsAfterJar = "";
-	private TabServerHandler handler;
 	private Logger log = LogManager.getLogger();
-	private ServerState state = ServerState.STOPPED;
+	private ObjectProperty<ServerState> state = new SimpleObjectProperty<>(ServerState.STOPPED);
 	private ServerMonitor monitor = new ServerMonitor();
 	private Queue<OutputCallback> outputCallbackQueue = new LinkedList<>();
 	private boolean isAddonSet = false;
 	private Addon addon;
+	private List<StopListener> stopListeners = new ArrayList<>();
+	private List<MessageListener> messageListeners = new ArrayList<>();
+	private Map<String, StringProperty> properties;
 
-	public BasicServer(Map<String, StringProperty> properties) {
+	public BasicServer(Map<String, StringProperty> properties, Addon addon) {
+		this.properties = properties;
+		this.addon = addon;
 		name = properties.get("name");
 		args = properties.get("args");
 		jarPath = properties.get("jarfile");
 	}
 
-	public ErrorCode start() {
+	public Map<String, StringProperty> getProperties() {
+		return properties;
+	}
+
+	public void addStopListener(StopListener stopListener) {
+		this.stopListeners.add(stopListener);
+	}
+
+	public void removeStopListener(StopListener stopListener) {
+		this.stopListeners.remove(stopListener);
+	}
+
+	public void addMessageListener(MessageListener messageListener) {
+		this.messageListeners.add(messageListener);
+	}
+
+	public void removeMessageListener(MessageListener messageListener) {
+		this.messageListeners.remove(messageListener);
+	}
+
+	ErrorCode start() {
 		if (getState() == ServerState.STOPPED) {
 			try {
 
@@ -122,7 +159,12 @@ public abstract class BasicServer {
 
 	}
 
-	public void stop() {
+	void stop() {
+		sendCommand(getStopCommand());
+		setState(ServerState.STOPPING);
+	}
+
+	private void destroy() {
 		try {
 			this.monitor.setPid(-1);
 			serverProcess.destroy();
@@ -158,7 +200,15 @@ public abstract class BasicServer {
 								outputCallbackQueue.add(callback);
 							}
 						}
-						EventHandler.EVENT_BUS.post(new ServerMessageEvent(BasicServer.this, line));
+
+						if(BasicServer.this.getState() == ServerState.STARTING && StringPredicates.SERVER_DONE_CHECK.test(line, BasicServer.this)){
+							BasicServer.this.setState(ServerState.RUNNING);
+						}
+
+						BasicServer.this.messageListeners.forEach(listener -> listener.onMessage(line));
+
+						//TODO use new system
+						//EventHandler.EVENT_BUS.post(new ServerMessageEvent(BasicServer.this, line));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -174,7 +224,12 @@ public abstract class BasicServer {
 			try {
 				int code = serverProcess.waitFor();
 				log.info("[{}]: Stopped with code {}", BasicServer.this.getName(), code);
-				EventHandler.EVENT_BUS.post(new ServerStopEvent(BasicServer.this, code));
+
+				//TODO use new system
+				//EventHandler.EVENT_BUS.post(new ServerStopEvent(BasicServer.this, code));
+				BasicServer.this.destroy();
+				BasicServer.this.stopListeners.forEach(listener -> listener.onStop(code));
+
 
 				messageReaderThread.interrupt();
 			} catch (Exception e) {
@@ -184,22 +239,36 @@ public abstract class BasicServer {
 		}
 	}
 
+	@NotNull
+	@Deprecated
 	public String getServerInfo() {
 		return I18N.format("server_name", getName());
 	}
 
+	@NotNull
+	public List<String> getServerInfos(){
+		List<String> infoList = new ArrayList<>();
+
+		infoList.add("Server-Name: " + name);
+		infoList.add("Server-Jar-Path: " + getJarPath());
+		infoList.add("Stop-Command: " + getStopCommand());
+		infoList.add("Start-Args: " + getArgs());
+		infoList.add("Addon-Name: " + getAddon().getAddonInfo().getName());
+		infoList.add("Done-Regex: " + getDoneRegex());
+
+		return infoList;
+	}
+
+	@NotNull
 	public String getStopCommand() {
 		return "stop";
 	}
 
-	public void onError(Exception errorMessage) {
-
-		EventHandler.EVENT_BUS.post(new ServerMessageEvent(this, "Error while server run"));
-
+	public final void onError(@NotNull Exception errorMessage) {
 		Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_server_error_of", getName()), "", errorMessage));
 	}
 
-	public void sendCommand(String command) {
+	public final void sendCommand(@NotNull String command) {
 		try {
 			outputWriter.write(command + "\n");
 			outputWriter.flush();
@@ -209,19 +278,8 @@ public abstract class BasicServer {
 		}
 	}
 
-	public void setServerHandler(TabServerHandler handler) {
-		this.handler = handler;
-	}
-
-	public TabServerHandler getServerHandler() {
-		return handler;
-	}
-
-	public boolean hasServerHandler() {
-		return handler != null;
-	}
-
-	public final void setAddon(Addon addon) {
+	@Deprecated
+	public final void setAddon(@NotNull Addon addon) {
 		if (!isAddonSet) {
 			this.addon = addon;
 			isAddonSet = true;
@@ -230,43 +288,48 @@ public abstract class BasicServer {
 		}
 	}
 
-	public Addon getAddon() {
+	@NotNull
+	public final Addon getAddon() {
 		return addon;
 	}
 
-	public boolean isRunning() {
+	public final boolean isRunning() {
 		return getState() != ServerState.STOPPED;
 	}
 
-	public int getPID() {
+	public final int getPID() {
 		return pid;
 	}
 
-	public String getName() {
+	@NotNull
+	public final String getName() {
 		return name.get();
 	}
 
-	public void setName(String name) {
+	public final void setName(@NotNull String name) {
 		this.name.set(name);
 	}
 
-	public StringProperty nameProperty() {
+	@NotNull
+	public final StringProperty nameProperty() {
 		return name;
 	}
 
-	public String getJarPath() {
+	@NotNull
+	public final String getJarPath() {
 		return jarPath.get();
 	}
 
-	public void setJarPath(String jarPath) {
+	public final void setJarPath(@NotNull String jarPath) {
 		this.jarPath.set(jarPath);
 	}
 
-	public String getArgsAfterJar() {
+	@NotNull
+	public final String getArgsAfterJar() {
 		return argsAfterJar;
 	}
 
-	public void setArgsAfterJar(String argsAfterJar) {
+	public final void setArgsAfterJar(@NotNull String argsAfterJar) {
 		this.argsAfterJar = argsAfterJar;
 	}
 
@@ -281,37 +344,48 @@ public abstract class BasicServer {
 				'}';
 	}
 
-	public abstract List<Control> getExtraControls();
+	@NotNull
+	public List<Control> getExtraControls(){
+		return new ArrayList<>();
+	}
 
 	public abstract int getSaveVersion();
 
+	@Nullable
 	public String getDoneRegex() {
 		return null;
 	}
 
-	public ServerState getState() {
-		return this.state;
+	public void setState(@NotNull ServerState state) {
+		log.info("[{}]: Set state from {} to {}", getName(), getState(), state);
+		this.state.set(state);
 	}
 
-	public void setState(ServerState state) {
-		log.debug("[{}]: Set state from {} to {}", getName(), this.state, state);
-		this.state = state;
-		handler.refreshListState();
+	@NotNull
+	public final ServerState getState() {
+		return state.get();
 	}
 
+	@NotNull
+	public final ObjectProperty<ServerState> stateProperty() {
+		return state;
+	}
+
+	@NotNull
+	@Deprecated //FIXME too many bugs
 	public ServerMonitor getMonitor() {
 		return this.monitor;
 	}
 
-
-	public OutputCallback waitForCommandResponse(String regex, Consumer<String> callback) {
+	@NotNull
+	public final OutputCallback waitForCommandResponse(String regex, Consumer<String> callback) {
 		OutputCallback outputCallback = new OutputCallback(regex, callback, this);
 
 		this.outputCallbackQueue.add(outputCallback);
 		return outputCallback;
 	}
 
-	public void removeCallback(OutputCallback callback) {
+	public final void removeCallback(@NotNull OutputCallback callback) {
 		this.outputCallbackQueue.remove(callback);
 	}
 

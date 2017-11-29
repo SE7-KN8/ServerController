@@ -1,9 +1,8 @@
 package sebe3012.servercontroller.addon.api;
 
 import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.gui.FrameHandler;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
@@ -55,20 +54,25 @@ public class AddonUtil {
 		return serverTypes;
 	}
 
-	public static void  loadServerCreateDialog(Addon addon, BasicServer parent) {
+	public static void loadServerCreateDialog(Addon addon, BasicServer parent, ServerManager serverManager) {
 		List<DialogRow> rows = new ArrayList<>();
 
-		createRows(AddonUtil.getServerCreator(addon), rows, Servers.getServerProperties(parent), parent != null);
+		if (parent != null) {
+			createRows(AddonUtil.getServerCreator(addon), rows, parent.getProperties(), true);
+		} else {
+			createRows(AddonUtil.getServerCreator(addon), rows, null, false);
+		}
+
 
 		openCreateDialog(addon, rows, parent, e -> {
 			try {
 
 				if (parent == null) {
-					Servers.addServer(Servers.createBasicServer(e, serverTypes.get(addon)), addon);
+					serverManager.createServerHandler(e, serverTypes.get(addon), addon, true);
 				} else {
-					Map<String, StringProperty> oldServerMap = Servers.getServerProperties(parent);
+					Map<String, StringProperty> oldServerMap = parent.getProperties();
 					oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
-					FrameHandler.tree.refresh();
+					serverManager.getTreeHandler().refresh();
 				}
 			} catch (Exception ex) {
 				log.error("Could not create the server, because: ", ex);
