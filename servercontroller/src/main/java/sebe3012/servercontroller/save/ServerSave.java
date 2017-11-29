@@ -5,12 +5,11 @@ import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.Tabs;
-import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.Servers;
+import sebe3012.servercontroller.server.BasicServerHandler;
+import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
@@ -43,11 +42,11 @@ import java.util.Map;
 
 public class ServerSave {
 
-	public static void saveServerController(){
+	public static void saveServerController(ServerManager manager) {
 		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
 
 		try {
-			ServerSave.saveServerController(file, true);
+			ServerSave.saveServerController(file, true, manager);
 		} catch (IOException e) {
 			e.printStackTrace();
 			showSaveErrorDialog();
@@ -56,7 +55,7 @@ public class ServerSave {
 
 	private static Logger log = LogManager.getLogger();
 
-	private static void saveServerController(String path, boolean showDialog) throws IOException {
+	private static void saveServerController(String path, boolean showDialog, ServerManager serverManager) throws IOException {
 
 		Task<Void> saveTask = new Task<Void>() {
 			@Override
@@ -68,13 +67,14 @@ public class ServerSave {
 					ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 				}
 
-				Servers.serversList.forEach(item -> {
+
+				/*Servers.serversList.forEach(item -> {
 					if (item.getItem().isRunning()) {
 						log.warn("Can't save while server is running");
 						showServerIsRunningDialog();
 						return;
 					}
-				});
+				});*///TODO check if this necessary
 
 				FileOutputStream fos = new FileOutputStream(new File(path));
 
@@ -83,14 +83,14 @@ public class ServerSave {
 
 				Document xml = new Document(rootElement);
 
-				int max = Servers.serversList.size();
+				int max = serverManager.getServerList().size();
 
 				for (int i = 0; i < max; i++) {
 					updateProgress(i, max);
 
-					TreeEntry<BasicServer> item = Servers.serversList.get(i);
+					BasicServerHandler item = serverManager.getServerList().get(0);
 
-					BasicServer server = item.getItem();
+					BasicServer server = item.getServer();
 
 					log.info("Start saving server {}", server.getName());
 					final Element serverElement = new Element("server");
@@ -100,9 +100,7 @@ public class ServerSave {
 					serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
 					log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 
-					Map<String, StringProperty> saveMap = Servers.getServerProperties(server);
-
-					saveMap.forEach((key, value) -> {
+					server.getProperties().forEach((key, value) -> {
 						log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
 						Element keyElement = new Element(key);
 						keyElement.setText(value.get());
@@ -137,11 +135,11 @@ public class ServerSave {
 		new Thread(saveTask).start();
 	}
 
-	public static void loadServerController(){
+	public static void loadServerController(ServerManager serverManager) {
 		String file = FileUtil.openFileChooser("*.xml", ".xml");
 
 		try {
-			ServerSave.loadServerController(file, true);
+			ServerSave.loadServerController(file, true, serverManager);
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -152,7 +150,7 @@ public class ServerSave {
 		}
 	}
 
-	private static void loadServerController(String path, boolean showDialog) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private static void loadServerController(String path, boolean showDialog, ServerManager serverManager) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
 		Task<Void> loadTask = new Task<Void>() {
 			@Override
@@ -168,15 +166,16 @@ public class ServerSave {
 
 				ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 
-				Servers.serversList.forEach(item -> {
-					if (item.getItem().isRunning()) {
-						log.warn("Can't load while server is running");
+				serverManager.getTabHandler().getTabEntries().forEach(e -> {
+					if (e.getItem().getServer().isRunning()) {
+						log.warn("Can't load servers while a server is running!");
 						showServerIsRunningDialog();
 						return;
 					}
 				});
 
-				Platform.runLater(Tabs::removeAllTabs);
+				//TODO use new system
+				//Platform.runLater(_Tabs::removeAllTabs);
 
 				FileInputStream fis = new FileInputStream(new File(path));
 
@@ -219,15 +218,14 @@ public class ServerSave {
 						continue;
 					}
 
-
-					BasicServer server = Servers.createBasicServer(map, serverClass);
+					BasicServerHandler serverHandler = serverManager.createServerHandler(map, serverClass, serverAddon, false);
 
 					log.info("Create server");
-					if (server.getSaveVersion() != saveVersion) {
+					if (serverHandler.getServer().getSaveVersion() != saveVersion) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
-					Servers.addServer(server, serverAddon);
-
+					
+					serverManager.addServerHandler(serverHandler);
 
 				}
 
@@ -245,16 +243,16 @@ public class ServerSave {
 		};
 
 		FrameHandler.currentProgress.progressProperty().bind(loadTask.progressProperty());
-		loadTask.setOnFailed(event -> log.error("Can't save servers", loadTask.getException()));
+		loadTask.setOnFailed(event -> log.error("Can't load servers", loadTask.getException()));
 		new Thread(loadTask).start();
 
 
 	}
 
-	public static void loadServerControllerFromLastFile(){
+	public static void loadServerControllerFromLastFile(ServerManager serverManager) {
 		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
 			try {
-				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false);
+				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false, serverManager);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 				showSaveStateErrorDialog();

@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.util.design;
 
-import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.util.I18N;
@@ -13,6 +12,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class Designs {
 		currentDesign = designs.get(designID);
 	}
 
-	public static void showDesignDialog() {
+	public static void showDesignDialog(Stage primaryStage) {
 		ChoiceDialog<Design> cd = new ChoiceDialog<>();
 		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
 		Designs.applyCurrentDesign(cd.getDialogPane());
@@ -108,7 +108,7 @@ public class Designs {
 			ServerControllerPreferences.saveSetting(PreferencesConstants.KEY_DESIGN, design.getId());
 
 			Designs.setCurrentDesign(design.getId());
-			Designs.applyCurrentDesign(Frame.primaryStage.getScene());
+			Designs.applyCurrentDesign(primaryStage.getScene());
 		}
 	}
 

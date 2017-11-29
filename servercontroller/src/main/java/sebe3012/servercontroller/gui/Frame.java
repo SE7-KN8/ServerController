@@ -4,9 +4,7 @@ import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
-import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
 import sebe3012.servercontroller.prelaunch.AddonInstallerTask;
-import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
 
@@ -33,20 +31,14 @@ import java.io.IOException;
  */
 public class Frame extends Application {
 
-	/**
-	 * The basic frame for the program
-	 */
-	public static Stage primaryStage;
-
 	private Stage splash;
 
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Frame.primaryStage = primaryStage;
 
 		createSplashScreen();
-		createPrimaryStage();
+		createPrimaryStage(primaryStage);
 
 		new AddonInstallerTask(AddonLoader.ADDON_TEMP_PATH, AddonLoader.ADDON_PATH, AddonLoader.JAR_FILE_MATCHER).installAddons();
 		Addons.loadAddons();
@@ -59,7 +51,8 @@ public class Frame extends Application {
 				Platform.runLater(() -> {
 					splash.close();
 					primaryStage.show();
-					ServerSave.loadServerControllerFromLastFile();
+					//TODO use new system
+					// ServerSave.loadServerControllerFromLastFile();
 				});
 
 				return null;
@@ -85,16 +78,19 @@ public class Frame extends Application {
 		splash.show();
 	}
 
-	private void createPrimaryStage() throws IOException {
-		BorderPane root = FXMLLoader.load(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"), I18N.getDefaultBundle());
+	private void createPrimaryStage(Stage primaryStage) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setResources(I18N.getDefaultBundle());
+		loader.setController(new FrameHandler(primaryStage));
+		loader.setLocation(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"));
+		BorderPane root = loader.load();
 		Scene scene = new Scene(root);
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, new DebugKeyHandler());
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new DebugKeyHandler(primaryStage));
 		Designs.applyCurrentDesign(scene);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle(I18N.format("window_title", ServerController.VERSION));
 		primaryStage.setMaximized(true);
 		primaryStage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
-		primaryStage.setOnCloseRequest(new ProgramExitHandler());
 	}
 
 	/**

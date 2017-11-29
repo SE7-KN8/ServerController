@@ -76,7 +76,7 @@ public class ConsoleLog extends PrintStream {
 	}
 
 	@Override
-	public void println(@NotNull Object x) {
-		printlnInternal(x.toString());
+	public void println(Object x) {
+		printlnInternal(String.valueOf(x));
 	}
 }

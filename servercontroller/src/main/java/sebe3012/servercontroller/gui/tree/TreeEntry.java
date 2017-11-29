@@ -35,4 +35,8 @@ public interface TreeEntry<T> {
 	T getItem();
 
 	void setItem(@NotNull T item);
+
+	default void onSelect(){
+		//Do nothing by default
+	}
 }

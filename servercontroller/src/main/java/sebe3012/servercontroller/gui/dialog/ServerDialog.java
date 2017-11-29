@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
 
@@ -21,7 +22,12 @@ import javafx.util.Callback;
 
 public class ServerDialog implements Dialog {
 
-	private static Logger log = LogManager.getLogger();
+	private Logger log = LogManager.getLogger();
+	private ServerManager serverManager;
+
+	public ServerDialog(ServerManager manager){
+		this.serverManager = manager;
+	}
 
 	public void showDialog() {
 		log.debug("Load ServerDialog");
@@ -55,7 +61,8 @@ public class ServerDialog implements Dialog {
 			if (box.getSelectionModel().getSelectedItem() != null) {
 				dialog.close();
 				log.debug("Load addon for name {}", box.getSelectionModel().getSelectedItem().getAddonInfo().getId());
-				AddonUtil.loadServerCreateDialog(box.getSelectionModel().getSelectedItem(), null);
+				//TODO use new system
+				AddonUtil.loadServerCreateDialog(box.getSelectionModel().getSelectedItem(), null, serverManager);
 				//EventHandler.EVENT_BUS.post(new ServerTypeChooseEvent(box.getSelectionModel().getSelectedItem()));
 			}
 		});

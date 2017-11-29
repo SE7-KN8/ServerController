@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.util;
 
-import sebe3012.servercontroller.gui.Frame;
 import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.scene.control.Alert;
@@ -68,7 +67,7 @@ public class DialogUtil {
 		a.setHeaderText(header);
 		Designs.applyCurrentDesign(a);
 		a.initModality(Modality.APPLICATION_MODAL);
-		a.initOwner(Frame.primaryStage);
+		//a.initOwner(Frame.primaryStage); TODO is this needed?
 
 		if(wait){
 			return a.showAndWait();

@@ -131,6 +131,7 @@ public final class AddonLoader {
 		} catch (AbstractMethodError e) {
 			log.error("Can't continue loading addon '" + info.getId() + "', because there are compatibility problems: " + e);
 		}
+		//TODO show dialog for error while loading addons
 	}
 
 	void unloadAddons() {

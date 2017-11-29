@@ -1,11 +1,7 @@
 package sebe3012.servercontroller;
 
 import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.eventbus.EventHandler;
 import sebe3012.servercontroller.gui.Frame;
-import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tab.ServerTab;
-import sebe3012.servercontroller.gui.tab.TabServerHandler;
 import sebe3012.servercontroller.server.monitoring.ServerWatcher;
 import sebe3012.servercontroller.util.CLIOptions;
 import sebe3012.servercontroller.util.I18N;
@@ -55,8 +51,6 @@ public class ServerController {
 
 		I18N.init();
 
-		EventHandler.EVENT_BUS.loadEventbus("servercontroller");
-
 		Frame.load(args);
 	}
 
@@ -65,19 +59,5 @@ public class ServerController {
 		Settings.saveSettings();
 		Addons.unloadAddons();
 		ServerWatcher.running = false;
-		FrameHandler.mainPane.getTabs().forEach(tab -> {
-			if (tab instanceof ServerTab) {
-
-				TabServerHandler handler = ((ServerTab) tab).getTabContent().getContentHandler()
-						.getServerHandler();
-
-				if (handler.getServer().isRunning()) {
-					handler.onStopClicked();
-				}
-
-				handler.getContentHandler().close();
-			}
-
-		});
 	}
 }
