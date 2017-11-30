@@ -1,7 +1,7 @@
 {
   "id": "spigot",
   "name": "Spigot",
-  "version": "0.0.1.1",
+  "version": "0.0.1.2",
   "mainClass": "sebe3012.servercontroller.addon.spigot.SpigotAddon",
   "authors": ["Sebe3012"],
   "dependencies": ["craftbukkit"]
