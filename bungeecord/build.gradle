@@ -2,7 +2,7 @@ dependencies {
     compile project(':servercontroller')
 }
 
-version = '0.0.1.1'
+version = '0.0.1.2'
 
 jar{
     baseName = 'ServerController-Addon-BungeeCord'
