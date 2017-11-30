@@ -113,7 +113,7 @@ public class OpsDialogController {
 			Optional<String> result = dialog.showAndWait();
 
 			if (result.isPresent()) {
-				server.getServerHandler().sendCommand("op " + result.get());
+				server.sendCommand("op " + result.get());
 				new Thread(() -> {
 
 					try {
@@ -139,7 +139,7 @@ public class OpsDialogController {
 
 		removedOp.setOnAction(e -> {
 			String player = mainList.getSelectionModel().getSelectedItem();
-			server.getServerHandler().sendCommand("deop " + player);
+			server.sendCommand("deop " + player);
 			new Thread(() -> {
 
 				try {

@@ -1,10 +1,10 @@
 package sebe3012.servercontroller.addon.vanilla;
 
+import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
-import sebe3012.servercontroller.eventbus.IEventHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class VanillaServer extends BasicServer implements IEventHandler {
+public class VanillaServer extends BasicServer {
 	private StringProperty propertiesFile;
 	private PropertiesHandler propertiesHandler;
 	private OpsHandler opsHandler;
@@ -28,8 +28,8 @@ public class VanillaServer extends BasicServer implements IEventHandler {
 	private List<Control> extraControls = new ArrayList<>();
 
 
-	public VanillaServer(Map<String, StringProperty> properties) {
-		super(properties);
+	public VanillaServer(Map<String, StringProperty> properties, Addon addon) {
+		super(properties, addon);
 		propertiesFile = properties.get("properties");
 
 		propertiesHandler = new PropertiesHandler(new File(getPropertiesFile()));
