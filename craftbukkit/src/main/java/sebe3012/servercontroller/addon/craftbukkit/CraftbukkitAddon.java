@@ -5,7 +5,6 @@ import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.addon.api.DialogRow;
 import sebe3012.servercontroller.addon.api.ServerCreator;
 import sebe3012.servercontroller.addon.api.StringPredicates;
-import sebe3012.servercontroller.eventbus.IEventHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +14,7 @@ import javafx.beans.property.StringProperty;
 import java.util.List;
 import java.util.Map;
 
-public class CraftbukkitAddon extends Addon implements IEventHandler, ServerCreator {
+public class CraftbukkitAddon extends Addon implements ServerCreator {
 
 	@Override
 	public void load() {
