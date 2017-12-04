@@ -61,9 +61,7 @@ public class ServerDialog implements Dialog {
 			if (box.getSelectionModel().getSelectedItem() != null) {
 				dialog.close();
 				log.debug("Load addon for name {}", box.getSelectionModel().getSelectedItem().getAddonInfo().getId());
-				//TODO use new system
 				AddonUtil.loadServerCreateDialog(box.getSelectionModel().getSelectedItem(), null, serverManager);
-				//EventHandler.EVENT_BUS.post(new ServerTypeChooseEvent(box.getSelectionModel().getSelectedItem()));
 			}
 		});
 		b.setPrefWidth(300);

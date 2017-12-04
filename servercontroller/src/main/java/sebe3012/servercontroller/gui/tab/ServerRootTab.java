@@ -44,7 +44,7 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 	private void initialize() {
 		rootHandler.addTab(this);
 		serverTabsHandler = new TabHandler<>(getTitle() + "-TabHandler", serverTabPane);
-		ServerConsoleTab.createServerConsoleTab(serverHandler, serverTabsHandler);
+		serverTabsHandler.addTab(ServerConsoleTab.createServerConsoleTab(serverHandler));
 
 		int index = 0;
 
@@ -113,6 +113,10 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 			control.setPrefWidth(1000);
 			FrameHandler.buttonList.getChildren().add(control);
 		});
+	}
+
+	public TabHandler<TabEntry<?>> getServerTabHandler() {
+		return serverTabsHandler;
 	}
 
 	public static ServerRootTab createRootTab(BasicServerHandler serverHandler, ServerManager serverManager) {

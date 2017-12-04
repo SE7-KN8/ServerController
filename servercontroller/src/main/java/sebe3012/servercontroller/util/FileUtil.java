@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.util;
 
+import sebe3012.servercontroller.gui.tab.TabEntry;
+import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.gui.tree.PathTreeEntry;
 import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
@@ -58,15 +60,15 @@ public class FileUtil {
 		return foundPaths;
 	}
 
-	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem) {
+	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler) {
 		try {
-			searchFiles(parent, parentItem);
+			searchFiles(parent, parentItem, serverHandler);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem) throws IOException {
+	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler) throws IOException {
 		if (!Files.isDirectory(parent)) {
 			return;
 		}
@@ -74,17 +76,17 @@ public class FileUtil {
 		DirectoryStream<Path> paths = Files.newDirectoryStream(parent, isDirectory);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler));
 			parentItem.getChildren().add(childItem);
 
-			searchFiles(path, childItem);
+			searchFiles(path, childItem, serverHandler);
 		}
 
 
 		paths = Files.newDirectoryStream(parent, isFile);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler));
 			parentItem.getChildren().add(childItem);
 		}
 	}

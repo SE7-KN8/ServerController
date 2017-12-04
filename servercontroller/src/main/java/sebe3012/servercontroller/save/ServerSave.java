@@ -67,15 +67,6 @@ public class ServerSave {
 					ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
 				}
 
-
-				/*Servers.serversList.forEach(item -> {
-					if (item.getItem().isRunning()) {
-						log.warn("Can't save while server is running");
-						showServerIsRunningDialog();
-						return;
-					}
-				});*///TODO check if this necessary
-
 				FileOutputStream fos = new FileOutputStream(new File(path));
 
 				final Element rootElement = new Element("servercontroller");
@@ -174,8 +165,11 @@ public class ServerSave {
 					}
 				});
 
+
+
 				//TODO use new system
 				//Platform.runLater(_Tabs::removeAllTabs);
+				Platform.runLater(serverManager::clearServers);
 
 				FileInputStream fis = new FileInputStream(new File(path));
 

@@ -83,15 +83,17 @@ public class ServerManager {
 	}
 
 	public void addServerHandler(@NotNull BasicServerHandler handler) {
-		log.info("Adding server handler");
-		servers.add(handler);
+		Platform.runLater(()->{
+			log.info("Adding server handler");
+			servers.add(handler);
 
-		Platform.runLater(() -> ServerRootTab.createRootTab(handler, this));
+			ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
 
-		//TODO better way to implement this
-		TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
-		FileUtil.searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item);
-		rootTreeHandler.addItem(item);
+			//TODO better way to implement this
+			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
+			FileUtil.searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler());
+			rootTreeHandler.addItem(item);
+		});
 	}
 
 	public void removeSelectedServer() {
@@ -105,7 +107,7 @@ public class ServerManager {
 			rootTabHandler.enableUpdateEntry();
 			rootTreeHandler.enableUpdateEntry();
 			rootTreeHandler.updateSelectedEntry();
-			rootTreeHandler.updateSelectedEntry();
+			rootTabHandler.updateSelectedEntry();
 		}
 	}
 
@@ -118,4 +120,9 @@ public class ServerManager {
 	public TreeHandler<TreeEntry<?>> getTreeHandler() {
 		return rootTreeHandler;
 	}
+
+	public void clearServers(){
+		//TODO
+	}
+
 }
