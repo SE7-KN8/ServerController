@@ -51,10 +51,6 @@ public class FrameHandler {
 	private Dialog settingsDialog;
 	private Dialog serverDialog;
 
-	//TODO use new system
-	//public static TabPane mainPane;
-	//public static TreeView<TreeEntry<?>> tree;
-	//public static TreeItem<TreeEntry<?>> rootItem;
 	public static ProgressBar currentProgress;
 	public static VBox buttonList;
 	//FIXME public static Thread monitoringThread;
@@ -180,21 +176,6 @@ public class FrameHandler {
 
 		vBox.getStyleClass().add("button-tree");
 		credits.setText(ServerController.VERSION);
-
-		/*main.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			TODO use new system
-			*//*FIXME
-			FrameHandler.this.dataCounterRam.set(0);
-			FrameHandler.this.dataCounterCpu.set(0);*/
-/*
-			if (newValue instanceof _ServerTab) {
-				_TabServerHandler handler = ((_ServerTab) newValue).getTabContent().getContentHandler()
-						.getServerHandler();
-				if (handler.hasServer()) {
-					EventHandler.EVENT_BUS.post(new ChangeControlsEvent(handler.getServer().getExtraControls()));
-				}
-			}TODO use new system
-		});*/
 
 		currentProgress = progressBar;
 		FrameHandler.hideBar();

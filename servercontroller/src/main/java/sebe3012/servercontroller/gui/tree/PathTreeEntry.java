@@ -1,5 +1,8 @@
 package sebe3012.servercontroller.gui.tree;
 
+import sebe3012.servercontroller.gui.tab.BasicTextEditorTab;
+import sebe3012.servercontroller.gui.tab.TabEntry;
+import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.util.I18N;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +26,13 @@ import java.nio.file.Path;
 public class PathTreeEntry implements TreeEntry<Path> {
 
 	private Path item;
+	private TabHandler<TabEntry<?>> serverTabHandler;
 
 	private static final Image FOLDER_ICON = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
 
-	public PathTreeEntry(@NotNull Path path) {
+	public PathTreeEntry(@NotNull Path path, TabHandler<TabEntry<?>> serverTabHandler) {
 		this.item = path;
+		this.serverTabHandler = serverTabHandler;
 	}
 
 	@Override
@@ -35,13 +40,15 @@ public class PathTreeEntry implements TreeEntry<Path> {
 		try {
 
 			if(!Files.isDirectory(item)){
-				Desktop.getDesktop().open(item.toFile());
-				return true;
+				serverTabHandler.addTab(BasicTextEditorTab.createBasicTextEditorTab(item));
+				/*Desktop.getDesktop().open(item.toFile());
+				return true;*/
+
 			}
 
 			return false;
 
-		} catch (IOException e) {
+		} catch (/*IO*/Exception e) {
 			e.printStackTrace();
 		}
 

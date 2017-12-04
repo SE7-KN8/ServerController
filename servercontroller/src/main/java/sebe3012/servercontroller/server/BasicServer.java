@@ -207,8 +207,6 @@ public abstract class BasicServer {
 
 						BasicServer.this.messageListeners.forEach(listener -> listener.onMessage(line));
 
-						//TODO use new system
-						//EventHandler.EVENT_BUS.post(new ServerMessageEvent(BasicServer.this, line));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -225,8 +223,6 @@ public abstract class BasicServer {
 				int code = serverProcess.waitFor();
 				log.info("[{}]: Stopped with code {}", BasicServer.this.getName(), code);
 
-				//TODO use new system
-				//EventHandler.EVENT_BUS.post(new ServerStopEvent(BasicServer.this, code));
 				BasicServer.this.destroy();
 				BasicServer.this.stopListeners.forEach(listener -> listener.onStop(code));
 

@@ -67,7 +67,6 @@ public class DialogUtil {
 		a.setHeaderText(header);
 		Designs.applyCurrentDesign(a);
 		a.initModality(Modality.APPLICATION_MODAL);
-		//a.initOwner(Frame.primaryStage); TODO is this needed?
 
 		if(wait){
 			return a.showAndWait();

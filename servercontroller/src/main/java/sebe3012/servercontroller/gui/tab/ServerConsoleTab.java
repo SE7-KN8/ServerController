@@ -24,17 +24,15 @@ import java.util.List;
 public class ServerConsoleTab implements TabEntry<BasicServerHandler>, BasicServer.MessageListener, BasicServer.StopListener {
 
 	private BasicServerHandler serverHandler;
-	private TabHandler<TabEntry<?>> rootHandler;
 	private OutputFormatter formatter;
 	private List<String> commandList;
 	private final int MAX_COMMAND_HISTORY = (int) Settings.readSetting(Settings.Constants.MAX_COMMAND_HISTORY);
 	private int currentListIndex;
 
-	private ServerConsoleTab(BasicServerHandler serverHandler, TabHandler<TabEntry<?>> rootHandler) {
+	private ServerConsoleTab(BasicServerHandler serverHandler) {
 		this.serverHandler = serverHandler;
 		this.serverHandler.getServer().addMessageListener(this);
 		this.serverHandler.getServer().addStopListener(this);
-		this.rootHandler = rootHandler;
 	}
 
 	@FXML
@@ -155,15 +153,14 @@ public class ServerConsoleTab implements TabEntry<BasicServerHandler>, BasicServ
 	void initialize() {
 		formatter = new OutputFormatter();
 		formatter.start(consoleOutputArea);
-		rootHandler.addTab(this);
 		commandList = new ArrayList<>();
 	}
 
-	public static ServerConsoleTab createServerConsoleTab(BasicServerHandler server, TabHandler<TabEntry<?>> rootHandler) {
+	public static ServerConsoleTab createServerConsoleTab(BasicServerHandler server) {
 		ServerConsoleTab consoleTab;
 
 		try {
-			consoleTab = new ServerConsoleTab(server, rootHandler);
+			consoleTab = new ServerConsoleTab(server);
 			FXMLLoader loader = new FXMLLoader();
 			loader.setController(consoleTab);
 			loader.setResources(I18N.getDefaultBundle());

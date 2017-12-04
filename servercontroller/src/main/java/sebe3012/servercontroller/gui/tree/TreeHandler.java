@@ -46,9 +46,7 @@ public class TreeHandler<T extends TreeEntry<?>> {
 				}
 			}
 		});
-		this.rootTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			updateSelectedEntry();
-		});
+		this.rootTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateSelectedEntry());
 	}
 
 	@NotNull
@@ -111,8 +109,12 @@ public class TreeHandler<T extends TreeEntry<?>> {
 		getRootItem().getChildren().remove(item);
 	}
 
-	public void updateSelectedEntry(){
-		if(updateSelection){
+	public void clearItems() {
+		getRootItem().getChildren().clear();
+	}
+
+	public void updateSelectedEntry() {
+		if (updateSelection) {
 			this.getTreeView().getSelectionModel().getSelectedItem().getValue().onSelect();
 		}
 	}
@@ -123,7 +125,7 @@ public class TreeHandler<T extends TreeEntry<?>> {
 	 * @deprecated for removal
 	 */
 	@Deprecated
-	public void enableUpdateEntry(){
+	public void enableUpdateEntry() {
 		this.updateSelection = true;
 	}
 
@@ -133,7 +135,7 @@ public class TreeHandler<T extends TreeEntry<?>> {
 	 * @deprecated for removal
 	 */
 	@Deprecated
-	public void disableUpdateEntry(){
+	public void disableUpdateEntry() {
 		this.updateSelection = false;
 	}
 
