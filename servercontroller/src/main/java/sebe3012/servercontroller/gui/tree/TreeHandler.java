@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.gui.tree;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.scene.control.TreeCell;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreeHandler<T extends TreeEntry<?>> {
+
+	private static Logger log = LogManager.getLogger();
 
 	private class CustomCell extends TreeCell<T> {
 
@@ -115,7 +119,12 @@ public class TreeHandler<T extends TreeEntry<?>> {
 
 	public void updateSelectedEntry() {
 		if (updateSelection) {
-			this.getTreeView().getSelectionModel().getSelectedItem().getValue().onSelect();
+			TreeItem<T> item = this.getTreeView().getSelectionModel().getSelectedItem();
+			if(item != null){
+				item.getValue().onSelect();
+			}else{
+				log.info("Selected entry is null!");
+			}
 		}
 	}
 

@@ -21,13 +21,11 @@ import java.util.List;
 
 public class ServerRootTab implements TabEntry<BasicServerHandler> {
 	private BasicServerHandler serverHandler;
-	private TabHandler<TabEntry<BasicServerHandler>> rootHandler;
 	private TabHandler<TabEntry<?>> serverTabsHandler;
 	private ServerManager serverManager;
 
 	private ServerRootTab(@NotNull BasicServerHandler serverHandler, @NotNull ServerManager serverManager) {
 		this.serverHandler = serverHandler;
-		this.rootHandler = serverManager.getTabHandler();
 		this.serverManager = serverManager;
 	}
 
@@ -42,7 +40,6 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 
 	@FXML
 	private void initialize() {
-		rootHandler.addTab(this);
 		serverTabsHandler = new TabHandler<>(getTitle() + "-TabHandler", serverTabPane);
 		serverTabsHandler.addTab(ServerConsoleTab.createServerConsoleTab(serverHandler));
 

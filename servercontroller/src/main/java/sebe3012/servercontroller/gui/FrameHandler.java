@@ -208,8 +208,11 @@ public class FrameHandler {
 		creditsDialog = new CreditsDialog();
 		addonInstallDialog = new AddonInstallDialog();
 
-
 		log.info("FXML initialized");
+	}
+
+	public ServerManager getServerManager() {
+		return serverManager;
 	}
 
 	public static void showBar() {

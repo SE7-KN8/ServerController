@@ -7,6 +7,7 @@ import sebe3012.servercontroller.gui.tree.TreeEntry;
 import sebe3012.servercontroller.preferences.PreferencesConstants;
 import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.server.BasicServerHandler;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,15 +61,15 @@ public class FileUtil {
 		return foundPaths;
 	}
 
-	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler) {
+	public static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) {
 		try {
-			searchFiles(parent, parentItem, serverHandler);
+			searchFiles(parent, parentItem, serverHandler, handler);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler) throws IOException {
+	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) throws IOException {
 		if (!Files.isDirectory(parent)) {
 			return;
 		}
@@ -76,17 +77,17 @@ public class FileUtil {
 		DirectoryStream<Path> paths = Files.newDirectoryStream(parent, isDirectory);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
 			parentItem.getChildren().add(childItem);
 
-			searchFiles(path, childItem, serverHandler);
+			searchFiles(path, childItem, serverHandler, handler);
 		}
 
 
 		paths = Files.newDirectoryStream(parent, isFile);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
 			parentItem.getChildren().add(childItem);
 		}
 	}
@@ -171,5 +172,4 @@ public class FileUtil {
 	public static Path loadServerFile(@NotNull BasicServer server, @NotNull String path) {
 		return Paths.get(server.getJarPath()).resolve(path);
 	}
-
 }

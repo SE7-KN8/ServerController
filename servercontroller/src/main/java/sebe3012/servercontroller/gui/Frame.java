@@ -5,6 +5,7 @@ import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
 import sebe3012.servercontroller.prelaunch.AddonInstallerTask;
+import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.design.Designs;
 
@@ -32,6 +33,7 @@ import java.io.IOException;
 public class Frame extends Application {
 
 	private Stage splash;
+	private FrameHandler handler;
 
 
 	@Override
@@ -51,8 +53,7 @@ public class Frame extends Application {
 				Platform.runLater(() -> {
 					splash.close();
 					primaryStage.show();
-					//TODO use new system
-					// ServerSave.loadServerControllerFromLastFile();
+					ServerSave.loadServerControllerFromLastFile(handler.getServerManager());
 				});
 
 				return null;
@@ -81,7 +82,8 @@ public class Frame extends Application {
 	private void createPrimaryStage(Stage primaryStage) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setResources(I18N.getDefaultBundle());
-		loader.setController(new FrameHandler(primaryStage));
+		handler = new FrameHandler(primaryStage);
+		loader.setController(handler);
 		loader.setLocation(ClassLoader.getSystemResource("fxml/BaseFrame.fxml"));
 		BorderPane root = loader.load();
 		Scene scene = new Scene(root);

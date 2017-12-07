@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -72,7 +72,7 @@
    <left>
       <VBox>
          <children>
-             <TreeView fx:id="lView" prefHeight="400.0" prefWidth="250.0" />
+             <TreeView fx:id="lView" prefHeight="400.0" prefWidth="250.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </left>
