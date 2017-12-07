@@ -13,22 +13,26 @@ import java.util.ResourceBundle;
  * Created by Sebe3012 on 04.02.2017.
  * A util class for translation
  */
+@Deprecated
 public class I18N {
 
 	private static ResourceBundle bundle;
 	private static List<ResourceBundle> bundleExtensions;
 	private static Logger log = LogManager.getLogger();
 
+	@Deprecated
 	public static void init() {
 		bundle = ResourceBundle.getBundle("lang/lang", Locale.getDefault());
 		bundleExtensions = new ArrayList<>();
 	}
 
+	@Deprecated
 	public static void addBundle(String location) {
 		bundleExtensions.add(ResourceBundle.getBundle(location, Locale.getDefault()));
 	}
 
 	@NotNull
+	@Deprecated
 	public static String translate(String key) {
 		if (bundle.containsKey(key)) {
 			return bundle.getString(key);
@@ -46,16 +50,19 @@ public class I18N {
 	}
 
 	@NotNull
+	@Deprecated
 	public static String format(String key, Object... args) {
 		return String.format(translate(key), args);
 	}
 
 	@NotNull
+	@Deprecated
 	public static ResourceBundle getDefaultBundle() {
 		return bundle;
 	}
 
 	@NotNull
+	@Deprecated
 	public static List<ResourceBundle> getBundleExtensions() {
 		return bundleExtensions;
 	}

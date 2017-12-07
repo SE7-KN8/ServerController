@@ -73,7 +73,7 @@ public class ServerManager {
 
 		Constructor<? extends BasicServer> constructor = serverClass.getConstructor(Map.class, Addon.class);
 		BasicServer server = constructor.newInstance(properties, addon);
-		BasicServerHandler handler = new BasicServerHandler(server);
+		BasicServerHandler handler = new BasicServerHandler(server, this);
 
 		if (addServer) {
 			addServerHandler(handler);
@@ -83,17 +83,17 @@ public class ServerManager {
 	}
 
 	public void addServerHandler(@NotNull BasicServerHandler handler) {
-		Platform.runLater(()->{
-			log.info("Adding server handler");
-			servers.add(handler);
+		log.info("Adding server handler");
+		servers.add(handler);
 
-			ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
+		ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
 
-			//TODO better way to implement this
-			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
-			FileUtil.searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler());
-			rootTreeHandler.addItem(item);
-		});
+		Platform.runLater(() -> rootTabHandler.addTab(tab));
+
+		//TODO better way to implement this
+		TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
+		FileUtil.searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler(), handler);
+		rootTreeHandler.addItem(item);
 	}
 
 	public void removeSelectedServer() {
@@ -121,8 +121,18 @@ public class ServerManager {
 		return rootTreeHandler;
 	}
 
-	public void clearServers(){
-		//TODO
+	public void clearServers() {
+		rootTabHandler.clearTabs();
+		rootTreeHandler.clearItems();
+		servers.clear();
+	}
+
+	public void selectServer(BasicServerHandler handler) {
+		rootTabHandler.getTabEntries().forEach(entry->{
+			if(entry.getItem() == handler){
+				rootTabHandler.selectEntry(entry);
+			}
+		});
 	}
 
 }

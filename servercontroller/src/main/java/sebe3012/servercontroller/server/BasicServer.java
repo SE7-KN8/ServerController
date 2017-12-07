@@ -50,14 +50,13 @@ public abstract class BasicServer {
 		void onMessage(String message);
 	}
 
-	protected BufferedReader inputReader;
-	protected BufferedWriter outputWriter;
-	protected WaitForExit waitForExitThread;
-	protected MessageReader messageReaderThread;
-	protected ProcessBuilder serverProcessBuilder;
-	protected Process serverProcess;
-	protected int pid = 0;
-	protected StringProperty jarPath;
+	private BufferedReader inputReader;
+	private BufferedWriter outputWriter;
+	private WaitForExit waitForExitThread;
+	private MessageReader messageReaderThread;
+	private Process serverProcess;
+	private int pid = 0;
+	private StringProperty jarPath;
 	private StringProperty name;
 	private StringProperty args;
 	private String argsAfterJar = "";
@@ -113,7 +112,7 @@ public abstract class BasicServer {
 				messageReaderThread.setName(getName() + "-Server reader");
 				waitForExitThread.setName(getName() + "-Server stop listener");
 
-				serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", getJarPath(),
+				ProcessBuilder serverProcessBuilder = new ProcessBuilder("java", getArgs(), "-jar", getJarPath(),
 						getArgsAfterJar() + "nogui");
 
 

@@ -5,12 +5,14 @@ import org.jetbrains.annotations.NotNull;
 public class BasicServerHandler implements BasicServer.StopListener {
 
 	private BasicServer server;
+	private ServerManager serverManager;
 	private boolean restartServer = false;
 
 
-	public BasicServerHandler(@NotNull BasicServer server) {
+	public BasicServerHandler(@NotNull BasicServer server, ServerManager manager) {
 		this.server = server;
 		this.server.addStopListener(this);
+		this.serverManager = manager;
 	}
 
 	public void startServer() {
@@ -50,5 +52,9 @@ public class BasicServerHandler implements BasicServer.StopListener {
 	@NotNull
 	public BasicServer getServer() {
 		return server;
+	}
+
+	public ServerManager getServerManager() {
+		return serverManager;
 	}
 }

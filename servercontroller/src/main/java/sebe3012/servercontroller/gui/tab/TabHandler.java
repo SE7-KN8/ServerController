@@ -63,8 +63,7 @@ public class TabHandler<T extends TabEntry<?>> {
 		this.rootPane = rootPane;
 		this.name = name;
 
-		this.rootPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS
-		);
+		this.rootPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		this.rootPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
 				updateSelectedEntry();
@@ -90,18 +89,19 @@ public class TabHandler<T extends TabEntry<?>> {
 		return false;
 	}
 
-	public boolean clearTabs(){
-
-		for(Tab t: this.rootPane.getTabs()){
+	public void clearTabs() {
+		/*for (Tab t : this.rootPane.getTabs()) {
 			T tab = castTab(t);
-			if(tab.onClose()){
+			if (tab.onClose()) {
 				rootPane.getTabs().remove(t);
-			}else{
+			} else {
 				return false;
 			}
-		}
+		}*/
 
-		return true;
+		this.rootPane.getTabs().clear();
+
+		//return true;
 	}
 
 	@NotNull
@@ -139,6 +139,14 @@ public class TabHandler<T extends TabEntry<?>> {
 		if (updateSelection) {//TODO refactor this very dirty code
 			castTab(this.getTabPane().getSelectionModel().getSelectedItem()).onSelect();
 		}
+	}
+
+	public void selectEntry(@NotNull T entry) {
+		rootPane.getTabs().forEach(tab -> {
+			if (castTab(tab) == entry) {
+				rootPane.getSelectionModel().select(tab);
+			}
+		});
 	}
 
 	/**
