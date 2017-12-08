@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.server;
 
 import sebe3012.servercontroller.addon.api.Addon;
+import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.gui.tab.ServerRootTab;
 import sebe3012.servercontroller.gui.tab.TabEntry;
 import sebe3012.servercontroller.gui.tab.TabHandler;
@@ -122,6 +123,7 @@ public class ServerManager {
 	}
 
 	public void clearServers() {
+		stopAllServers();
 		rootTabHandler.clearTabs();
 		rootTreeHandler.clearItems();
 		servers.clear();
@@ -133,6 +135,11 @@ public class ServerManager {
 				rootTabHandler.selectEntry(entry);
 			}
 		});
+	}
+
+	public void editSelectedServer(){
+		BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
+		AddonUtil.loadServerCreateDialog(handler.getServer().getAddon(), handler.getServer(), this);
 	}
 
 }

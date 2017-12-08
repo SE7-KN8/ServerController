@@ -22,11 +22,7 @@ public class TabHandler<T extends TabEntry<?>> {
 		public CustomTab(@NotNull final T entry) {
 			super();
 			tabEntry = new SimpleObjectProperty<>(entry);
-			setText(entry.getTitle());
-			setClosable(entry.isCloseable());
-			setContent(entry.getContent());
-			setContextMenu(entry.getContextMenu());
-			setGraphic(entry.getGraphic());
+			createTab(entry);
 			setOnCloseRequest(e -> {
 				log.debug("Try to closing tab: {}", getText());
 				boolean close = entry.onClose();
@@ -34,6 +30,19 @@ public class TabHandler<T extends TabEntry<?>> {
 					e.consume();
 				}
 			});
+		}
+
+		public void refresh(){
+			//TODO use properties
+			createTab(getTabEntry());
+		}
+
+		private void createTab(T value){
+			setText(value.getTitle());
+			setClosable(value.isCloseable());
+			setContent(value.getContent());
+			setContextMenu(value.getContextMenu());
+			setGraphic(value.getGraphic());
 		}
 
 		public void setTabEntry(@NotNull T tabEntry) {
@@ -106,7 +115,7 @@ public class TabHandler<T extends TabEntry<?>> {
 
 	@NotNull
 	public T getSelectedTabEntry() {
-		return castTab(rootPane.getSelectionModel().getSelectedItem());
+		return getEntryFromTab(rootPane.getSelectionModel().getSelectedItem());
 	}
 
 	@NotNull
@@ -114,18 +123,23 @@ public class TabHandler<T extends TabEntry<?>> {
 		ObservableList<Tab> tabs = rootPane.getTabs();
 		List<T> entries = new ArrayList<>();
 
-		tabs.forEach(tab -> entries.add(castTab(tab)));
+		tabs.forEach(tab -> entries.add(getEntryFromTab(tab)));
 
 		return entries;
 	}
 
+	@NotNull
+	private T getEntryFromTab(@NotNull Tab tab) {
+		return castTab(tab).getTabEntry();
+	}
+
 	@SuppressWarnings("unchecked")
 	@NotNull
-	private T castTab(@NotNull Tab tab) {
-		try {
-			return ((CustomTab) tab).getTabEntry();
-		} catch (ClassCastException e) {
-			//This should never happen
+	public CustomTab castTab(@NotNull Tab tab){
+		try{
+			return (CustomTab) tab;
+		}catch (ClassCastException e){
+			//Should ever happen
 			throw new RuntimeException(e);
 		}
 	}
@@ -137,15 +151,22 @@ public class TabHandler<T extends TabEntry<?>> {
 
 	public void updateSelectedEntry() {
 		if (updateSelection) {//TODO refactor this very dirty code
-			castTab(this.getTabPane().getSelectionModel().getSelectedItem()).onSelect();
+			getEntryFromTab(this.getTabPane().getSelectionModel().getSelectedItem()).onSelect();
 		}
 	}
 
 	public void selectEntry(@NotNull T entry) {
 		rootPane.getTabs().forEach(tab -> {
-			if (castTab(tab) == entry) {
+			if (getEntryFromTab(tab) == entry) {
 				rootPane.getSelectionModel().select(tab);
 			}
+		});
+	}
+
+	public void refresh(){
+		getTabPane().getTabs().forEach(tab->{
+			getEntryFromTab(tab).refresh();
+			castTab(tab).refresh();
 		});
 	}
 

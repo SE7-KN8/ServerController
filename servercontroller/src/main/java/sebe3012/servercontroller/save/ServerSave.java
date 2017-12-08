@@ -79,7 +79,7 @@ public class ServerSave {
 				for (int i = 0; i < max; i++) {
 					updateProgress(i, max);
 
-					BasicServerHandler item = serverManager.getServerList().get(0);
+					BasicServerHandler item = serverManager.getServerList().get(i);
 
 					BasicServer server = item.getServer();
 
@@ -121,7 +121,7 @@ public class ServerSave {
 		};
 
 		FrameHandler.currentProgress.progressProperty().bind(saveTask.progressProperty());
-
+		//TODO show dialog
 		saveTask.setOnFailed(event -> log.error("Can't save servers", saveTask.getException()));
 		new Thread(saveTask).start();
 	}

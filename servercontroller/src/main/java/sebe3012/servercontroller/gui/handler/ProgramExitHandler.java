@@ -24,6 +24,7 @@ public class ProgramExitHandler implements EventHandler<WindowEvent> {
 	@Override
 	public void handle(WindowEvent event) {
 		if (ServerController.DEBUG) {
+			rootHandler.getTabEntries().forEach(TabEntry::onClose);
 			ServerController.stop();
 			Platform.exit();
 		} else {

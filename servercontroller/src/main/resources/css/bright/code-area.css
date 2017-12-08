@@ -2,6 +2,7 @@
 .code-area {
     -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
     -fx-border-radius: 0.0px;
+    -fx-highlight-fill: -base-normal;
 }
 
 .code-area:focused {
