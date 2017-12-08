@@ -40,4 +40,8 @@ public interface TabEntry<T> {
 		return true;
 	}
 
+	default void refresh(){
+		//Do nothing
+	}
+
 }

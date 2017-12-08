@@ -42,7 +42,11 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 	private void initialize() {
 		serverTabsHandler = new TabHandler<>(getTitle() + "-TabHandler", serverTabPane);
 		serverTabsHandler.addTab(ServerConsoleTab.createServerConsoleTab(serverHandler));
+		loadServerInfo();
+	}
 
+	private void loadServerInfo(){
+		lblPane.getChildren().clear();
 		int index = 0;
 
 		for (int i = 0; i < lblPane.getRowConstraints().size(); i++) {
@@ -60,6 +64,11 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 				index++;
 			}
 		}
+	}
+
+	@Override
+	public void refresh() {
+		loadServerInfo();
 	}
 
 	@Override

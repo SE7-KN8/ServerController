@@ -31,7 +31,7 @@ public class ServerController {
 	public static boolean DEBUG = false;
 	public static long START_TIME = 0;
 
-	public static final String VERSION = ServerController.class.getPackage().getImplementationVersion();
+	public static final String VERSION = getVersion();
 
 	private static final Logger log = LogManager.getLogger();
 
@@ -41,7 +41,7 @@ public class ServerController {
 	 * @param args Arguments from the console
 	 */
 	public static void main(String[] args) {
-		log.info("ServerController is starting!");
+		log.info("ServerController ({}) is starting!", ServerController.VERSION);
 		START_TIME = System.currentTimeMillis();
 
 		CLIOptions.loadOptions(args);
@@ -60,4 +60,15 @@ public class ServerController {
 		Addons.unloadAddons();
 		ServerWatcher.running = false;
 	}
+
+	private static String getVersion(){
+		String version = ServerController.class.getPackage().getImplementationVersion();
+
+		if(version == null){
+			version = "INTERNAL_SNAPSHOT";
+		}
+
+		return version;
+	}
+
 }

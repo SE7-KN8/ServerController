@@ -72,6 +72,7 @@ public class AddonUtil {
 				} else {
 					Map<String, StringProperty> oldServerMap = parent.getProperties();
 					oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
+					serverManager.getTabHandler().refresh();
 					serverManager.getTreeHandler().refresh();
 				}
 			} catch (Exception ex) {
@@ -90,6 +91,7 @@ public class AddonUtil {
 		}
 
 		creator.createServerDialogRows(properties, parentRows, useProperties);
+
 	}
 
 	/**
@@ -195,6 +197,10 @@ public class AddonUtil {
 				//Non-Null check
 				if (controlRow == null) {
 					throw new IllegalStateException("Row is null");
+				}
+
+				if(v.get() == null){
+					v.setValue("");
 				}
 
 				//Test the values

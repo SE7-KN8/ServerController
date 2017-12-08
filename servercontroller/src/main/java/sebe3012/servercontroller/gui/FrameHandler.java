@@ -127,8 +127,7 @@ public class FrameHandler {
 
 	@FXML
 	void onServerEditItemClicked() {
-		//TODO use new system
-		//Servers.editCurrentServer();
+		serverManager.editSelectedServer();
 	}
 
 	@FXML
@@ -191,7 +190,7 @@ public class FrameHandler {
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/restart.png").toExternalForm(), e -> serverManager.restartSelectedServer(), I18N.translate("tooltip_restart_server"));
 		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/stop.png").toExternalForm(), e -> serverManager.stopSelectedServer(), I18N.translate("tooltip_stop_server"));
 		GUIUtil.addSeparatorToToolbar(toolbar);
-		//GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> Servers.editCurrentServer(), I18N.translate("tooltip_edit_server"));
+		GUIUtil.addButtonToToolbar(toolbar, ClassLoader.getSystemResource("png/toolbar/edit.png").toExternalForm(), e -> serverManager.editSelectedServer(), I18N.translate("tooltip_edit_server"));
 
 		buttonList = vBox;
 
