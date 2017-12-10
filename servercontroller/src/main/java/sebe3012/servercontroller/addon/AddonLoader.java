@@ -2,7 +2,9 @@ package sebe3012.servercontroller.addon;
 
 import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonInfo;
+import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.FileUtil;
+import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +14,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 import java.io.IOException;
@@ -125,13 +128,18 @@ public final class AddonLoader {
 
 			ADDONS.put(info.getId(), addon);
 		} catch (ClassNotFoundException e) {
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because wrong main-class in addon.json: " + e);
 		} catch (InstantiationException | IllegalAccessException e) {
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because somethings is wrong in the addon main-class: " + e);
 		} catch (AbstractMethodError e) {
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because there are compatibility problems: " + e);
+		}catch (Throwable e){
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			log.error("Can't continue loading addon '" + info.getId() + "', because an exception was thrown", e);
 		}
-		//TODO show dialog for error while loading addons
 	}
 
 	void unloadAddons() {
