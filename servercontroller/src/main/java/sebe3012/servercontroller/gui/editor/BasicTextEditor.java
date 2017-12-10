@@ -1,5 +1,6 @@
-package sebe3012.servercontroller.gui.tab;
+package sebe3012.servercontroller.gui.editor;
 
+import sebe3012.servercontroller.addon.api.filetype.FileEditor;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
@@ -21,7 +22,7 @@ import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class BasicTextEditorTab implements TabEntry<Path> {
+public class BasicTextEditor implements FileEditor {
 
 	private class ReadFileTask extends Task<String> {
 
@@ -88,10 +89,6 @@ public class BasicTextEditorTab implements TabEntry<Path> {
 
 	private Path filePath;
 
-	private BasicTextEditorTab(Path filePath) {
-		this.filePath = filePath;
-	}
-
 	@FXML
 	private VBox rootPane;
 
@@ -151,21 +148,18 @@ public class BasicTextEditorTab implements TabEntry<Path> {
 		return true;
 	}
 
-	public static BasicTextEditorTab createBasicTextEditorTab(Path filePath) {
-		BasicTextEditorTab basicTextEditorTab;
+	@Override
+	public void openFile(@NotNull Path file) {
+		this.filePath = file;
 
 		try {
-			basicTextEditorTab = new BasicTextEditorTab(filePath);
 			FXMLLoader loader = new FXMLLoader();
-			loader.setController(basicTextEditorTab);
+			loader.setController(this);
 			loader.setResources(I18N.getDefaultBundle());
 			loader.setLocation(ClassLoader.getSystemResource("fxml/tab/BasicTextEditorTab.fxml"));
 			loader.load();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
-		return basicTextEditorTab;
 	}
-
 }

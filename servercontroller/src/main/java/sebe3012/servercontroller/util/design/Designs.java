@@ -22,6 +22,7 @@ import java.util.Optional;
  * Created by Sebe3012 on 01.04.2017.
  * Util class for all designs
  */
+//TODO don't use static methods
 public class Designs {
 
 	private static Logger log = LogManager.getLogger();
