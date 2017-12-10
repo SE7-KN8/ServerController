@@ -87,11 +87,11 @@ public class DialogUtil {
 		}
 	}
 
-	public static Optional<ButtonType> showExceptionAlert(String title, String header, String content, Exception exception){
+	public static Optional<ButtonType> showExceptionAlert(String title, String header, String content, Throwable exception){
 		return showExceptionAlert(title, header, content, exception, true);
 	}
 
-	public static Optional<ButtonType> showExceptionAlert(String title, String header, String content, Exception exception, boolean wait) {
+	public static Optional<ButtonType> showExceptionAlert(String title, String header, String content, Throwable exception, boolean wait) {
 		Alert a = new Alert(AlertType.ERROR);
 		a.setTitle(title);
 		a.setHeaderText(header);
