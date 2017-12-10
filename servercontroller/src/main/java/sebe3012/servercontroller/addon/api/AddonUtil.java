@@ -3,6 +3,7 @@ package sebe3012.servercontroller.addon.api;
 import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.addon.api.filetype.FileEditor;
 import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
+import sebe3012.servercontroller.gui.editor.BasicImageViewer;
 import sebe3012.servercontroller.gui.editor.BasicTextEditor;
 import sebe3012.servercontroller.gui.tab.TabEntry;
 import sebe3012.servercontroller.gui.tab.TabHandler;
@@ -67,7 +68,15 @@ public class AddonUtil {
 		fileTypes.add("log");
 		fileTypes.add("json");
 		fileTypes.add("xml");
+		fileTypes.add("yml");
 		registerFileEditor(fileTypes, BasicTextEditor.class, "basic_text_editor", I18N.getDefaultBundle(), null /*TODO add graphic*/);
+
+		List<String> imageFileTypes = new ArrayList<>();
+		imageFileTypes.add("png");
+		imageFileTypes.add("jpg");
+		imageFileTypes.add("jpeg");
+		imageFileTypes.add("gif");
+		registerFileEditor(imageFileTypes, BasicImageViewer.class, "basic_image_viewer", I18N.getDefaultBundle(), null /*TODO add graphic*/);
 	}
 
 	public static void registerServerType(Addon addon, Class<? extends BasicServer> serverClass, ServerCreator serverCreator) {
