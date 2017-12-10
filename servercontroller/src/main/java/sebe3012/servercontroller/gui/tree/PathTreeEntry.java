@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui.tree;
 
-import sebe3012.servercontroller.gui.tab.BasicTextEditorTab;
+import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
 import sebe3012.servercontroller.gui.tab.TabEntry;
 import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.server.BasicServerHandler;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,23 +42,11 @@ public class PathTreeEntry implements TreeEntry<Path> {
 
 	@Override
 	public boolean onDoubleClick() {
-		try {
-			if(!Files.isDirectory(item)){
-				serverTabHandler.addTab(BasicTextEditorTab.createBasicTextEditorTab(item));
-				handler.getServerManager().selectServer(handler);
-				/*Desktop.getDesktop().open(item.toFile());
-				return true;*/
-
-			}
-
-			return false;
-
-		} catch (/*IO*/Exception e) {
-			e.printStackTrace();
+		if (!Files.isDirectory(item)) {
+			AddonUtil.openFileEditor(serverTabHandler, item);
+			handler.getServerManager().selectServer(handler);
 		}
-
-		return false;
-
+		return true;
 	}
 
 	@Nullable
@@ -75,19 +65,31 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	@Nullable
 	@Override
 	public ContextMenu getContextMenu() {
+		Menu openWith = new Menu(I18N.translate("context_menu_open_with"));
+
+		for (FileEditorManager.FileEditorEntry entry : AddonUtil.getEditorsForType(item)) {
+			MenuItem item = new MenuItem(entry.getLocalizedName());
+			item.setOnAction(e -> {
+				AddonUtil.loadFileEditor(entry.getEditorClass().getName(), serverTabHandler, PathTreeEntry.this.item);
+				handler.getServerManager().selectServer(handler);
+			});
+			item.setGraphic(entry.getFileGraphic());
+			openWith.getItems().add(item);
+		}
 
 		MenuItem openWithSystem = new MenuItem(I18N.translate("context_menu_open_in_system"));
-		openWithSystem.setOnAction(e->{
-			try{
+		openWithSystem.setOnAction(e -> {
+			try {
 				Desktop.getDesktop().open(item.toFile());
-			}catch (IOException ex){
+			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		});
 		openWithSystem.setGraphic(new ImageView(PathTreeEntry.FOLDER_ICON));
+		openWith.getItems().add(openWithSystem);
 
 		ContextMenu menu = new ContextMenu();
-		menu.getItems().add(openWithSystem);
+		menu.getItems().add(openWith);
 
 		return menu;
 	}

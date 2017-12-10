@@ -65,11 +65,7 @@ public class TreeHandler<T extends TreeEntry<?>> {
 
 	@NotNull
 	public List<TreeItem<T>> getItems() {
-		List<TreeItem<T>> items = new ArrayList<>();
-
-		items.addAll(getRootItem().getChildren());
-
-		return items;
+		return new ArrayList<>(getRootItem().getChildren());
 	}
 
 	@NotNull

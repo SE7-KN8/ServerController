@@ -1,6 +1,11 @@
 package sebe3012.servercontroller.addon.api;
 
 import sebe3012.servercontroller.addon.Addons;
+import sebe3012.servercontroller.addon.api.filetype.FileEditor;
+import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
+import sebe3012.servercontroller.gui.editor.BasicTextEditor;
+import sebe3012.servercontroller.gui.tab.TabEntry;
+import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.DialogUtil;
@@ -19,31 +24,60 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+//TODO don't use static methods
 public class AddonUtil {
 
 	private static final Logger log = LogManager.getLogger();
 
 	private static final HashMap<Addon, Class<? extends BasicServer>> serverTypes = new HashMap<>();
 	private static final HashMap<Addon, ServerCreator> serverCreators = new HashMap<>();
+	private static final FileEditorManager fileEditorManager = new FileEditorManager();
+
+	static {
+		List<String> fileTypes = new ArrayList<>();
+		fileTypes.add("txt");
+		fileTypes.add("properties");
+		fileTypes.add("log");
+		fileTypes.add("json");
+		fileTypes.add("xml");
+		registerFileEditor(fileTypes, BasicTextEditor.class, "basic_text_editor", I18N.getDefaultBundle(), null /*TODO add graphic*/);
+	}
 
 	public static void registerServerType(Addon addon, Class<? extends BasicServer> serverClass, ServerCreator serverCreator) {
 		serverTypes.put(addon, serverClass);
 		serverCreators.put(addon, serverCreator);
+	}
+
+	//TODO use addon instance to prevent duplicates
+	public static void registerFileEditor(@NotNull List<String> fileType, @NotNull Class<? extends FileEditor> editor, @NotNull String name, @NotNull ResourceBundle bundle, @Nullable Node graphic) {
+		fileEditorManager.registerFileEditor(fileType, editor, name, bundle, graphic);
 	}
 
 	public static ServerCreator getServerCreator(Addon addon) {
@@ -52,6 +86,71 @@ public class AddonUtil {
 
 	public static HashMap<Addon, Class<? extends BasicServer>> getServerTypes() {
 		return serverTypes;
+	}
+
+	public static List<FileEditorManager.FileEditorEntry> getEditorsForType(Path file) {
+		if (!Files.exists(file) || Files.isDirectory(file)) {
+			return new ArrayList<>();
+		}
+
+		String filePath = file.toString();
+		String fileExtension = filePath.substring(filePath.lastIndexOf(".") + 1);
+		return fileEditorManager.getFileEditors(fileExtension);
+	}
+
+	public static void loadFileEditor(String className, TabHandler<TabEntry<?>> serverTabHandler, Path file) {
+		try {
+			Class<?> editorClass = Class.forName(className);
+			Constructor<?> constructor = editorClass.getConstructor();
+			Object o = constructor.newInstance();
+			if (o instanceof FileEditor) {
+				FileEditor editor = (FileEditor) o;
+				editor.openFile(file);
+				serverTabHandler.addTab(editor);
+			}
+		} catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException e) {
+			log.error("Error while opening file editor ", e);
+		}
+	}
+
+	public static void openFileEditor(TabHandler<TabEntry<?>> serverTabHandler, Path file) {
+		List<FileEditorManager.FileEditorEntry> editors = AddonUtil.getEditorsForType(file);
+
+		Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.OK, ButtonType.CANCEL);
+		dialog.setHeaderText(I18N.format("dialog_choose_editor_header", file.getFileName().toString()));
+		Designs.applyCurrentDesign(dialog);
+		VBox buttons = new VBox();
+		buttons.setSpacing(20);
+		ToggleGroup group = new ToggleGroup();
+
+		for (FileEditorManager.FileEditorEntry editor : editors) {
+			RadioButton button = new RadioButton(editor.getLocalizedName());
+			button.setToggleGroup(group);
+			button.setUserData(editor.getEditorClass().getName());
+			buttons.getChildren().add(button);
+		}
+
+		RadioButton openWithSystem = new RadioButton(I18N.translate("context_menu_open_in_system"));
+		openWithSystem.setUserData("useSystemExplorer");
+		openWithSystem.setToggleGroup(group);
+		buttons.getChildren().add(openWithSystem);
+		group.selectToggle(openWithSystem);
+
+		dialog.getDialogPane().setContent(buttons);
+		Optional<ButtonType> result = dialog.showAndWait();
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			String className = (String) group.getSelectedToggle().getUserData();
+			if (className.equals("useSystemExplorer")) {
+				try {
+					Desktop.getDesktop().open(file.toFile());
+				} catch (IOException e) {
+					log.error("Error while opening file", e);
+				}
+			} else {
+				AddonUtil.loadFileEditor(className, serverTabHandler, file);
+			}
+
+		}
 	}
 
 	public static void loadServerCreateDialog(Addon addon, BasicServer parent, ServerManager serverManager) {
@@ -199,7 +298,7 @@ public class AddonUtil {
 					throw new IllegalStateException("Row is null");
 				}
 
-				if(v.get() == null){
+				if (v.get() == null) {
 					v.setValue("");
 				}
 
@@ -261,5 +360,4 @@ public class AddonUtil {
 			layout.getChildren().add(b);
 		}
 	}
-
 }

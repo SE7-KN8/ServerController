@@ -8,9 +8,13 @@ import javafx.scene.control.ContextMenu;
 
 public interface TabEntry<T> {
 
+
+	@Deprecated //Currently no use
 	@NotNull
 	T getItem();
 
+
+	@Deprecated //Currently no use
 	void setItem(@NotNull T item);
 
 	@NotNull
