@@ -8,6 +8,8 @@ import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandl
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
 
+import org.jetbrains.annotations.NotNull;
+
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
@@ -56,15 +58,24 @@ public class VanillaServer extends BasicServer {
 		return 1;
 	}
 
+	@NotNull
 	@Override
-	public String getServerInfo() {
-		return I18N.format("addon_vanilla_server_description", propertiesHandler.getServerPort(), propertiesHandler.getLevelName(), propertiesHandler.getDifficulty(), propertiesHandler.getLevelSeed());
+	public List<String> getServerInfos() {
+		List<String> serverInfoList = new ArrayList<>();
+		serverInfoList.add("Difficulty: " + propertiesHandler.getDifficulty());
+		serverInfoList.add("Gamemode: " + propertiesHandler.getGamemode());
+		serverInfoList.add("Port: " + propertiesHandler.getServerPort());
+		serverInfoList.add("Max-Players: " + propertiesHandler.getMaxPlayers());
+		serverInfoList.add("MOTD: " + propertiesHandler.getMotd());
+		serverInfoList.add("View-Distance: " + propertiesHandler.getViewDistance());
+		return serverInfoList;
 	}
 
 	public String getPropertiesFile() {
 		return propertiesFile.get();
 	}
 
+	@NotNull
 	@Override
 	public List<Control> getExtraControls() {
 		return extraControls;
