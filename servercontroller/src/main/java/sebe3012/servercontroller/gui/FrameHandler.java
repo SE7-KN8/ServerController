@@ -158,6 +158,7 @@ public class FrameHandler {
 	private void init() {
 		Designs.registerDesign(new Design("css/bright", "bright"));
 		Designs.registerDesign(new Design("css/dark", "dark"));
+		Designs.registerDesign(new Design("css/bright-rework", "bright-rework"));
 
 		handler = new TabHandler<>("RootHandler", rootTabPane);
 
