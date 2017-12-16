@@ -89,7 +89,7 @@ public class Designs {
 
 
 	public static void setCurrentDesign(String designID) {
-		currentDesign = designs.get(designID);
+		currentDesign = designs.getOrDefault(designID, designs.values().stream().findFirst().get());
 	}
 
 	public static void showDesignDialog(Stage primaryStage) {
