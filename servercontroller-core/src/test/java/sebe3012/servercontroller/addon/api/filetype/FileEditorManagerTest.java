@@ -8,7 +8,9 @@ import javafx.scene.Node;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -100,8 +102,30 @@ public class FileEditorManagerTest {
 		List<String> fileTypes2 = new ArrayList<>();
 		fileTypes2.add("cpp");
 		fileTypes2.add("java");
-		manager.registerFileEditor(fileTypes1, TestFileHandler1.class, "tfh1", null, null);
-		manager.registerFileEditor(fileTypes2, TestFileHandler2.class, "tfh1", null, null);
+		manager.registerFileEditor(fileTypes1, TestFileHandler1.class, "tfh1", new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(@NotNull String key) {
+				return null;
+			}
+
+			@NotNull
+			@Override
+			public Enumeration<String> getKeys() {
+				return null;
+			}
+		}, null);
+		manager.registerFileEditor(fileTypes2, TestFileHandler2.class, "tfh1", new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(@NotNull String key) {
+				return null;
+			}
+
+			@NotNull
+			@Override
+			public Enumeration<String> getKeys() {
+				return null;
+			}
+		}, null);
 		assertEquals(TestFileHandler1.class, manager.getFileEditors("txt").get(0).getEditorClass());
 		assertEquals(TestFileHandler1.class, manager.getFileEditors("png").get(0).getEditorClass());
 		assertEquals(TestFileHandler2.class, manager.getFileEditors("cpp").get(0).getEditorClass());
