@@ -1,0 +1,11 @@
+* {
+	-base-normal: rgb(90,127,180);
+}
+
+.root {
+	-fx-base : rgb(50.0,50.0,50.0);
+	-fx-focus-color: transparent;
+	-fx-accent: -base-normal;
+	-fx-focus-color: -base-normal;
+	-fx-highlight-fill: -base-normal;
+}/*Base Color */

@@ -1,7 +1,0 @@
-.bracket {
-    -fx-fill: red;
-}
-
-.lineno {
-    -fx-background-color: derive(-fx-base, 20%);
-}

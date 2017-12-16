@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':servercontroller')
+    compile project(':servercontroller-core')
 }
 
 version = '0.0.1.2'
