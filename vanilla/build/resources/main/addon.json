@@ -1,8 +1,0 @@
-{
-  "id": "vanilla",
-  "name": "Vanilla",
-  "version": "0.0.1.2",
-  "mainClass": "sebe3012.servercontroller.addon.vanilla.VanillaAddon",
-  "authors": ["Sebe3012"],
-  "dependencies": []
-}
