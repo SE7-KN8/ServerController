@@ -1,10 +1,10 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import sebe3012.servercontroller.addon.api.Addon;
-import sebe3012.servercontroller.addon.api.AddonUtil;
-import sebe3012.servercontroller.addon.api.DialogRow;
-import sebe3012.servercontroller.addon.api.ServerCreator;
-import sebe3012.servercontroller.addon.api.StringPredicates;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.addon.AddonRegistry;
+import sebe3012.servercontroller.api.gui.server.DialogRow;
+import sebe3012.servercontroller.api.gui.server.ServerCreator;
+import sebe3012.servercontroller.api.util.StringPredicates;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,12 +16,13 @@ import java.util.Map;
 
 public class SpigotAddon extends Addon implements ServerCreator {
 
-	public void load() {
-		AddonUtil.registerServerType(this, SpigotServer.class, this);
+	public void load(AddonRegistry registry) {
+		registry.registerServerType(SpigotServer.class, this);
 	}
 
 	@Override
-	public void unload() {
+	public void unload(AddonRegistry registry) {
+		registry.unregisterServerType(SpigotServer.class);
 	}
 
 	@NotNull
