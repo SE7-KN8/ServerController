@@ -1,0 +1,39 @@
+/*Start TabPane */
+.tab-pane{
+	-fx-background-color: -fx-base;
+	/*-fx-border-color: -base-normal;
+	-fx-border-radius: 0.0px;*/
+}
+
+.tab-pane .tab-header-area .tab-header-background{
+    -fx-opacity: 0.0;
+}
+
+.tab-pane{
+    -fx-tab-min-width:90.0px;
+}
+
+.tab{
+    -fx-background-insets: 0.0;
+    -fx-border-color: -base-normal;
+	-fx-border-radius: 0.0px;
+}
+
+.tab-pane .tab:selected{
+    -fx-background-color: derive(-fx-base, 10.0%);
+    -fx-border-color: derive(-base-normal, -20.0%);
+	-fx-border-radius: 0.0px;
+}
+
+.tab .tab-label{
+    -fx-alignment: CENTER;
+    -fx-text-fill: derive(white,-20.0%);
+    -fx-font-size: 12.0px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label{
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+/*End TabPane */

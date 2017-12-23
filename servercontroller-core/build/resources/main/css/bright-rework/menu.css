@@ -1,0 +1,5 @@
+.menu-bar{
+    -fx-background-color: -fx-base;
+    -fx-border-color: derive(-fx-base, -10%);
+    -fx-border-width: 1px;
+}

@@ -1,0 +1,33 @@
+/*Start Button */
+.button {
+	-fx-font-size: 15.0;
+	-fx-border-color: -base-normal;
+	-fx-border-radius: 20.0px;
+	-fx-border-width: 2.0px;
+	-fx-background-color: transparent;
+}
+
+.button:hover {
+	-fx-border-color: -base-hover;
+	-fx-cursor: hand;
+}
+
+.button:armed {
+	-fx-border-color: -base-armed;
+	-fx-cursor: hand;
+}
+/*End Button */
+
+/*Start Tool-button*/
+.tool-button{
+    -fx-border-color: transparent;
+    -fx-border-width: 2.0px;
+}
+.tool-button:hover{
+    -fx-border-width: 2.0px;
+}
+.tool-button:armed {
+    -fx-background-color: derive(-fx-base, 10%);
+    -fx-border-width: 2.0px;
+}
+/*End Tool-button*/

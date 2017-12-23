@@ -1,0 +1,20 @@
+/*Start CodeArea */
+.code-area {
+    -fx-background-color: #a9a9a9 , -fx-base, -fx-base;
+    -fx-border-radius: 0.0px;
+    -fx-highlight-fill: -base-normal;
+}
+
+.code-area:focused {
+	-fx-prompt-text-fill: rgb(20.0,20.0,20.0);
+	-fx-background-insets: 0.0;
+}
+/*End CodeArea */
+
+.bracket {
+    -fx-fill: red;
+}
+
+.lineno {
+    -fx-background-color: derive(-fx-base, 20%);
+}

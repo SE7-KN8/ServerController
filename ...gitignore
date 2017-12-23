@@ -7,18 +7,27 @@
 
 /vanilla/versions/
 /vanilla/build/
+/vanilla/out/
 
 /bungeecord/versions/
 /bungeecord/build/
+/bungeecord/out/
 
 /spigot/versions/
 /spigot/build/
+/spigot/out/
 
 /craftbukkit/versions/
 /craftbukkit/build/
+/craftbukkit/out/
 
 /servercontroller-core/versions/
 /servercontroller-core/build/
+/servercontroller-core/out/
+
+/servercontroller-api/versions/
+/servercontroller-api/build/
+/servercontroller-api/out/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -36,10 +45,3 @@ Thumbs.db
 .idea/
 classes
 /scenicView.properties
-servercontroller/out
-bungeecord/out/production/resources/
-craftbukkit/out/production/resources/
-servercontroller-core/out/production/resources/
-servercontroller-core/src/test/resources/
-spigot/out/production/resources/
-vanilla/out/production/resources/

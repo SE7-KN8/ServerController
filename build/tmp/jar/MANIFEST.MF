@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Version: 0.3.11.9_alpha
+Main-Class: sebe3012.servercontroller.ServerController
+
