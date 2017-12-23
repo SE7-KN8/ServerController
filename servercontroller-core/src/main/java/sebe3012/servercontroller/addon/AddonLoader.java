@@ -215,7 +215,9 @@ public final class AddonLoader {
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
 				info.setJarPath(jarPath);
 
-				for (int i = 0; i < addonInfos.size(); i++) {
+				addonInfos.add(info);
+
+				/*for (int i = 0; i < addonInfos.size(); i++) {
 					AddonInfo oldInfo = addonInfos.get(i);
 
 					if (oldInfo.getId().equals(info.getId())) {
@@ -234,11 +236,11 @@ public final class AddonLoader {
 							addonInfos.add(info);
 						}
 
-					} else {
+					}else{
 						addonInfos.add(info);
 					}
 
-				}
+				}*///FIXME not working
 				log.info("Loading addon info: {}", info.getId());
 			} catch (IOException e) {
 				log.error("Can't continue searching addon.json in jarfile " + jarPath + ", because: ", e);

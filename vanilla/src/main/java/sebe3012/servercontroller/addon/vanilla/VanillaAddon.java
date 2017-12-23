@@ -14,8 +14,11 @@ import javafx.beans.property.StringProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class VanillaAddon extends Addon implements ServerCreator {
+
+	public static ResourceBundle bundle = ResourceBundle.getBundle("lang/addon_vanilla_lang");
 
 	@Override
 	public void load(AddonRegistry registry) {

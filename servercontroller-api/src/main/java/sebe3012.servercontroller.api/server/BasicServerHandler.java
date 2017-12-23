@@ -11,7 +11,7 @@ public class BasicServerHandler implements BasicServer.StopListener {
 
 	private BasicServer server;
 	private boolean restartServer = false;
-	private static ResourceBundle bundle = ResourceBundle.getBundle("lang/lang.basic_server_handler/lang");
+	private static ResourceBundle bundle = ResourceBundle.getBundle("lang/basic_server_handler/lang");
 
 	public BasicServerHandler(@NotNull BasicServer server) {
 		this.server = server;

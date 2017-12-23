@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
-import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
+import sebe3012.servercontroller.api.util.DialogUtil;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,10 +86,10 @@ public class PropertiesDialogHandler {
 			}
 			Files.write(file, lines, Charset.forName("UTF-8"));
 
-			DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("addon_vanilla_properties_save_information"));
+			DialogUtil.showInformationAlert("", VanillaAddon.bundle.getString("addon_vanilla_properties_save_information"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("addon_vanilla_properties_save_error"));
+			DialogUtil.showErrorAlert("", VanillaAddon.bundle.getString("addon_vanilla_properties_save_error"));
 		}
 
 	}
