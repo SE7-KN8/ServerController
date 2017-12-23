@@ -73,6 +73,8 @@ public final class AddonLoader {
 	private List<AddonInfo> addonsToLoad = new ArrayList<>();
 	private List<AddonInfo> addonsToLoadSorted = new ArrayList<>();
 
+	private AddonRegistryHelper registryHelper = new AddonRegistryHelper();
+
 	private Gson gson;
 	private Logger log = LogManager.getLogger();
 
@@ -143,7 +145,8 @@ public final class AddonLoader {
 
 			if (!addon.isLoaded()) {
 				log.info("Start to load addon '{}'", info.getId());
-				addon.loadAddon();
+				registryHelper.setCurrentAddon(addon);
+				addon.loadAddon(registryHelper);
 				log.info("Addon '{}' is loaded", info.getId());
 			} else {
 				log.warn("Addon '{}' is already loaded", info.getId());
@@ -151,23 +154,24 @@ public final class AddonLoader {
 
 			ADDONS.put(info.getId(), addon);
 		} catch (ClassNotFoundException e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because wrong main-class in addon.json: " + e);
 		} catch (InstantiationException | IllegalAccessException e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because somethings is wrong in the addon main-class: " + e);
 		} catch (AbstractMethodError e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because there are compatibility problems: " + e);
-		}catch (Throwable e){
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+		} catch (Throwable e) {
+			Platform.runLater(() -> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because an exception was thrown", e);
 		}
 	}
 
 	void unloadAddons() {
 		for (Addon addon : ADDONS.values()) {
-			addon.unloadAddon();
+			registryHelper.setCurrentAddon(addon);
+			addon.unloadAddon(registryHelper);
 		}
 	}
 
@@ -211,28 +215,30 @@ public final class AddonLoader {
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
 				info.setJarPath(jarPath);
 
-				for(int i = 0; i< addonInfos.size(); i++){
+				for (int i = 0; i < addonInfos.size(); i++) {
 					AddonInfo oldInfo = addonInfos.get(i);
 
-					if(oldInfo.getId().equals(info.getId())){
+					if (oldInfo.getId().equals(info.getId())) {
 						log.info("Addon '{}({})' was already registered, deciding by newest version.", info.getId(), info.getJarPath());
 
 						AddonInfo.AddonVersion oldVersion = oldInfo.getVersion();
 						AddonInfo.AddonVersion currentVersion = info.getVersion();
 
 						int value = oldVersion.compareTo(currentVersion);
-						//TODO
+
+						if (value == 0) {
+							addonInfos.add(info);
+						} else if (value > 0) {
+							addonInfos.add(oldInfo);
+						} else {
+							addonInfos.add(info);
+						}
+
+					} else {
+						addonInfos.add(info);
 					}
 
 				}
-
-//				if (addonInfos.contains(info)) {
-//					log.warn("Addon '{}' will not load, because it's already registered", info.getJarPath());
-//					continue;
-//				}
-
-				addonInfos.add(info);
-
 				log.info("Loading addon info: {}", info.getId());
 			} catch (IOException e) {
 				log.error("Can't continue searching addon.json in jarfile " + jarPath + ", because: ", e);
