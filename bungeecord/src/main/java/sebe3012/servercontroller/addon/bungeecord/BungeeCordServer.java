@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import sebe3012.servercontroller.addon.api.Addon;
-import sebe3012.servercontroller.server.BasicServer;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.server.BasicServer;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Control;
@@ -24,11 +24,6 @@ public class BungeeCordServer extends BasicServer {
 	@Override
 	public int getSaveVersion() {
 		return 1;
-	}
-
-	@Override
-	public String getServerInfo() {
-		return "";
 	}
 
 	public String getConfigFile() {

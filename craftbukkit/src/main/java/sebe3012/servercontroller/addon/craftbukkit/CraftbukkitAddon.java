@@ -23,7 +23,7 @@ public class CraftbukkitAddon extends Addon implements ServerCreator {
 
 	@Override
 	public void unload(AddonRegistry registry) {
-		registry.unregisterServerType(CraftbukkitServer.class, this);
+		registry.unregisterServerType(CraftbukkitServer.class);
 	}
 
 	@NotNull

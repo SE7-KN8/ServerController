@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
+import sebe3012.servercontroller.api.addon.Addon;
 
 import javafx.beans.property.StringProperty;
 
@@ -19,11 +19,6 @@ public class SpigotServer extends CraftbukkitServer {
 	@Override
 	public int getSaveVersion() {
 		return 1;
-	}
-
-	@Override
-	public String getServerInfo() {
-		return super.getServerInfo();
 	}
 
 	public String getSpigotConfig() {

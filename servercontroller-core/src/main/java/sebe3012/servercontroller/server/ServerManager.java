@@ -105,7 +105,7 @@ public class ServerManager {
 	}
 
 	@Deprecated
-	private static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) {
+	private void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) {
 		try {
 			searchFiles(parent, parentItem, serverHandler, handler);
 		} catch (IOException e) {
@@ -114,7 +114,7 @@ public class ServerManager {
 	}
 
 	@Deprecated
-	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) throws IOException {
+	private void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) throws IOException {
 		if (!Files.isDirectory(parent)) {
 			return;
 		}
@@ -122,7 +122,7 @@ public class ServerManager {
 		DirectoryStream<Path> paths = Files.newDirectoryStream(parent, FileUtil.IS_DIRECTORY);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler, this));
 			parentItem.getChildren().add(childItem);
 
 			searchFiles(path, childItem, serverHandler, handler);
@@ -132,7 +132,7 @@ public class ServerManager {
 		paths = Files.newDirectoryStream(parent, FileUtil.IS_FILE);
 
 		for (Path path : paths) {
-			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler, this));
 			parentItem.getChildren().add(childItem);
 		}
 	}

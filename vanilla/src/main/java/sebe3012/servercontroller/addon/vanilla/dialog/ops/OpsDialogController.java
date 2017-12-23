@@ -1,9 +1,8 @@
-
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
+import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
+import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.util.design.Designs;
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.util.I18N;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -97,15 +96,15 @@ public class OpsDialogController {
 		leftList.getSelectionModel().selectedIndexProperty().addListener(this::changedLeft);
 		rightList.getSelectionModel().selectedIndexProperty().addListener(this::changedRight);
 
-		MenuItem addOp = new MenuItem(I18N.translate("addon_vanilla_add_operator"));
+		MenuItem addOp = new MenuItem(VanillaAddon.bundle.getString("addon_vanilla_add_operator"));
 
-		MenuItem removedOp = new MenuItem(I18N.translate("addon_vanilla_remove_operator"));
+		MenuItem removedOp = new MenuItem(VanillaAddon.bundle.getString("addon_vanilla_remove_operator"));
 
 		addOp.setOnAction(e -> {
 
 			TextInputDialog dialog = new TextInputDialog();
-			dialog.setHeaderText(I18N.translate("addon_vanilla_add_operator"));
-			dialog.setContentText(I18N.translate("addon_vanilla_player_name"));
+			dialog.setHeaderText(VanillaAddon.bundle.getString("addon_vanilla_add_operator"));
+			dialog.setContentText(VanillaAddon.bundle.getString("addon_vanilla_player_name"));
 
 			Designs.applyCurrentDesign(dialog);
 			dialog.getDialogPane().setMaxSize(300, 45);

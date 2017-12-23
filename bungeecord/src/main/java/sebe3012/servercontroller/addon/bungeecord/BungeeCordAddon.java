@@ -24,7 +24,7 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 
 	@Override
 	public void unload(AddonRegistry registry) {
-		registry.unregisterServerType(BungeeCordServer.class, this);
+		registry.unregisterServerType(BungeeCordServer.class);
 	}
 
 	@NotNull

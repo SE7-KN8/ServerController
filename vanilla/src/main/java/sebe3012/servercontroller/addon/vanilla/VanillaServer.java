@@ -1,12 +1,11 @@
 package sebe3012.servercontroller.addon.vanilla;
 
-import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.util.I18N;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.server.BasicServer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,10 +42,10 @@ public class VanillaServer extends BasicServer {
 			e.printStackTrace();
 		}
 
-		Button propertiesButton = new Button(I18N.translate("addon_vanilla_properties"));
+		Button propertiesButton = new Button(VanillaAddon.bundle.getString("addon_vanilla_properties"));
 		propertiesButton.setOnAction(e -> new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this));
 
-		Button opsButtons = new Button(I18N.translate("addon_vanilla_operators"));
+		Button opsButtons = new Button(VanillaAddon.bundle.getString("addon_vanilla_operators"));
 		opsButtons.setOnAction(e -> new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this));
 
 		extraControls.add(propertiesButton);
@@ -85,6 +84,4 @@ public class VanillaServer extends BasicServer {
 	public String getDoneRegex() {
 		return ".*Done \\(\\d*,\\d*s\\)! For help, type \"help\" or \"\\?\"";
 	}
-
-
 }

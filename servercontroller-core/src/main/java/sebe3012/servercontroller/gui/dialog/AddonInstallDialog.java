@@ -2,9 +2,9 @@ package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.api.gui.dialog.StageDialog;
+import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.api.util.design.Designs;
-import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.scene.Scene;
@@ -41,7 +41,7 @@ public class AddonInstallDialog extends StageDialog {
 				try {
 					Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
 					Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-					DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
+					DialogUtil.showInformationAlert("", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -77,7 +77,7 @@ public class AddonInstallDialog extends StageDialog {
 						try {
 							Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
 							Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-							DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
+							DialogUtil.showInformationAlert("", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
