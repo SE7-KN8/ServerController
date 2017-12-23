@@ -1,0 +1,40 @@
+
+/*Start ListView */
+.list-view{
+	-fx-background-color: #a9a9a9 , -fx-base, -fx-base;
+}
+
+.list-view:focused{
+	-fx-background-color: #a9a9a9 , -fx-base, -fx-base;
+}
+/*End ListView */
+
+
+.button-list {
+	-fx-background-color: -fx-base;
+}/*ButtonList */
+
+
+.list-cell {
+	-fx-text-fill: black;
+}
+
+.list-cell:odd {
+	-fx-background-color: white;
+}
+
+.list-cell:even {
+	-fx-background-color: lightgrey;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: rgb(140.0,190.0,31.0);
+    -fx-text-fill: white;
+}
+/*End ListCell */
+
+/*Start ListCell */
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: -base-normal;
+    -fx-text-fill: white;
+}

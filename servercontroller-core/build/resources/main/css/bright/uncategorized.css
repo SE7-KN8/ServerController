@@ -1,0 +1,72 @@
+.pane {
+	-fx-background-color: -fx-base;
+}/*Pane */
+
+.info-pane {
+    -fx-background-color: derive(-fx-base, 20.0%);
+}
+
+.tool-bar{
+    -fx-background-color: derive(-fx-base, 20.0%);
+}/*Toolbar*/
+
+
+/*Start ComboBox */
+.combo-box-base {	
+	-fx-background-color: transparent;
+    -fx-border-color: -base-normal;
+    -fx-border-radius: 20.0px;
+	-fx-border-width: 2.0px;
+    -fx-padding: 0.0;
+}
+
+.combo-box-base:hover {
+    -fx-border-color: -base-hover;
+    -fx-cursor: hand;
+}
+
+.combo-box-base:showing {
+	-fx-border-color: -base-armed;
+}
+.combo-box .cell:selected {
+	-fx-text-fill: -base-normal;
+    -fx-background-color: transparent;
+}
+/*End ComboBox */
+
+/*Start Separator */
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+   -fx-border-width: 2.0px;
+   -fx-border-radius: 20.0px;
+   -fx-border-color: -base-normal;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: transparent;
+   -fx-border-width: 2.0px;
+   -fx-border-radius: 20.0px;
+   -fx-border-color: -base-normal;
+}
+
+.separator .line {
+    -fx-border-color: -base-normal;
+    -fx-border-width: 1.0px;
+}
+/*End Separator */
+
+.tooltip {
+    -fx-background-color: -fx-base;
+    -fx-text-fill: black;
+}/*Tooltip*/
+
+.hyperlink{
+    -fx-text-fill: derive(-base-normal, 20%);
+}/*Hyperlink*/
+
+/*Progress-Bar*/
+.progress-bar > .bar {
+    -fx-background-color: -base-normal;
+	-fx-border-radius: 20.0px;
+	-fx-border-width: 2.0px;
+}
+/*End Progress-Bar*/
