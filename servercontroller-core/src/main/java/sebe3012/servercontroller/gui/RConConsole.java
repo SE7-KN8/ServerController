@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.gui;
 
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.rcon.RCon;
 import sebe3012.servercontroller.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

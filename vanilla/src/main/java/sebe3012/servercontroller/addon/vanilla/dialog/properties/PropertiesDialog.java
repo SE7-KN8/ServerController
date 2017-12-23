@@ -1,8 +1,8 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.gui.editor;
 
-import sebe3012.servercontroller.addon.api.filetype.FileEditor;
-import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
+import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +52,7 @@ public class BasicTextEditor implements FileEditor {
 
 				reader.close();
 			} catch (MalformedInputException e) {
-				Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_file_cannot_load_header"), I18N.format("dialog_file_cannot_load", path.toFile())));
+				Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_file_cannot_load_header"), I18N.format("dialog_file_cannot_load", path.toFile())));
 				return "";
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -80,7 +80,7 @@ public class BasicTextEditor implements FileEditor {
 				ps.write(fileContent);
 				ps.close();
 			} catch (Exception e) {
-				Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_error"), I18N.translate("dialog_file_cannot_save_header"), I18N.format("dialog_file_cannot_save", filePath.toFile())));
+				Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_file_cannot_save_header"), I18N.format("dialog_file_cannot_save", filePath.toFile())));
 			}
 
 			return null;
@@ -109,7 +109,7 @@ public class BasicTextEditor implements FileEditor {
 
 	private void saveFile() {
 		Task<Void> saveFileTask = new SaveFileTask(filePath, textArea.getText());
-		saveFileTask.setOnSucceeded(event -> DialogUtil.showInformationAlert(I18N.translate("dialog_information"), I18N.translate("dialog_file_saved_header"), I18N.format("dialog_file_saved", filePath.toString())));
+		saveFileTask.setOnSucceeded(event -> DialogUtil.showInformationAlert(I18N.translate("dialog_file_saved_header"), I18N.format("dialog_file_saved", filePath.toString())));
 		new Thread(saveFileTask).start();
 	}
 

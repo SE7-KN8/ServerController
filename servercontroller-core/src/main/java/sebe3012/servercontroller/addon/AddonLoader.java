@@ -1,9 +1,9 @@
 package sebe3012.servercontroller.addon;
 
-import sebe3012.servercontroller.addon.api.Addon;
-import sebe3012.servercontroller.addon.api.AddonInfo;
-import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.FileUtil;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.addon.AddonInfo;
+import sebe3012.servercontroller.api.util.DialogUtil;
+import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +13,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -31,12 +34,32 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sebe3012 on 01.03.2017.
  * The loader class for all addons
  */
 public final class AddonLoader {
+
+	public static class AddonVersionAdapter extends TypeAdapter<AddonInfo.AddonVersion> {
+		@Override
+		public AddonInfo.AddonVersion read(JsonReader in) throws IOException {
+			String value = in.nextString();
+
+			Pattern pattern = Pattern.compile("([0-9]*)[._]([0-9]*)[._]([0-9]*)[._]([0-9]*)");
+			Matcher matcher = pattern.matcher(value);
+			matcher.matches();
+
+			return new AddonInfo.AddonVersion(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)), Integer.valueOf(matcher.group(4)));
+		}
+
+		@Override
+		public void write(JsonWriter out, AddonInfo.AddonVersion value) throws IOException {
+			throw new UnsupportedOperationException();
+		}
+	}
 
 	AddonLoader() {
 	}
@@ -128,16 +151,16 @@ public final class AddonLoader {
 
 			ADDONS.put(info.getId(), addon);
 		} catch (ClassNotFoundException e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because wrong main-class in addon.json: " + e);
 		} catch (InstantiationException | IllegalAccessException e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because somethings is wrong in the addon main-class: " + e);
 		} catch (AbstractMethodError e) {
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because there are compatibility problems: " + e);
 		}catch (Throwable e){
-			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.translate("dialog_error"), I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
+			Platform.runLater(()-> DialogUtil.showExceptionAlert(I18N.format("dialog_addon_cannot_load", info.getId()), "", e));
 			log.error("Can't continue loading addon '" + info.getId() + "', because an exception was thrown", e);
 		}
 	}
@@ -183,7 +206,7 @@ public final class AddonLoader {
 					continue;
 				}
 
-				gson = new GsonBuilder().registerTypeAdapter(AddonInfo.AddonVersion.class, new AddonInfo.AddonVersionTypeAdapter()).create();
+				gson = new GsonBuilder().registerTypeAdapter(AddonInfo.AddonVersion.class, new AddonVersionAdapter()).create();
 				//Parse addon.json to AddonInfo
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
 				info.setJarPath(jarPath);
@@ -198,7 +221,7 @@ public final class AddonLoader {
 						AddonInfo.AddonVersion currentVersion = info.getVersion();
 
 						int value = oldVersion.compareTo(currentVersion);
-
+						//TODO
 					}
 
 				}

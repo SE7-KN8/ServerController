@@ -1,6 +1,6 @@
 package sebe3012.servercontroller.util.settings;
 
-import sebe3012.servercontroller.util.FileUtil;
+import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import org.apache.logging.log4j.LogManager;

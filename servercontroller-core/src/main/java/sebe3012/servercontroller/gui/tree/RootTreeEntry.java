@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.gui.tree;
 
+import sebe3012.servercontroller.api.gui.tree.TreeEntry;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

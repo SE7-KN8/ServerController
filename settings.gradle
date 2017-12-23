@@ -17,4 +17,5 @@ include 'services:webservice'
 */
 
 rootProject.name = 'ServerController'
-include ':servercontroller-core', ':vanilla', ':bungeecord', ':craftbukkit', ':spigot'
+include ':servercontroller-api', ':servercontroller-core', ':vanilla', ':bungeecord', ':craftbukkit', ':spigot'
+

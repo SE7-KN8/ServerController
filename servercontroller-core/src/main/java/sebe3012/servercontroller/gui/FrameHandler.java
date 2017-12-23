@@ -1,28 +1,27 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.api.gui.dialog.Dialog;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.gui.tree.TreeEntry;
+import sebe3012.servercontroller.api.gui.tree.TreeHandler;
+import sebe3012.servercontroller.api.preferences.ServerControllerPreferences;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
+import sebe3012.servercontroller.api.util.design.Design;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.gui.dialog.AddonInstallDialog;
 import sebe3012.servercontroller.gui.dialog.CreditsDialog;
-import sebe3012.servercontroller.gui.dialog.Dialog;
 import sebe3012.servercontroller.gui.dialog.LicenseDialog;
 import sebe3012.servercontroller.gui.dialog.RConDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
-import sebe3012.servercontroller.gui.tab.TabEntry;
-import sebe3012.servercontroller.gui.tab.TabHandler;
 import sebe3012.servercontroller.gui.tree.RootTreeEntry;
-import sebe3012.servercontroller.gui.tree.TreeEntry;
-import sebe3012.servercontroller.gui.tree.TreeHandler;
-import sebe3012.servercontroller.preferences.PreferencesConstants;
-import sebe3012.servercontroller.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.save.ServerSave;
-import sebe3012.servercontroller.server.BasicServerHandler;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Design;
-import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -156,9 +155,9 @@ public class FrameHandler {
 	}
 
 	private void init() {
-		Designs.registerDesign(new Design("css/bright", "bright"));
-		Designs.registerDesign(new Design("css/dark", "dark"));
-		Designs.registerDesign(new Design("css/bright-rework", "bright-rework"));
+		Designs.registerDesign(new Design("css/bright", "bright", I18N.getDefaultBundle()));
+		Designs.registerDesign(new Design("css/dark", "dark", I18N.getDefaultBundle()));
+		Designs.registerDesign(new Design("css/bright-rework", "bright-rework", I18N.getDefaultBundle()));
 
 		handler = new TabHandler<>("RootHandler", rootTabPane);
 
@@ -170,7 +169,7 @@ public class FrameHandler {
 
 		this.primaryStage.setOnCloseRequest(new ProgramExitHandler(handler));
 
-		String designID = ServerControllerPreferences.loadSetting(PreferencesConstants.KEY_DESIGN, Designs.getDefaultDesign().getId());
+		String designID = ServerControllerPreferences.loadSetting(Designs.SAVE_KEY, Designs.getDefaultDesign().getId());
 
 		Designs.setCurrentDesign(designID);
 

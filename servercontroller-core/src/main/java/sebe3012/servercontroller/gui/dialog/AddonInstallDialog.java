@@ -1,10 +1,11 @@
 package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.AddonLoader;
+import sebe3012.servercontroller.api.gui.dialog.StageDialog;
+import sebe3012.servercontroller.api.util.FileUtil;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

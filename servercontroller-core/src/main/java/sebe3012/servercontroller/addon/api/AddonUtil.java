@@ -1,19 +1,23 @@
 package sebe3012.servercontroller.addon.api;
 
 import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.addon.api.filetype.FileEditor;
 import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
+import sebe3012.servercontroller.api.gui.server.DialogRow;
+import sebe3012.servercontroller.api.gui.server.ServerCreator;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.util.DialogUtil;
+import sebe3012.servercontroller.api.util.FileUtil;
+import sebe3012.servercontroller.api.util.StringPredicates;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.gui.editor.BasicImageViewer;
 import sebe3012.servercontroller.gui.editor.BasicTextEditor;
-import sebe3012.servercontroller.gui.tab.TabEntry;
-import sebe3012.servercontroller.gui.tab.TabHandler;
-import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.server.ServerManager;
-import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -314,7 +318,7 @@ public class AddonUtil {
 				//Test the values
 				if (!controlRow.getStringPredicate().test(v.get())) {
 					log.warn("Value '{}' do not match!", controlRow.getName());
-					DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), I18N.translate("dialog_wrong_content"), I18N.format("dialog_wrong_content_desc", controlRow.getName()));
+					DialogUtil.showWaringAlert(I18N.translate("dialog_wrong_content"), I18N.format("dialog_wrong_content_desc", controlRow.getName()));
 					flag.set(false);
 					return;
 				}

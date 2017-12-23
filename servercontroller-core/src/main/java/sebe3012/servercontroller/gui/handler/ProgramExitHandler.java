@@ -1,10 +1,10 @@
 package sebe3012.servercontroller.gui.handler;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.gui.tab.TabEntry;
-import sebe3012.servercontroller.gui.tab.TabHandler;
-import sebe3012.servercontroller.server.BasicServerHandler;
-import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
+import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
 import javafx.application.Platform;
@@ -29,7 +29,7 @@ public class ProgramExitHandler implements EventHandler<WindowEvent> {
 			Platform.exit();
 		} else {
 			// Close Dialog
-			Optional<Boolean> shouldExit = DialogUtil.showRequestAlert("", I18N.translate("dialog_close"), I18N.translate("dialog_close_desc"));
+			Optional<Boolean> shouldExit = DialogUtil.showRequestAlert(I18N.translate("dialog_close"), I18N.translate("dialog_close_desc"));
 
 			if (shouldExit.isPresent()) {
 				if (shouldExit.get()) {

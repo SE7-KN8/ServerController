@@ -1,6 +1,6 @@
 package sebe3012.servercontroller.gui.editor;
 
-import sebe3012.servercontroller.addon.api.filetype.FileEditor;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
 
 import org.jetbrains.annotations.NotNull;
 

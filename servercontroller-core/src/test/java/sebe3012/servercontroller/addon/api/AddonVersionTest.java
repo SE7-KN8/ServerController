@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.api;
 
+import sebe3012.servercontroller.api.addon.AddonInfo;
+
 import org.junit.Before;
 import org.junit.Test;
 

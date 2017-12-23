@@ -1,14 +1,17 @@
 package sebe3012.servercontroller.server;
 
-import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.gui.tree.TreeEntry;
+import sebe3012.servercontroller.api.gui.tree.TreeHandler;
+import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
+import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.gui.tab.ServerRootTab;
-import sebe3012.servercontroller.gui.tab.TabEntry;
-import sebe3012.servercontroller.gui.tab.TabHandler;
+import sebe3012.servercontroller.gui.tree.PathTreeEntry;
 import sebe3012.servercontroller.gui.tree.ServerTreeEntry;
-import sebe3012.servercontroller.gui.tree.TreeEntry;
-import sebe3012.servercontroller.gui.tree.TreeHandler;
-import sebe3012.servercontroller.util.FileUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,8 +21,12 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +81,7 @@ public class ServerManager {
 
 		Constructor<? extends BasicServer> constructor = serverClass.getConstructor(Map.class, Addon.class);
 		BasicServer server = constructor.newInstance(properties, addon);
-		BasicServerHandler handler = new BasicServerHandler(server, this);
+		BasicServerHandler handler = new BasicServerHandler(server);
 
 		if (addServer) {
 			addServerHandler(handler);
@@ -93,8 +100,41 @@ public class ServerManager {
 
 		//TODO better way to implement this
 		TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
-		FileUtil.searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler(), handler);
+		searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler(), handler);
 		rootTreeHandler.addItem(item);
+	}
+
+	@Deprecated
+	private static void searchSubFolders(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) {
+		try {
+			searchFiles(parent, parentItem, serverHandler, handler);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Deprecated
+	private static void searchFiles(Path parent, TreeItem<TreeEntry<?>> parentItem, TabHandler<TabEntry<?>> serverHandler, BasicServerHandler handler) throws IOException {
+		if (!Files.isDirectory(parent)) {
+			return;
+		}
+
+		DirectoryStream<Path> paths = Files.newDirectoryStream(parent, FileUtil.IS_DIRECTORY);
+
+		for (Path path : paths) {
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
+			parentItem.getChildren().add(childItem);
+
+			searchFiles(path, childItem, serverHandler, handler);
+		}
+
+
+		paths = Files.newDirectoryStream(parent, FileUtil.IS_FILE);
+
+		for (Path path : paths) {
+			TreeItem<TreeEntry<?>> childItem = new TreeItem<>(new PathTreeEntry(path, serverHandler, handler));
+			parentItem.getChildren().add(childItem);
+		}
 	}
 
 	public void removeSelectedServer() {

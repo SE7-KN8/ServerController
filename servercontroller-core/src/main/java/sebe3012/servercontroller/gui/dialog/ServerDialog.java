@@ -1,10 +1,11 @@
 package sebe3012.servercontroller.gui.dialog;
 
-import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.gui.dialog.Dialog;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.addon.api.filetype;
 
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
