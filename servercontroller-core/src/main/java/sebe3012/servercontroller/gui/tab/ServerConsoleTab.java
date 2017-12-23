@@ -1,7 +1,8 @@
 package sebe3012.servercontroller.gui.tab;
 
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.BasicServerHandler;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.settings.Settings;
 

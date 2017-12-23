@@ -3,11 +3,11 @@ package sebe3012.servercontroller.gui;
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.AddonLoader;
 import sebe3012.servercontroller.addon.Addons;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.gui.handler.DebugKeyHandler;
 import sebe3012.servercontroller.prelaunch.AddonInstallerTask;
 import sebe3012.servercontroller.save.ServerSave;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.application.Application;
 import javafx.application.Platform;

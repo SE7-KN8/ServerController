@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.gui.handler;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.util.DialogUtil;
+import sebe3012.servercontroller.api.util.DialogUtil;
 
 import org.controlsfx.control.Notifications;
 import org.scenicview.ScenicView;
@@ -45,7 +45,7 @@ public class DebugKeyHandler implements EventHandler<KeyEvent> {
 				case F10:
 					break;
 				case F11:
-					Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("Some Dialog", "", "Some information")).text("Some text with some information").showInformation();
+					Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("", "Some information")).text("Some text with some information").showInformation();
 					break;
 				case F12:
 					ScenicView.show(primaryStage.getScene());

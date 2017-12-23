@@ -2,16 +2,15 @@ package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.addon.api.Addon;
 import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.api.preferences.ServerControllerPreferences;
+import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
+import sebe3012.servercontroller.api.util.DialogUtil;
+import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.preferences.PreferencesConstants;
-import sebe3012.servercontroller.preferences.ServerControllerPreferences;
-import sebe3012.servercontroller.server.BasicServer;
-import sebe3012.servercontroller.server.BasicServerHandler;
 import sebe3012.servercontroller.server.ServerManager;
-import sebe3012.servercontroller.util.DialogUtil;
-import sebe3012.servercontroller.util.FileUtil;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.settings.Settings;
 
@@ -42,6 +41,8 @@ import java.util.Map;
 
 public class ServerSave {
 
+	private static final String SAVE_KEY = "last_servers";
+
 	public static void saveServerController(ServerManager manager) {
 		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
 
@@ -64,7 +65,7 @@ public class ServerSave {
 				log.info("Start saving");
 
 				if (path != null) {
-					ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+					ServerControllerPreferences.saveSetting(ServerSave.SAVE_KEY, path);
 				}
 
 				FileOutputStream fos = new FileOutputStream(new File(path));
@@ -112,7 +113,7 @@ public class ServerSave {
 				log.info("Finished saving");
 
 				if (showDialog) {
-					Platform.runLater(() -> DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_save_successful")));
+					Platform.runLater(() -> DialogUtil.showInformationAlert("", I18N.translate("dialog_save_successful")));
 				}
 
 				FrameHandler.hideBar();
@@ -155,7 +156,7 @@ public class ServerSave {
 					return null;
 				}
 
-				ServerControllerPreferences.saveSetting(PreferencesConstants.LAST_SERVERS, path);
+				ServerControllerPreferences.saveSetting(ServerSave.SAVE_KEY, path);
 
 				serverManager.getTabHandler().getTabEntries().forEach(e -> {
 					if (e.getItem().getServer().isRunning()) {
@@ -164,7 +165,6 @@ public class ServerSave {
 						return;
 					}
 				});
-
 
 
 				//TODO use new system
@@ -197,7 +197,7 @@ public class ServerSave {
 
 					if (serverClass == null) {
 						log.warn("No plugin found with name: {}", addonId);
-						Platform.runLater(() -> DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.format("dialog_save_no_plugin", addonId)));
+						Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.format("dialog_save_no_plugin", addonId)));
 					}
 
 					Map<String, StringProperty> map = new HashMap<>();
@@ -218,7 +218,7 @@ public class ServerSave {
 					if (serverHandler.getServer().getSaveVersion() != saveVersion) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
-					
+
 					serverManager.addServerHandler(serverHandler);
 
 				}
@@ -226,7 +226,7 @@ public class ServerSave {
 				fis.close();
 
 				if (showDialog) {
-					Platform.runLater(() -> DialogUtil.showInformationAlert(I18N.translate("dialog_information"), "", I18N.translate("dialog_load_successful")));
+					Platform.runLater(() -> DialogUtil.showInformationAlert("", I18N.translate("dialog_load_successful")));
 				}
 
 				log.info("Finished loading");
@@ -246,7 +246,7 @@ public class ServerSave {
 	public static void loadServerControllerFromLastFile(ServerManager serverManager) {
 		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
 			try {
-				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(PreferencesConstants.LAST_SERVERS, null), false, serverManager);
+				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(ServerSave.SAVE_KEY, null), false, serverManager);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 				showSaveStateErrorDialog();
@@ -258,15 +258,15 @@ public class ServerSave {
 	}
 
 	private static void showServerIsRunningDialog() {
-		Platform.runLater(() -> DialogUtil.showWaringAlert(I18N.translate("dialog_warning"), "", "dialog_save_servers_running"));
+		Platform.runLater(() -> DialogUtil.showWaringAlert("", "dialog_save_servers_running"));
 	}
 
 	private static void showSaveErrorDialog() {
-		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_save_error"));
+		DialogUtil.showErrorAlert("", I18N.translate("dialog_save_error"));
 	}
 
 	private static void showSaveStateErrorDialog() {
-		DialogUtil.showErrorAlert(I18N.translate("dialog_error"), "", I18N.translate("dialog_wrong_save_version"));
+		DialogUtil.showErrorAlert("", I18N.translate("dialog_wrong_save_version"));
 	}
 
 }

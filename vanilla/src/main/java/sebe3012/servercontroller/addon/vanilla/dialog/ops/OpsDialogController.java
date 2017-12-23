@@ -1,9 +1,9 @@
 
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.server.BasicServer;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;

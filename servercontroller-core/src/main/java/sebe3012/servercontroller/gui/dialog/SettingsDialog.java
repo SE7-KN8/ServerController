@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.gui.dialog;
 
+import sebe3012.servercontroller.api.gui.dialog.AlertDialog;
 import sebe3012.servercontroller.util.I18N;
 import sebe3012.servercontroller.util.settings.Settings;
 

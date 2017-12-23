@@ -1,6 +1,6 @@
 package sebe3012.servercontroller.addon;
 
-import sebe3012.servercontroller.addon.api.Addon;
+import sebe3012.servercontroller.api.addon.Addon;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

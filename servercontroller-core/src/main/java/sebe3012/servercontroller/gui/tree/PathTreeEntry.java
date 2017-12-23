@@ -2,9 +2,11 @@ package sebe3012.servercontroller.gui.tree;
 
 import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
-import sebe3012.servercontroller.gui.tab.TabEntry;
-import sebe3012.servercontroller.gui.tab.TabHandler;
-import sebe3012.servercontroller.server.BasicServerHandler;
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.gui.tree.TreeEntry;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
+import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.I18N;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,20 +33,22 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	private Path item;
 	private TabHandler<TabEntry<?>> serverTabHandler;
 	private BasicServerHandler handler;
+	private ServerManager manager;
 
 	private static final Image FOLDER_ICON = new Image(ClassLoader.getSystemResource("png/treeview/folder.png").toExternalForm());
 
-	public PathTreeEntry(@NotNull Path path, TabHandler<TabEntry<?>> serverTabHandler, BasicServerHandler handler) {
+	public PathTreeEntry(@NotNull Path path, TabHandler<TabEntry<?>> serverTabHandler, BasicServerHandler handler, ServerManager manager) {
 		this.item = path;
 		this.serverTabHandler = serverTabHandler;
 		this.handler = handler;
+		this.manager = manager;
 	}
 
 	@Override
 	public boolean onDoubleClick() {
 		if (!Files.isDirectory(item)) {
 			AddonUtil.openFileEditor(serverTabHandler, item);
-			handler.getServerManager().selectServer(handler);
+			manager.selectServer(handler);
 		}
 		return true;
 	}
@@ -71,7 +75,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 			MenuItem item = new MenuItem(entry.getLocalizedName());
 			item.setOnAction(e -> {
 				AddonUtil.loadFileEditor(entry.getEditorClass().getName(), serverTabHandler, PathTreeEntry.this.item);
-				handler.getServerManager().selectServer(handler);
+				manager.selectServer(handler);
 			});
 			item.setGraphic(entry.getFileGraphic());
 			openWith.getItems().add(item);

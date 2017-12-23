@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.prelaunch;
 
 import sebe3012.servercontroller.addon.AddonLoader;
-import sebe3012.servercontroller.util.FileUtil;
+import sebe3012.servercontroller.api.util.FileUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

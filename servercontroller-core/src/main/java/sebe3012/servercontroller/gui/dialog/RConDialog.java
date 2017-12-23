@@ -1,9 +1,10 @@
 package sebe3012.servercontroller.gui.dialog;
 
+import sebe3012.servercontroller.api.gui.dialog.Dialog;
+import sebe3012.servercontroller.api.util.NumberField;
+import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.gui.RConConsole;
 import sebe3012.servercontroller.util.I18N;
-import sebe3012.servercontroller.util.NumberField;
-import sebe3012.servercontroller.util.design.Designs;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonBar;

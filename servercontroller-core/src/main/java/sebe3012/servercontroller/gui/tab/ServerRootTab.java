@@ -1,8 +1,10 @@
 package sebe3012.servercontroller.gui.tab;
 
+import sebe3012.servercontroller.api.gui.tab.TabEntry;
+import sebe3012.servercontroller.api.gui.tab.TabHandler;
+import sebe3012.servercontroller.api.gui.tree.TreeEntry;
+import sebe3012.servercontroller.api.server.BasicServerHandler;
 import sebe3012.servercontroller.gui.FrameHandler;
-import sebe3012.servercontroller.gui.tree.TreeEntry;
-import sebe3012.servercontroller.server.BasicServerHandler;
 import sebe3012.servercontroller.server.ServerManager;
 
 import org.jetbrains.annotations.NotNull;
