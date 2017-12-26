@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui;
 
 import sebe3012.servercontroller.ServerController;
+import sebe3012.servercontroller.addon.Addons;
 import sebe3012.servercontroller.api.gui.dialog.Dialog;
 import sebe3012.servercontroller.api.gui.tab.TabEntry;
 import sebe3012.servercontroller.api.gui.tab.TabHandler;
@@ -165,7 +166,7 @@ public class FrameHandler {
 
 		treeHandler = new TreeHandler<>(lView, rootItem, false);
 
-		serverManager = new ServerManager(handler, treeHandler);
+		serverManager = new ServerManager(handler, treeHandler, Addons.getAddonLoader().getRegistryHelper());
 
 		this.primaryStage.setOnCloseRequest(new ProgramExitHandler(handler));
 

@@ -2,6 +2,8 @@ package sebe3012.servercontroller.api.gui.dialog;
 
 import sebe3012.servercontroller.api.util.design.Designs;
 
+import org.jetbrains.annotations.NotNull;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
@@ -14,7 +16,7 @@ public abstract class AlertDialog implements Dialog {
 	private Alert.AlertType type;
 	private ButtonType[] buttonTypes;
 
-	public AlertDialog(String title, String header, String content, Alert.AlertType type, ButtonType... types){
+	public AlertDialog(@NotNull String title, @NotNull String header, @NotNull String content, @NotNull Alert.AlertType type, @NotNull ButtonType... types){
 		this.title = title;
 		this.header = header;
 		this.content = content;

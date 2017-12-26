@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.server;
 
-import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.addon.AddonRegistryHelper;
+import sebe3012.servercontroller.addon.AddonUtil;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.gui.tab.TabEntry;
 import sebe3012.servercontroller.api.gui.tab.TabHandler;
@@ -39,10 +40,12 @@ public class ServerManager {
 	private TabHandler<TabEntry<BasicServerHandler>> rootTabHandler;
 	private TreeHandler<TreeEntry<?>> rootTreeHandler;
 	private Logger log = LogManager.getLogger();
+	private AddonRegistryHelper registryHelper;
 
-	public ServerManager(@NotNull TabHandler<TabEntry<BasicServerHandler>> rootTabHandler, @NotNull TreeHandler<TreeEntry<?>> rootTreeHandler) {
+	public ServerManager(@NotNull TabHandler<TabEntry<BasicServerHandler>> rootTabHandler, @NotNull TreeHandler<TreeEntry<?>> rootTreeHandler, @NotNull AddonRegistryHelper helper) {
 		this.rootTabHandler = rootTabHandler;
 		this.rootTreeHandler = rootTreeHandler;
+		this.registryHelper = helper;
 		servers = new ArrayList<>();
 	}
 
@@ -160,6 +163,10 @@ public class ServerManager {
 	@NotNull
 	public TreeHandler<TreeEntry<?>> getTreeHandler() {
 		return rootTreeHandler;
+	}
+
+	public AddonRegistryHelper getRegistryHelper() {
+		return registryHelper;
 	}
 
 	public void clearServers() {

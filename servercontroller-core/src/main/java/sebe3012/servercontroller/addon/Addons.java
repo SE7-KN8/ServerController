@@ -51,6 +51,10 @@ public class Addons {
 
 	}
 
+	public static AddonLoader getAddonLoader() {
+		return loader;
+	}
+
 	public static String nameForID(String addonID) {
 
 		String result = null;
