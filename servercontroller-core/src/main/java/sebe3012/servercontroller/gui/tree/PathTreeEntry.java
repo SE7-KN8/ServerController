@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.gui.tree;
 
-import sebe3012.servercontroller.addon.api.AddonUtil;
-import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
+import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditorCreator;
 import sebe3012.servercontroller.api.gui.tab.TabEntry;
 import sebe3012.servercontroller.api.gui.tab.TabHandler;
 import sebe3012.servercontroller.api.gui.tree.TreeEntry;
@@ -47,7 +47,7 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	@Override
 	public boolean onDoubleClick() {
 		if (!Files.isDirectory(item)) {
-			AddonUtil.openFileEditor(serverTabHandler, item);
+			AddonUtil.openFileEditor(serverTabHandler, item, manager);
 			manager.selectServer(handler);
 		}
 		return true;
@@ -71,10 +71,10 @@ public class PathTreeEntry implements TreeEntry<Path> {
 	public ContextMenu getContextMenu() {
 		Menu openWith = new Menu(I18N.translate("context_menu_open_with"));
 
-		for (FileEditorManager.FileEditorEntry entry : AddonUtil.getEditorsForType(item)) {
-			MenuItem item = new MenuItem(entry.getLocalizedName());
+		for (FileEditorCreator entry : AddonUtil.getEditorsForType(item, manager)) {
+			MenuItem item = new MenuItem(entry.getBundleToTranslate().getString(entry.getID()));
 			item.setOnAction(e -> {
-				AddonUtil.loadFileEditor(entry.getEditorClass().getName(), serverTabHandler, PathTreeEntry.this.item);
+				AddonUtil.loadFileEditor(entry.getFileEditorClass().getName(), serverTabHandler, PathTreeEntry.this.item);
 				manager.selectServer(handler);
 			});
 			item.setGraphic(entry.getFileGraphic());

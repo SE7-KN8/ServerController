@@ -1,9 +1,8 @@
-package sebe3012.servercontroller.addon.api;
+package sebe3012.servercontroller.addon;
 
-import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.addon.api.filetype.FileEditorManager;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditorCreator;
 import sebe3012.servercontroller.api.gui.server.DialogRow;
 import sebe3012.servercontroller.api.gui.server.ServerCreator;
 import sebe3012.servercontroller.api.gui.tab.TabEntry;
@@ -13,8 +12,6 @@ import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.api.util.FileUtil;
 import sebe3012.servercontroller.api.util.StringPredicates;
 import sebe3012.servercontroller.api.util.design.Designs;
-import sebe3012.servercontroller.gui.editor.BasicImageViewer;
-import sebe3012.servercontroller.gui.editor.BasicTextEditor;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.GUIUtil;
 import sebe3012.servercontroller.util.I18N;
@@ -29,7 +26,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -49,11 +45,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 //TODO don't use static methods
@@ -61,54 +57,27 @@ public class AddonUtil {
 
 	private static final Logger log = LogManager.getLogger();
 
-	private static final HashMap<Addon, Class<? extends BasicServer>> serverTypes = new HashMap<>();
-	private static final HashMap<Addon, ServerCreator> serverCreators = new HashMap<>();
-	private static final FileEditorManager fileEditorManager = new FileEditorManager();
-
-	static {
-		List<String> fileTypes = new ArrayList<>();
-		fileTypes.add("txt");
-		fileTypes.add("properties");
-		fileTypes.add("log");
-		fileTypes.add("json");
-		fileTypes.add("xml");
-		fileTypes.add("yml");
-		registerFileEditor(fileTypes, BasicTextEditor.class, "basic_text_editor", I18N.getDefaultBundle(), null /*TODO add graphic*/);
-
-		List<String> imageFileTypes = new ArrayList<>();
-		imageFileTypes.add("png");
-		imageFileTypes.add("jpg");
-		imageFileTypes.add("jpeg");
-		imageFileTypes.add("gif");
-		registerFileEditor(imageFileTypes, BasicImageViewer.class, "basic_image_viewer", I18N.getDefaultBundle(), null /*TODO add graphic*/);
-	}
-
-	public static void registerServerType(Addon addon, Class<? extends BasicServer> serverClass, ServerCreator serverCreator) {
-		serverTypes.put(addon, serverClass);
-		serverCreators.put(addon, serverCreator);
-	}
-
-	//TODO use addon instance to prevent duplicates
-	public static void registerFileEditor(@NotNull List<String> fileType, @NotNull Class<? extends FileEditor> editor, @NotNull String name, @NotNull ResourceBundle bundle, @Nullable Node graphic) {
-		fileEditorManager.registerFileEditor(fileType, editor, name, bundle, graphic);
-	}
-
-	public static ServerCreator getServerCreator(Addon addon) {
-		return serverCreators.get(addon);
-	}
-
-	public static HashMap<Addon, Class<? extends BasicServer>> getServerTypes() {
-		return serverTypes;
-	}
-
-	public static List<FileEditorManager.FileEditorEntry> getEditorsForType(Path file) {
+	public static List<FileEditorCreator> getEditorsForType(Path file, ServerManager manager) {
 		if (!Files.exists(file) || Files.isDirectory(file)) {
 			return new ArrayList<>();
 		}
 
 		String filePath = file.toString();
 		String fileExtension = filePath.substring(filePath.lastIndexOf(".") + 1);
-		return fileEditorManager.getFileEditors(fileExtension);
+
+		Collection<List<FileEditorCreator>> fileCreators = manager.getRegistryHelper().getFileEditorRegistry().getValues();
+
+		List<FileEditorCreator> creatorList = new ArrayList<>();
+
+		for (List<FileEditorCreator> creators : fileCreators) {
+			for (FileEditorCreator creator : creators) {
+				if (creator.getFileTypes().contains(fileExtension)) {
+					creatorList.add(creator);
+				}
+			}
+		}
+
+		return creatorList;
 	}
 
 	public static void loadFileEditor(String className, TabHandler<TabEntry<?>> serverTabHandler, Path file) {
@@ -126,8 +95,8 @@ public class AddonUtil {
 		}
 	}
 
-	public static void openFileEditor(TabHandler<TabEntry<?>> serverTabHandler, Path file) {
-		List<FileEditorManager.FileEditorEntry> editors = AddonUtil.getEditorsForType(file);
+	public static void openFileEditor(TabHandler<TabEntry<?>> serverTabHandler, Path file, ServerManager manager) {
+		List<FileEditorCreator> editors = AddonUtil.getEditorsForType(file, manager);
 
 		Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.OK, ButtonType.CANCEL);
 		dialog.setHeaderText(I18N.format("dialog_choose_editor_header", file.getFileName().toString()));
@@ -136,10 +105,10 @@ public class AddonUtil {
 		buttons.setSpacing(20);
 		ToggleGroup group = new ToggleGroup();
 
-		for (FileEditorManager.FileEditorEntry editor : editors) {
-			RadioButton button = new RadioButton(editor.getLocalizedName());
+		for (FileEditorCreator editor : editors) {
+			RadioButton button = new RadioButton(editor.getBundleToTranslate().getString(editor.getID()));
 			button.setToggleGroup(group);
-			button.setUserData(editor.getEditorClass().getName());
+			button.setUserData(editor.getFileEditorClass().getName());
 			buttons.getChildren().add(button);
 		}
 
@@ -170,9 +139,9 @@ public class AddonUtil {
 		List<DialogRow> rows = new ArrayList<>();
 
 		if (parent != null) {
-			createRows(AddonUtil.getServerCreator(addon), rows, parent.getProperties(), true);
+			createRows(serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(addon).get(0)/*TODO allow more servers per addon*/, rows, parent.getProperties(), true, serverManager);
 		} else {
-			createRows(AddonUtil.getServerCreator(addon), rows, null, false);
+			createRows(serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(addon).get(0)/*TODO allow more servers per addon*/, rows, null, false, serverManager);
 		}
 
 
@@ -180,7 +149,7 @@ public class AddonUtil {
 			try {
 
 				if (parent == null) {
-					serverManager.createServerHandler(e, serverTypes.get(addon), addon, true);
+					serverManager.createServerHandler(e, serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(addon).get(0).getServerClass()/*TODO allow more servers per addon*/, addon, true);
 				} else {
 					Map<String, StringProperty> oldServerMap = parent.getProperties();
 					oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
@@ -194,12 +163,12 @@ public class AddonUtil {
 
 	}
 
-	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, StringProperty> properties, boolean useProperties) {
+	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, StringProperty> properties, boolean useProperties, ServerManager manager) {
 		Addon parentCreatorAddon = Addons.addonForID(creator.getParent());
-		ServerCreator parentCreator = AddonUtil.getServerCreator(parentCreatorAddon);
+		ServerCreator parentCreator = manager.getRegistryHelper().getServerCreatorRegistry().getEntries(parentCreatorAddon).get(0);/*TODO allow more servers per addon*/
 
 		if (parentCreator != null) {
-			createRows(parentCreator, parentRows, properties, useProperties);
+			createRows(parentCreator, parentRows, properties, useProperties, manager);
 		}
 
 		creator.createServerDialogRows(properties, parentRows, useProperties);

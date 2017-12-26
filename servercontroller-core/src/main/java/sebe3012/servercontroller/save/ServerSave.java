@@ -2,7 +2,6 @@ package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.addon.api.AddonUtil;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.api.server.BasicServer;
@@ -166,9 +165,6 @@ public class ServerSave {
 					}
 				});
 
-
-				//TODO use new system
-				//Platform.runLater(_Tabs::removeAllTabs);
 				Platform.runLater(serverManager::clearServers);
 
 				FileInputStream fis = new FileInputStream(new File(path));
@@ -189,11 +185,16 @@ public class ServerSave {
 					log.info("Start loading {}", serverElement.getName());
 					String addonId = serverElement.getAttributeValue("addon");
 					log.debug("Plugin is {}", addonId);
-					long saveVersion = Long.valueOf(serverElement.getAttributeValue("addonVersion"));
+
+
+					int saveVersion = Integer.valueOf(serverElement.getAttributeValue("addonVersion"));
 
 					Addon serverAddon = Addons.addonForID(addonId);
 
-					Class<? extends BasicServer> serverClass = AddonUtil.getServerTypes().get(serverAddon);
+					Class<? extends BasicServer> serverClass = null;
+					if (serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(serverAddon).size() > 0) {
+						serverClass = serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(serverAddon).get(0).getServerClass();//TODO allow more servers per addon
+					}
 
 					if (serverClass == null) {
 						log.warn("No plugin found with name: {}", addonId);
@@ -215,7 +216,7 @@ public class ServerSave {
 					BasicServerHandler serverHandler = serverManager.createServerHandler(map, serverClass, serverAddon, false);
 
 					log.info("Create server");
-					if (serverHandler.getServer().getSaveVersion() != saveVersion) {
+					if (serverHandler.getServer().getSaveVersion() > saveVersion) {
 						throw new IllegalStateException("The save type of the server has been changed");
 					}
 

@@ -1,5 +1,7 @@
 package sebe3012.servercontroller.api.addon;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Sebe3012 on 28.02.2017.
  * Basic type for all addons
@@ -12,7 +14,7 @@ public abstract class Addon {
 	protected Addon() {
 	}
 
-	public final void loadAddon(AddonRegistry registry) {
+	public final void loadAddon(@NotNull AddonRegistry registry) {
 		if (!loaded) {
 			load(registry);
 			loaded = true;
@@ -21,7 +23,7 @@ public abstract class Addon {
 		}
 	}
 
-	public final void unloadAddon(AddonRegistry registry) {
+	public final void unloadAddon(@NotNull AddonRegistry registry) {
 		if (loaded) {
 			unload(registry);
 			loaded = false;
@@ -34,14 +36,15 @@ public abstract class Addon {
 		return loaded;
 	}
 
-	protected abstract void load(AddonRegistry registry);
+	protected abstract void load(@NotNull AddonRegistry registry);
 
-	protected abstract void unload(AddonRegistry registry);
+	protected abstract void unload(@NotNull AddonRegistry registry);
 
-	public final void setAddonInfo(AddonInfo addonInfo) {
+	public final void setAddonInfo(@NotNull AddonInfo addonInfo) {
 		this.addonInfo = addonInfo;
 	}
 
+	@NotNull
 	public final AddonInfo getAddonInfo() {
 		return addonInfo;
 	}

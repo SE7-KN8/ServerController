@@ -4,6 +4,7 @@ import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.addon.AddonRegistry;
 import sebe3012.servercontroller.api.gui.server.DialogRow;
 import sebe3012.servercontroller.api.gui.server.ServerCreator;
+import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.util.StringPredicates;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +18,19 @@ import java.util.Map;
 public class CraftbukkitAddon extends Addon implements ServerCreator {
 
 	@Override
-	public void load(AddonRegistry registry) {
-		registry.registerServerType(CraftbukkitServer.class, this);
+	public void load(@NotNull AddonRegistry registry) {
+		registry.registerServerType(this);
 	}
 
 	@Override
-	public void unload(AddonRegistry registry) {
-		registry.unregisterServerType(CraftbukkitServer.class);
+	public void unload(@NotNull AddonRegistry registry) {
+		registry.unregisterServerType(this);
+	}
+
+	@NotNull
+	@Override
+	public Class<? extends BasicServer> getServerClass() {
+		return CraftbukkitServer.class;
 	}
 
 	@NotNull

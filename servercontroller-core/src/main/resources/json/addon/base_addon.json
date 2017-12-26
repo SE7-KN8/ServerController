@@ -1,0 +1,8 @@
+{
+  "id": "servercontroller-base",
+  "name": "ServerController-Base",
+  "version": "SERVERCONTROLLER_VERSION",
+  "mainClass": "sebe3012.servercontroller.addon.base.BaseAddon",
+  "authors": ["Sebe3012"],
+  "dependencies": []
+}

@@ -1,6 +1,6 @@
 package sebe3012.servercontroller.gui.dialog;
 
-import sebe3012.servercontroller.addon.api.AddonUtil;
+import sebe3012.servercontroller.addon.AddonUtil;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.gui.dialog.Dialog;
 import sebe3012.servercontroller.api.util.design.Designs;
@@ -52,7 +52,7 @@ public class ServerDialog implements Dialog {
 		ComboBox<Addon> box = new ComboBox<>();
 		box.setButtonCell(callback.call(null));
 		box.setCellFactory(callback);
-		box.setItems(FXCollections.observableArrayList(AddonUtil.getServerTypes().keySet()));
+		box.setItems(FXCollections.observableArrayList());
 		box.setPrefWidth(300);
 		box.setPrefHeight(50);
 		box.setStyle("-fx-font: 30px \"Arial\";");

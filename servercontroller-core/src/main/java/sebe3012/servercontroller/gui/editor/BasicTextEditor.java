@@ -1,6 +1,7 @@
 package sebe3012.servercontroller.gui.editor;
 
 import sebe3012.servercontroller.api.gui.fileeditor.FileEditor;
+import sebe3012.servercontroller.api.gui.fileeditor.FileEditorCreator;
 import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.util.I18N;
 
@@ -21,8 +22,45 @@ import java.io.PrintWriter;
 import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class BasicTextEditor implements FileEditor {
+
+	public static class BasicTextEditorCreator implements FileEditorCreator {
+
+		@NotNull
+		@Override
+		public Class<? extends FileEditor> getFileEditorClass() {
+			return BasicTextEditor.class;
+		}
+
+		@NotNull
+		@Override
+		public List<String> getFileTypes() {
+			List<String> textFileTypes = new ArrayList<>();
+			textFileTypes.add("txt");
+			textFileTypes.add("properties");
+			textFileTypes.add("log");
+			textFileTypes.add("json");
+			textFileTypes.add("xml");
+			textFileTypes.add("yml");
+			return textFileTypes;
+		}
+
+		@NotNull
+		@Override
+		public String getID() {
+			return "basic_text_editor";
+		}
+
+		@NotNull
+		@Override
+		public ResourceBundle getBundleToTranslate() {
+			return I18N.getDefaultBundle();
+		}
+	}
 
 	private class ReadFileTask extends Task<String> {
 

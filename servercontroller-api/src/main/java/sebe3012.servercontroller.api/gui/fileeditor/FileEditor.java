@@ -6,6 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
-public interface FileEditor extends TabEntry<Path>{
+public interface FileEditor extends TabEntry<Path> {
 	void openFile(@NotNull Path file);
 }

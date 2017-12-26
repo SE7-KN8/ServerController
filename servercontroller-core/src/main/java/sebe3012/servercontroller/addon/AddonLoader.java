@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon;
 
+import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.addon.AddonInfo;
 import sebe3012.servercontroller.api.util.DialogUtil;
@@ -22,13 +23,13 @@ import javafx.concurrent.Task;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -47,8 +48,17 @@ public final class AddonLoader {
 		@Override
 		public AddonInfo.AddonVersion read(JsonReader in) throws IOException {
 			String value = in.nextString();
+			String versionRegex = "([0-9]*)[._]([0-9]*)[._]([0-9]*)[._]([0-9]*)";
 
-			Pattern pattern = Pattern.compile("([0-9]*)[._]([0-9]*)[._]([0-9]*)[._]([0-9]*)");
+			if(value.equals("SERVERCONTROLLER_VERSION")){
+				if(ServerController.VERSION.matches(versionRegex)){
+					value = ServerController.VERSION;
+				}else{
+					return new AddonInfo.AddonVersion(0,0,0,0);
+				}
+			}
+
+			Pattern pattern = Pattern.compile(versionRegex);
 			Matcher matcher = pattern.matcher(value);
 			matcher.matches();
 
@@ -103,7 +113,7 @@ public final class AddonLoader {
 					for (int i = 0; i < urls.length; i++) {
 						try {
 							urls[i] = addonsToLoadSorted.get(i).getJarPath().toUri().toURL();
-						} catch (MalformedURLException e) {
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
@@ -115,7 +125,7 @@ public final class AddonLoader {
 
 					loadingFlag = true;
 				} else {
-					throw new RuntimeException("Addons already loaded");
+					throw new Exception("Addons already loaded");
 				}
 				return null;
 			}
@@ -247,7 +257,15 @@ public final class AddonLoader {
 			}
 		}
 
+		AddonInfo baseInfo = gson.fromJson(new InputStreamReader(ClassLoader.getSystemResourceAsStream("json/addon/base_addon.json")), AddonInfo.class);
+		baseInfo.setJarPath(Paths.get(""));
+		addonInfos.add(baseInfo);
+
 		addonsToLoad.addAll(addonInfos);
+	}
+
+	public AddonRegistryHelper getRegistryHelper() {
+		return registryHelper;
 	}
 
 	private void calculateDependencies() {
