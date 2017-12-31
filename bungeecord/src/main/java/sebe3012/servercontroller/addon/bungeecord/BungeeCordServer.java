@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.server.BasicServer;
 
 import javafx.beans.property.StringProperty;
@@ -15,8 +14,8 @@ public class BungeeCordServer extends BasicServer {
 
 	private List<Control> extraControls = new ArrayList<>();
 
-	public BungeeCordServer(Map<String, StringProperty> properties, Addon addon){
-		super(properties, addon);
+	public BungeeCordServer(Map<String, StringProperty> properties){
+		super(properties);
 
 		configFile = properties.get("bungeecord");
 	}

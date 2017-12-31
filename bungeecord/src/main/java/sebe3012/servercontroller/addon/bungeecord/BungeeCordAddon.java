@@ -8,7 +8,6 @@ import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.util.StringPredicates;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javafx.beans.property.StringProperty;
 
@@ -32,6 +31,12 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 	@Override
 	public Class<? extends BasicServer> getServerClass() {
 		return BungeeCordServer.class;
+	}
+
+	@NotNull
+	@Override
+	public String getID() {
+		return "bungeecord";
 	}
 
 	@NotNull
@@ -61,11 +66,5 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 		Collections.addAll(parentRows, jarRow, configRow);
 
 		return parentRows;
-	}
-
-	@Nullable
-	@Override
-	public String getParent() {
-		return null;
 	}
 }

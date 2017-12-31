@@ -18,16 +18,22 @@ import java.util.Map;
 public interface ServerCreator {
 
 	@NotNull
-	List<DialogRow> createServerDialogRows(@NotNull Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties);
+	List<DialogRow> createServerDialogRows(@Nullable Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties);
 
 	@NotNull
 	Class<? extends BasicServer> getServerClass();
 
-	@Nullable
-	String getParent();
+	@NotNull
+	String getID();
 
 	@Nullable
-	default Node getGraphic(){
+	default String getParent() {
+		//No parent
+		return null;
+	}
+
+	@Nullable
+	default Node getGraphic() {
 		//Do nothing
 		return null;
 	}

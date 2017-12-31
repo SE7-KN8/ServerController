@@ -205,6 +205,8 @@ public final class AddonLoader {
 
 		List<AddonInfo> addonInfos = new ArrayList<>();
 
+		gson = new GsonBuilder().registerTypeAdapter(AddonInfo.AddonVersion.class, new AddonVersionAdapter()).create();
+
 		for (Path jarPath : JAR_PATHS) {
 			try {
 
@@ -220,7 +222,6 @@ public final class AddonLoader {
 					continue;
 				}
 
-				gson = new GsonBuilder().registerTypeAdapter(AddonInfo.AddonVersion.class, new AddonVersionAdapter()).create();
 				//Parse addon.json to AddonInfo
 				AddonInfo info = gson.fromJson(new InputStreamReader(file.getInputStream(addonInfo)), AddonInfo.class);
 				info.setJarPath(jarPath);

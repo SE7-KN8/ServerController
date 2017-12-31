@@ -35,4 +35,9 @@ public class Registry<T> {
 		return Collections.unmodifiableCollection(entries.values());
 	}
 
+	@NotNull
+	public Map<Addon, List<T>> getData(){
+		return Collections.unmodifiableMap(entries);
+	}
+
 }

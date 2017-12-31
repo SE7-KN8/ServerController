@@ -8,7 +8,6 @@ import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.util.StringPredicates;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javafx.beans.property.StringProperty;
 
@@ -35,6 +34,12 @@ public class VanillaAddon extends Addon implements ServerCreator {
 	@Override
 	public Class<? extends BasicServer> getServerClass() {
 		return VanillaServer.class;
+	}
+
+	@NotNull
+	@Override
+	public String getID() {
+		return "vanilla";
 	}
 
 	@Override
@@ -64,11 +69,5 @@ public class VanillaAddon extends Addon implements ServerCreator {
 		Collections.addAll(parentRows, jarRow, propertiesRow);
 
 		return parentRows;
-	}
-
-	@Override
-	@Nullable
-	public String getParent() {
-		return null;
 	}
 }

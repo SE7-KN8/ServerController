@@ -1,6 +1,5 @@
 package sebe3012.servercontroller.api.server;
 
-import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.server.jna.Kernel32;
 import sebe3012.servercontroller.api.server.jna.W32API;
 import sebe3012.servercontroller.api.util.ErrorCode;
@@ -62,18 +61,22 @@ public abstract class BasicServer {
 	private ObjectProperty<ServerState> state = new SimpleObjectProperty<>(ServerState.STOPPED);
 	private ServerMonitor monitor = new ServerMonitor();
 	private Queue<OutputCallback> outputCallbackQueue = new LinkedList<>();
-	private boolean isAddonSet = false;
-	private Addon addon;
 	private List<StopListener> stopListeners = new ArrayList<>();
 	private List<MessageListener> messageListeners = new ArrayList<>();
 	private Map<String, StringProperty> properties;
+	private String addonID;
+	private String creatorID;
 
-	public BasicServer(Map<String, StringProperty> properties, Addon addon) {
+	public BasicServer(Map<String, StringProperty> properties) {
 		this.properties = properties;
-		this.addon = addon;
 		name = properties.get("name");
 		args = properties.get("args");
 		jarPath = properties.get("jarfile");
+	}
+
+	public final void setCreatorInfo(String addonID, String creatorID){
+		this.addonID = addonID;
+		this.creatorID = creatorID;
 	}
 
 	public Map<String, StringProperty> getProperties() {
@@ -239,10 +242,18 @@ public abstract class BasicServer {
 		infoList.add("Server-Jar-Path: " + getJarPath());
 		infoList.add("Stop-Command: " + getStopCommand());
 		infoList.add("Start-Args: " + getArgs());
-		infoList.add("Addon-Name: " + getAddon().getAddonInfo().getName());
+		infoList.add("Addon-Name: " + getAddonID());
 		infoList.add("Done-Regex: " + getDoneRegex());
 
 		return infoList;
+	}
+
+	public String getAddonID() {
+		return addonID;
+	}
+
+	public String getCreatorID() {
+		return creatorID;
 	}
 
 	@NotNull
@@ -250,7 +261,7 @@ public abstract class BasicServer {
 		return "stop";
 	}
 
-	private final void onError(@NotNull Exception errorMessage) {
+	private void onError(@NotNull Exception errorMessage) {
 		for (MessageListener listener : messageListeners) {
 			StringWriter sw = new StringWriter();
 			PrintWriter ps = new PrintWriter(sw);
@@ -267,21 +278,6 @@ public abstract class BasicServer {
 			onError(e);
 			e.printStackTrace();
 		}
-	}
-
-	@Deprecated
-	public final void setAddon(@NotNull Addon addon) {
-		if (!isAddonSet) {
-			this.addon = addon;
-			isAddonSet = true;
-		} else {
-			throw new RuntimeException("Addon is already set");
-		}
-	}
-
-	@NotNull
-	public final Addon getAddon() {
-		return addon;
 	}
 
 	public final boolean isRunning() {
@@ -347,7 +343,7 @@ public abstract class BasicServer {
 		return null;
 	}
 
-	public void setState(@NotNull ServerState state) {
+	private void setState(@NotNull ServerState state) {
 		log.info("[{}]: Set state from {} to {}", getName(), getState(), state);
 		this.state.set(state);
 	}

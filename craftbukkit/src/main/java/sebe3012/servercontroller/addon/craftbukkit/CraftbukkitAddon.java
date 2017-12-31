@@ -35,6 +35,12 @@ public class CraftbukkitAddon extends Addon implements ServerCreator {
 
 	@NotNull
 	@Override
+	public String getID() {
+		return "craftbukkit";
+	}
+
+	@NotNull
+	@Override
 	public List<DialogRow> createServerDialogRows(@NotNull Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
 
 		DialogRow bukkitConfigRow = new DialogRow();
@@ -56,6 +62,6 @@ public class CraftbukkitAddon extends Addon implements ServerCreator {
 	@Nullable
 	@Override
 	public String getParent() {
-		return "vanilla";
+		return "vanilla:vanilla";
 	}
 }
