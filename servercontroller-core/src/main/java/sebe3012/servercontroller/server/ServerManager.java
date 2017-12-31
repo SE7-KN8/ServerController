@@ -2,7 +2,6 @@ package sebe3012.servercontroller.server;
 
 import sebe3012.servercontroller.addon.AddonRegistryHelper;
 import sebe3012.servercontroller.addon.AddonUtil;
-import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.gui.tab.TabEntry;
 import sebe3012.servercontroller.api.gui.tab.TabHandler;
 import sebe3012.servercontroller.api.gui.tree.TreeEntry;
@@ -79,11 +78,12 @@ public class ServerManager {
 	}
 
 	@NotNull
-	public BasicServerHandler createServerHandler(@NotNull Map<String, StringProperty> properties, @NotNull Class<? extends BasicServer> serverClass, @NotNull Addon addon, boolean addServer) throws NoSuchMethodException, InstantiationException, InvocationTargetException, IllegalAccessException {
+	public BasicServerHandler createServerHandler(@NotNull Map<String, StringProperty> properties, @NotNull Class<? extends BasicServer> serverClass, boolean addServer, @NotNull String addonID, @NotNull String serverCreatorID) throws NoSuchMethodException, InstantiationException, InvocationTargetException, IllegalAccessException {
 		log.info("Creating server '{}' with properties: '{}'", serverClass.getSimpleName(), properties);
 
-		Constructor<? extends BasicServer> constructor = serverClass.getConstructor(Map.class, Addon.class);
-		BasicServer server = constructor.newInstance(properties, addon);
+		Constructor<? extends BasicServer> constructor = serverClass.getConstructor(Map.class);
+		BasicServer server = constructor.newInstance(properties);
+		server.setCreatorInfo(addonID, serverCreatorID);
 		BasicServerHandler handler = new BasicServerHandler(server);
 
 		if (addServer) {
@@ -177,16 +177,16 @@ public class ServerManager {
 	}
 
 	public void selectServer(BasicServerHandler handler) {
-		rootTabHandler.getTabEntries().forEach(entry->{
-			if(entry.getItem() == handler){
+		rootTabHandler.getTabEntries().forEach(entry -> {
+			if (entry.getItem() == handler) {
 				rootTabHandler.selectEntry(entry);
 			}
 		});
 	}
 
-	public void editSelectedServer(){
+	public void editSelectedServer() {
 		BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
-		AddonUtil.loadServerCreateDialog(handler.getServer().getAddon(), handler.getServer(), this);
+		AddonUtil.loadServerCreateDialog(handler.getServer().getAddonID(), handler.getServer().getCreatorID(), handler.getServer(), this);
 	}
 
 }

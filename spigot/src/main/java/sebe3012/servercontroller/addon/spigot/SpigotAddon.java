@@ -35,6 +35,12 @@ public class SpigotAddon extends Addon implements ServerCreator {
 
 	@NotNull
 	@Override
+	public String getID() {
+		return "spigot";
+	}
+
+	@NotNull
+	@Override
 	public List<DialogRow> createServerDialogRows(@NotNull Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
 
 		DialogRow spigotConfigRow = new DialogRow();
@@ -56,6 +62,6 @@ public class SpigotAddon extends Addon implements ServerCreator {
 	@Nullable
 	@Override
 	public String getParent() {
-		return "craftbukkit";
+		return "craftbukkit:craftbukkit";
 	}
 }

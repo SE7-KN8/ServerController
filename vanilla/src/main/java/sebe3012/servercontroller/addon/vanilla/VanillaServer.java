@@ -4,7 +4,6 @@ import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
-import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.server.BasicServer;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +27,8 @@ public class VanillaServer extends BasicServer {
 
 	private List<Control> extraControls = new ArrayList<>();
 
-
-	public VanillaServer(Map<String, StringProperty> properties, Addon addon) {
-		super(properties, addon);
+	public VanillaServer(Map<String, StringProperty> properties) {
+		super(properties);
 		propertiesFile = properties.get("properties");
 
 		propertiesHandler = new PropertiesHandler(new File(getPropertiesFile()));

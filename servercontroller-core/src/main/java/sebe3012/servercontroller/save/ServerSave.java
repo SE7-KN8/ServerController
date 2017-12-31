@@ -1,8 +1,8 @@
 package sebe3012.servercontroller.save;
 
 import sebe3012.servercontroller.ServerController;
-import sebe3012.servercontroller.addon.Addons;
-import sebe3012.servercontroller.api.addon.Addon;
+import sebe3012.servercontroller.addon.AddonUtil;
+import sebe3012.servercontroller.api.gui.server.ServerCreator;
 import sebe3012.servercontroller.api.preferences.ServerControllerPreferences;
 import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.server.BasicServerHandler;
@@ -17,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -30,13 +29,12 @@ import javafx.concurrent.Task;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ServerSave {
 
@@ -44,18 +42,12 @@ public class ServerSave {
 
 	public static void saveServerController(ServerManager manager) {
 		String file = FileUtil.openFileChooser("*.xml", ".xml", true);
-
-		try {
-			ServerSave.saveServerController(file, true, manager);
-		} catch (IOException e) {
-			e.printStackTrace();
-			showSaveErrorDialog();
-		}
+		ServerSave.saveServerController(file, true, manager);
 	}
 
 	private static Logger log = LogManager.getLogger();
 
-	private static void saveServerController(String path, boolean showDialog, ServerManager serverManager) throws IOException {
+	private static void saveServerController(String path, boolean showDialog, ServerManager serverManager) {
 
 		Task<Void> saveTask = new Task<Void>() {
 			@Override
@@ -86,9 +78,10 @@ public class ServerSave {
 					log.info("Start saving server {}", server.getName());
 					final Element serverElement = new Element("server");
 
-					log.debug("Addon id from server {} is {}", server.getName(), server.getAddon().getAddonInfo().getId());
-					serverElement.setAttribute("addon", server.getAddon().getAddonInfo().getId());
-					serverElement.setAttribute("addonVersion", String.valueOf(server.getSaveVersion()));
+					log.debug("Addon id from server {} is {}", server.getName(), server.getAddonID());
+					log.debug("Creator id from {} is {}", server.getName(), server.getCreatorID());
+					serverElement.setAttribute("serverCreatorInfo", server.getAddonID() + ":" + server.getCreatorID());
+					serverElement.setAttribute("saveVersion", String.valueOf(server.getSaveVersion()));
 					log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 
 					server.getProperties().forEach((key, value) -> {
@@ -122,26 +115,21 @@ public class ServerSave {
 
 		FrameHandler.currentProgress.progressProperty().bind(saveTask.progressProperty());
 		//TODO show dialog
-		saveTask.setOnFailed(event -> log.error("Can't save servers", saveTask.getException()));
+		saveTask.setOnFailed(event -> {
+			log.error("Can't save servers", saveTask.getException());
+			showSaveErrorDialog();
+		});
 		new Thread(saveTask).start();
 	}
 
 	public static void loadServerController(ServerManager serverManager) {
 		String file = FileUtil.openFileChooser("*.xml", ".xml");
 
-		try {
-			ServerSave.loadServerController(file, true, serverManager);
+		ServerSave.loadServerController(file, true, serverManager);
 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			showSaveStateErrorDialog();
-		} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-			e.printStackTrace();
-			showSaveErrorDialog();
-		}
 	}
 
-	private static void loadServerController(String path, boolean showDialog, ServerManager serverManager) throws JDOMException, IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private static void loadServerController(String path, boolean showDialog, ServerManager serverManager) {
 
 		Task<Void> loadTask = new Task<Void>() {
 			@Override
@@ -183,44 +171,37 @@ public class ServerSave {
 
 					updateProgress(counter, max);
 					log.info("Start loading {}", serverElement.getName());
-					String addonId = serverElement.getAttributeValue("addon");
-					log.debug("Plugin is {}", addonId);
+					String[] ids = serverElement.getAttributeValue("serverCreatorInfo").split(":");
+					String addonID = ids[0];
+					String creatorID = ids[1];
+					log.debug("Plugin is {}", addonID);
 
+					int saveVersion = Integer.valueOf(serverElement.getAttributeValue("saveVersion"));
 
-					int saveVersion = Integer.valueOf(serverElement.getAttributeValue("addonVersion"));
+					Optional<ServerCreator> serverCreatorOptional = AddonUtil.findServerCreator(serverManager, addonID, creatorID);
 
-					Addon serverAddon = Addons.addonForID(addonId);
+					if (serverCreatorOptional.isPresent()) {
+						Map<String, StringProperty> map = new HashMap<>();
 
-					Class<? extends BasicServer> serverClass = null;
-					if (serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(serverAddon).size() > 0) {
-						serverClass = serverManager.getRegistryHelper().getServerCreatorRegistry().getEntries(serverAddon).get(0).getServerClass();//TODO allow more servers per addon
+						for (Element e : serverElement.getChildren()) {
+							log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
+							map.put(e.getName(), new SimpleStringProperty(e.getValue()));
+						}
+
+						BasicServerHandler serverHandler = serverManager.createServerHandler(map, serverCreatorOptional.get().getServerClass(), false, addonID, creatorID);
+
+						log.info("Create server");
+						if (serverHandler.getServer().getSaveVersion() > saveVersion) {
+							showSaveStateErrorDialog();
+							continue;
+						}
+
+						serverManager.addServerHandler(serverHandler);
+
+					} else {
+						log.warn("No plugin found with name: {}", addonID);
+						Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.format("dialog_save_no_plugin", addonID)));
 					}
-
-					if (serverClass == null) {
-						log.warn("No plugin found with name: {}", addonId);
-						Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.format("dialog_save_no_plugin", addonId)));
-					}
-
-					Map<String, StringProperty> map = new HashMap<>();
-
-					for (Element e : serverElement.getChildren()) {
-						log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
-						map.put(e.getName(), new SimpleStringProperty(e.getValue()));
-					}
-
-					if (serverClass == null) {
-						log.warn("Server-class is null. Can't load server");
-						continue;
-					}
-
-					BasicServerHandler serverHandler = serverManager.createServerHandler(map, serverClass, serverAddon, false);
-
-					log.info("Create server");
-					if (serverHandler.getServer().getSaveVersion() > saveVersion) {
-						throw new IllegalStateException("The save type of the server has been changed");
-					}
-
-					serverManager.addServerHandler(serverHandler);
 
 				}
 
@@ -238,36 +219,29 @@ public class ServerSave {
 		};
 
 		FrameHandler.currentProgress.progressProperty().bind(loadTask.progressProperty());
-		loadTask.setOnFailed(event -> log.error("Can't load servers", loadTask.getException()));
+		loadTask.setOnFailed(event -> {
+			log.error("Can't load servers", loadTask.getException());
+			showSaveErrorDialog();
+		});
 		new Thread(loadTask).start();
-
-
 	}
 
 	public static void loadServerControllerFromLastFile(ServerManager serverManager) {
 		if ((boolean) Settings.readSetting(Settings.Constants.AUTO_LOAD_SERVERS)) {
-			try {
-				ServerSave.loadServerController(ServerControllerPreferences.loadSetting(ServerSave.SAVE_KEY, null), false, serverManager);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-				showSaveStateErrorDialog();
-			} catch (JDOMException | IOException | IllegalArgumentException | ReflectiveOperationException e) {
-				e.printStackTrace();
-				showSaveErrorDialog();
-			}
+			ServerSave.loadServerController(ServerControllerPreferences.loadSetting(ServerSave.SAVE_KEY, null), false, serverManager);
 		}
 	}
 
 	private static void showServerIsRunningDialog() {
-		Platform.runLater(() -> DialogUtil.showWaringAlert("", "dialog_save_servers_running"));
+		Platform.runLater(() -> DialogUtil.showWaringAlert("", I18N.translate("dialog_save_servers_running")));
 	}
 
 	private static void showSaveErrorDialog() {
-		DialogUtil.showErrorAlert("", I18N.translate("dialog_save_error"));
+		Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.translate("dialog_save_error")));
 	}
 
 	private static void showSaveStateErrorDialog() {
-		DialogUtil.showErrorAlert("", I18N.translate("dialog_wrong_save_version"));
+		Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.translate("dialog_wrong_save_version")));
 	}
 
 }
