@@ -1,7 +1,7 @@
 {
   "id": "craftbukkit",
   "name": "Craftbukkit",
-  "version": "0.0.1.2",
+  "version": "0.0.1.3",
   "mainClass": "se7kn8.servercontroller.addon.craftbukkit.CraftBukkitAddon",
   "authors": ["SE7-KN8"],
   "dependencies": ["vanilla"]
