@@ -1,7 +1,7 @@
 {
   "id": "vanilla",
   "name": "Vanilla",
-  "version": "0.0.1.2",
+  "version": "0.0.1.3",
   "mainClass": "se7kn8.servercontroller.addon.vanilla.VanillaAddon",
   "authors": ["SE7-KN8"],
   "dependencies": []

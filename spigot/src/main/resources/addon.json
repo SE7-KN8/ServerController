@@ -1,7 +1,7 @@
 {
   "id": "spigot",
   "name": "Spigot",
-  "version": "0.0.1.2",
+  "version": "0.0.1.3",
   "mainClass": "se7kn8.servercontroller.addon.spigot.SpigotAddon",
   "authors": ["SE7-KN8"],
   "dependencies": ["craftbukkit"]
