@@ -134,11 +134,6 @@ public class FrameHandler {
 	}
 
 	@FXML
-	void onLicenseClicked() {
-		licenseDialog.showDialog();
-	}
-
-	@FXML
 	void onDesignClicked() {
 		Designs.showDesignDialog(primaryStage);
 	}

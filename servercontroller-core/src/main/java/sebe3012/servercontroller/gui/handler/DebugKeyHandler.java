@@ -4,7 +4,6 @@ import sebe3012.servercontroller.ServerController;
 import sebe3012.servercontroller.api.util.DialogUtil;
 
 import org.controlsfx.control.Notifications;
-import org.scenicview.ScenicView;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
@@ -48,7 +47,6 @@ public class DebugKeyHandler implements EventHandler<KeyEvent> {
 					Notifications.create().darkStyle().hideAfter(Duration.seconds(10)).owner(primaryStage).title("Test notification").onAction(e -> DialogUtil.showInformationAlert("", "Some information")).text("Some text with some information").showInformation();
 					break;
 				case F12:
-					ScenicView.show(primaryStage.getScene());
 					break;
 			}
 
