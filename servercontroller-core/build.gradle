@@ -13,8 +13,6 @@ dependencies {
     // For future use
     // compile 'io.github.lukehutch:fast-classpath-scanner:2.8.2'
 
-    compile fileTree(dir: '../tools', include: '*.jar')
-
     testCompile 'junit:junit:4.12'
 }
 
