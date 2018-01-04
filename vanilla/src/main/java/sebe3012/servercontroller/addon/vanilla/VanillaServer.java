@@ -4,35 +4,39 @@ import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.ops.OpsHandler;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesDialog;
 import sebe3012.servercontroller.addon.vanilla.dialog.properties.PropertiesHandler;
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.JarServer;
 
 import org.jetbrains.annotations.NotNull;
 
-import javafx.beans.property.StringProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class VanillaServer extends BasicServer {
-	private StringProperty propertiesFile;
+public class VanillaServer extends JarServer {
+	private String propertiesFile;
 	private PropertiesHandler propertiesHandler;
 	private OpsHandler opsHandler;
 
-	private List<Control> extraControls = new ArrayList<>();
+	private List<Node> extraControls = new ArrayList<>();
 
-	public VanillaServer(Map<String, StringProperty> properties) {
-		super(properties);
-		propertiesFile = properties.get("properties");
+	@Override
+	public void initialize(@NotNull Map<String, String> properties) {
+		super.initialize(properties);
+
+		propertiesFile = properties.get("propertiesPath");
+
 
 		propertiesHandler = new PropertiesHandler(new File(getPropertiesFile()));
-		opsHandler = new OpsHandler(new File(new File(super.getJarPath()).getParentFile(), "ops.json").getAbsolutePath());
+		opsHandler = new OpsHandler(Paths.get(getJarPath().getParent().toString(), "ops.json").toFile().getAbsolutePath());
+
 		try {
 			propertiesHandler.readProperties();
 			opsHandler.readOps();
@@ -42,9 +46,11 @@ public class VanillaServer extends BasicServer {
 
 		Button propertiesButton = new Button(VanillaAddon.bundle.getString("addon_vanilla_properties"));
 		propertiesButton.setOnAction(e -> new PropertiesDialog(new Stage(StageStyle.UTILITY), propertiesHandler, VanillaServer.this));
+		propertiesButton.setPrefWidth(1000);
 
 		Button opsButtons = new Button(VanillaAddon.bundle.getString("addon_vanilla_operators"));
 		opsButtons.setOnAction(e -> new OpsDialog(new Stage(StageStyle.UTILITY), opsHandler, VanillaServer.this));
+		opsButtons.setPrefWidth(1000);
 
 		extraControls.add(propertiesButton);
 		extraControls.add(opsButtons);
@@ -57,7 +63,7 @@ public class VanillaServer extends BasicServer {
 
 	@NotNull
 	@Override
-	public List<String> getServerInfos() {
+	public List<String> getServerInformation() {
 		List<String> serverInfoList = new ArrayList<>();
 		serverInfoList.add("Difficulty: " + propertiesHandler.getDifficulty());
 		serverInfoList.add("Gamemode: " + propertiesHandler.getGamemode());
@@ -68,17 +74,31 @@ public class VanillaServer extends BasicServer {
 		return serverInfoList;
 	}
 
-	public String getPropertiesFile() {
-		return propertiesFile.get();
+	@NotNull
+	protected String getPropertiesFile() {
+		return propertiesFile;
 	}
 
 	@NotNull
 	@Override
-	public List<Control> getExtraControls() {
+	public List<Node> getControls() {
 		return extraControls;
 	}
 
+	@NotNull
 	@Override
+	public String getStopCommand() {
+		return "stop";
+	}
+
+	@NotNull
+	@Override
+	protected String getArgsAfterJar() {
+		return "nogui";
+	}
+
+	@Override
+	@NotNull
 	public String getDoneRegex() {
 		return ".*Done \\(\\d*,\\d*s\\)! For help, type \"help\" or \"\\?\"";
 	}

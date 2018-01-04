@@ -22,8 +22,6 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 
 import java.io.File;
@@ -79,15 +77,15 @@ public class ServerSave {
 					final Element serverElement = new Element("server");
 
 					log.debug("Addon id from server {} is {}", server.getName(), server.getAddonID());
-					log.debug("Creator id from {} is {}", server.getName(), server.getCreatorID());
-					serverElement.setAttribute("serverCreatorInfo", server.getAddonID() + ":" + server.getCreatorID());
+					log.debug("Creator id from {} is {}", server.getName(), server.getServerCreatorID());
+					serverElement.setAttribute("serverCreatorInfo", server.getAddonID() + ":" + server.getServerCreatorID());
 					serverElement.setAttribute("saveVersion", String.valueOf(server.getSaveVersion()));
 					log.debug("Save version from Server {} is {}", server.getName(), server.getSaveVersion());
 
 					server.getProperties().forEach((key, value) -> {
 						log.debug("Save entry from server {} is '{}' with value '{}'", server.getName(), key, value);
 						Element keyElement = new Element(key);
-						keyElement.setText(value.get());
+						keyElement.setText(value);
 						serverElement.addContent(keyElement);
 					});
 
@@ -181,11 +179,11 @@ public class ServerSave {
 					Optional<ServerCreator> serverCreatorOptional = AddonUtil.findServerCreator(serverManager, addonID, creatorID);
 
 					if (serverCreatorOptional.isPresent()) {
-						Map<String, StringProperty> map = new HashMap<>();
+						Map<String, String> map = new HashMap<>();
 
 						for (Element e : serverElement.getChildren()) {
 							log.debug("Load server information '{}' with value '{}'", e.getName(), e.getValue());
-							map.put(e.getName(), new SimpleStringProperty(e.getValue()));
+							map.put(e.getName(), e.getValue());
 						}
 
 						BasicServerHandler serverHandler = serverManager.createServerHandler(map, serverCreatorOptional.get().getServerClass(), false, addonID, creatorID);

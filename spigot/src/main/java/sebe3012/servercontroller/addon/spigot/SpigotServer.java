@@ -1,18 +1,19 @@
 package sebe3012.servercontroller.addon.spigot;
 
-import sebe3012.servercontroller.addon.craftbukkit.CraftbukkitServer;
+import sebe3012.servercontroller.addon.craftbukkit.CraftBukkitServer;
 
-import javafx.beans.property.StringProperty;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class SpigotServer extends CraftbukkitServer {
-	private StringProperty spigotConfig;
+public class SpigotServer extends CraftBukkitServer {
+	private String spigotConfig;
 
-	public SpigotServer(Map<String, StringProperty> properties){
-		super(properties);
+	@Override
+	public void initialize(@NotNull Map<String, String> properties) {
+		super.initialize(properties);
 
-		spigotConfig = properties.get("spigot");
+		spigotConfig = properties.get("spigotConfig");
 	}
 
 	@Override
@@ -20,7 +21,8 @@ public class SpigotServer extends CraftbukkitServer {
 		return 1;
 	}
 
+	@NotNull
 	public String getSpigotConfig() {
-		return spigotConfig.get();
+		return spigotConfig;
 	}
 }

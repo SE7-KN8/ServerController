@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.properties;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.addon.vanilla.VanillaServer;
 import sebe3012.servercontroller.api.util.design.Designs;
 
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class PropertiesDialog {
 
-	public PropertiesDialog(Stage stage, PropertiesHandler handler, BasicServer server) {
+	public PropertiesDialog(Stage stage, PropertiesHandler handler, VanillaServer server) {
 		try {
 
 			stage.setTitle(String.format(VanillaAddon.bundle.getString("addon_vanilla_properties_title"), server.getName()));

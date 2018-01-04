@@ -1,7 +1,6 @@
 package sebe3012.servercontroller.api.util;
 
 import sebe3012.servercontroller.api.preferences.ServerControllerPreferences;
-import sebe3012.servercontroller.api.server.BasicServer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -129,10 +128,5 @@ public class FileUtil {
 	@NotNull
 	public static Path createRelativePath(@NotNull String path) {
 		return ROOT_PATH.resolve(path);
-	}
-
-	@NotNull
-	public static Path loadServerFile(@NotNull BasicServer server, @NotNull String path) {
-		return Paths.get(server.getJarPath()).resolve(path);
 	}
 }

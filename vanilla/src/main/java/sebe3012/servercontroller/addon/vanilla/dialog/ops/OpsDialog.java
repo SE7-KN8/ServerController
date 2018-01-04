@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.CLIServer;
 import sebe3012.servercontroller.api.util.design.Designs;
 
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class OpsDialog {
 
-	public OpsDialog(Stage stage, OpsHandler handler, BasicServer server) {
+	public OpsDialog(Stage stage, OpsHandler handler, CLIServer server) {
 		try {
 			stage.setTitle(String.format(VanillaAddon.bundle.getString("addon_vanilla_operators_title"), server.getName()));
 
