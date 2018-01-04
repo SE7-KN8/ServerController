@@ -2,7 +2,7 @@
   "id": "bungeecord",
   "name": "BungeeCord",
   "version": "0.0.1.2",
-  "mainClass": "sebe3012.servercontroller.addon.bungeecord.BungeeCordAddon",
-  "authors": ["Sebe3012"],
+  "mainClass": "se7kn8.servercontroller.addon.bungeecord.BungeeCordAddon",
+  "authors": ["SE7-KN8"],
   "dependencies": []
 }

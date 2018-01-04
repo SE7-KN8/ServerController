@@ -2,7 +2,7 @@
   "id": "servercontroller-base",
   "name": "ServerController-Base",
   "version": "SERVERCONTROLLER_VERSION",
-  "mainClass": "sebe3012.servercontroller.addon.base.BaseAddon",
-  "authors": ["Sebe3012"],
+  "mainClass": "se7kn8.servercontroller.addon.base.BaseAddon",
+  "authors": ["SE7-KN8"],
   "dependencies": []
 }
