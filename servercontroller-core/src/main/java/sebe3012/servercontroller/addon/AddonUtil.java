@@ -9,7 +9,6 @@ import sebe3012.servercontroller.api.gui.tab.TabHandler;
 import sebe3012.servercontroller.api.server.BasicServer;
 import sebe3012.servercontroller.api.util.DialogUtil;
 import sebe3012.servercontroller.api.util.FileUtil;
-import sebe3012.servercontroller.api.util.StringPredicates;
 import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.GUIUtil;
@@ -18,7 +17,6 @@ import sebe3012.servercontroller.util.I18N;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -149,7 +147,7 @@ public class AddonUtil {
 		});
 
 		//Opens Dialog
-		openCreateDialog(addonID, serverCreatorID, serverManager, rows, parent, editedProperties -> {
+		openCreateDialog(addonID, serverCreatorID, serverManager, rows, editedProperties -> {
 			if (parent == null) {
 				//Creates new server
 				findServerCreator(serverManager, addonID, serverCreatorID, serverCreator -> {
@@ -186,8 +184,14 @@ public class AddonUtil {
 		if (creator.getParent() != null) {
 			String parentAddonID = creator.getParent().split(":")[0];
 			String parentCreatorID = creator.getParent().split(":")[1];
-
-			findServerCreator(manager, parentAddonID, parentCreatorID, parentCreator -> createRows(parentCreator, parentRows, properties, useProperties, manager));
+			Optional<ServerCreator> parentServerCreatorOptional = findServerCreator(manager, parentAddonID, parentCreatorID);
+			if (parentServerCreatorOptional.isPresent()) {
+				log.info("Found parent '{}:{}' for server '{}'", parentAddonID, parentCreatorID, creator.getID());
+				createRows(parentServerCreatorOptional.get(), parentRows, properties, useProperties, manager);
+			} else {
+				//TODO show error dialog
+				log.warn("Can't find parent '{}:{} for server '{}'", parentAddonID, parentCreatorID, creator.getID());
+			}
 		}
 
 		creator.createServerDialogRows(properties, parentRows, useProperties);
@@ -200,13 +204,12 @@ public class AddonUtil {
 	 *
 	 * @param addonID        The addon id
 	 * @param values         The rows to be used
-	 * @param parent         A parent server if the dialog is used to edit. Can be null.
 	 * @param serverConsumer The function to create the server
 	 */
-	public static void openCreateDialog(@NotNull String addonID, String id, ServerManager manager, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, String>> serverConsumer) {
+	public static void openCreateDialog(@NotNull String addonID, String id, ServerManager manager, @NotNull List<DialogRow> values, @NotNull Consumer<Map<String, String>> serverConsumer) {
 		Alert dialog = new Alert(Alert.AlertType.NONE);
 
-		GridPane root = getDialogLayout(addonID, values, serverConsumer, parent, v -> dialog.close());
+		GridPane root = getDialogLayout(addonID, values, serverConsumer, v -> dialog.close());
 
 		dialog.getDialogPane().setContent(root);
 		dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
@@ -216,40 +219,21 @@ public class AddonUtil {
 	}
 
 
-	private static GridPane getDialogLayout(String addonID, List<DialogRow> values, Consumer<Map<String, String>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
-		DialogRow idRow = new DialogRow();
-
-		idRow.setName(I18N.translate("dialog_create_server_name"));
-		idRow.setPropertyName("name");
-		idRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-
-		DialogRow argsRow = new DialogRow();
-		argsRow.setName(I18N.translate("dialog_create_server_args"));
-		argsRow.setPropertyName("args");
-		argsRow.setStringPredicate(StringPredicates.DO_NOTHING);
-
-		if (parent != null) {
-			idRow.setDefaultValue(parent.getName());
-			argsRow.setDefaultValue("args");
-			//argsRow.setDefaultValue(parent.getArgs());
-		}
-
+	private static GridPane getDialogLayout(String addonID, List<DialogRow> values, Consumer<Map<String, String>> serverConsumer, Consumer<Void> closeCallback) {
 		Map<String, String> properties = new HashMap<>();
 		Map<String, DialogRow> rows = new HashMap<>();
 		Map<String, StringProperty> propertyMap = new HashMap<>();
 
 		//put the rows tree in the rows map
 		values.forEach(row -> rows.put(row.getPropertyName(), row));
-		rows.put(idRow.getPropertyName(), idRow);
-		rows.put(argsRow.getPropertyName(), argsRow);
 
 		//Create layout
 		GridPane layout = new GridPane();
 		layout.setMinWidth(1000);
 		layout.setMinHeight(500);
 
-		//Size of the tree + header + id + args
-		int size = values.size() + 3;
+		//Size of the properties
+		int size = values.size();
 
 		//Add rows to layout
 		for (int i = 0; i < size; i++) {
@@ -266,22 +250,16 @@ public class AddonUtil {
 		Label header = new Label(I18N.format("create_server", Addons.addonForID(addonID).getAddonInfo().getName()));
 		header.setFont(new Font(50));
 		header.setPrefWidth(750);
-		header.setPrefHeight(73);
+		//header.setPrefHeight(73);
 		GridPane.setColumnSpan(header, 3);
 		layout.getChildren().add(header);
-
-
-		//Add default rows
-		addRow(idRow, 1, layout, propertyMap);
-		addRow(argsRow, 2, layout, propertyMap);
-
 
 		//Add addon-specified rows
 		int lastRow = 0;
 		for (int i = 0; i < values.size(); i++) {
 			DialogRow row = values.get(i);
-			addRow(row, i + 3, layout, propertyMap);
-			lastRow = i + 3;
+			addRow(row, i + 1, layout, propertyMap);
+			lastRow = i + 1;
 		}
 
 		//Add confirm button
@@ -320,7 +298,7 @@ public class AddonUtil {
 			log.debug("Load server callback");
 
 			if (flag.get()) {
-				System.out.println("test:" +properties);
+				System.out.println("test:" + properties);
 				serverConsumer.accept(properties);
 				closeCallback.accept(null);
 			}

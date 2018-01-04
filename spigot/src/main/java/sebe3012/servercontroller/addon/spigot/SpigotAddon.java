@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused") //Loaded by AddonLoader
 public class SpigotAddon extends Addon implements ServerCreator {
 
 	@Override
@@ -50,7 +51,7 @@ public class SpigotAddon extends Addon implements ServerCreator {
 		spigotConfigRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
 		if (useProperties && properties != null) {
-			spigotConfigRow.setDefaultValue(properties.get("spigot"));
+			spigotConfigRow.setDefaultValue(properties.get("spigotConfig"));
 		}
 		parentRows.add(spigotConfigRow);
 

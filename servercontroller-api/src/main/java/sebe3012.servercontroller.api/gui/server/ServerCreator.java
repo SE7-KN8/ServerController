@@ -36,4 +36,9 @@ public interface ServerCreator {
 		//Do nothing
 		return null;
 	}
+
+	default boolean isStandaloneServer(){
+		return true;
+	}
+
 }

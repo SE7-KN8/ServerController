@@ -10,10 +10,10 @@ import sebe3012.servercontroller.api.util.StringPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused") //Loaded by AddonLoader
 public class BungeeCordAddon extends Addon implements ServerCreator {
 
 	@Override
@@ -38,17 +38,15 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 		return "bungeecord";
 	}
 
+	@Nullable
+	@Override
+	public String getParent() {
+		return "servercontroller-base:jar-server";
+	}
+
 	@NotNull
 	@Override
 	public List<DialogRow> createServerDialogRows(@Nullable Map<String, String> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
-		DialogRow jarRow = new DialogRow();
-		jarRow.setName("Jar-Pfad");
-		jarRow.setUsingFileChooser(true);
-		jarRow.setFileExtension("*.jar");
-		jarRow.setFileType("JAR-ARCHIVE");
-		jarRow.setPropertyName("jarPath");
-		jarRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-
 		DialogRow configRow = new DialogRow();
 		configRow.setName("Config-Pfad");
 		configRow.setUsingFileChooser(true);
@@ -58,11 +56,10 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 		configRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
 		if (useProperties && properties != null) {
-			jarRow.setDefaultValue(properties.get("jar"));
-			configRow.setDefaultValue(properties.get("bungeecord"));
+			configRow.setDefaultValue(properties.get("bungeeCordConfig"));
 		}
 
-		Collections.addAll(parentRows, jarRow, configRow);
+		parentRows.add(configRow);
 
 		return parentRows;
 	}

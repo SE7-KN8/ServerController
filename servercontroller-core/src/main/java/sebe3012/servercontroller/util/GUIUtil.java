@@ -26,7 +26,7 @@ public class GUIUtil {
 	private static Logger log = LogManager.getLogger();
 
 	/**
-	 * -1 will disabling a number setting
+	 * -1 will disable a number setting
 	 *
 	 * @param layout         The GridPane
 	 * @param minWidth       The minimal width of the column
@@ -58,7 +58,7 @@ public class GUIUtil {
 	}
 
 	/**
-	 * -1 will disabling a number setting
+	 * -1 will disable a number setting
 	 *
 	 * @param layout       The GridPane
 	 * @param minHeight    The minimal height of the row
