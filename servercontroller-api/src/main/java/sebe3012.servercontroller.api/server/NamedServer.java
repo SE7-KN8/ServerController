@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +117,17 @@ public abstract class NamedServer implements BasicServer {
 
 	protected void setState(@NotNull ServerState state) {
 		log.info("[{}] Set state from {} to {}", name, this.state, state);
+		getStateListeners().forEach(listener -> listener.onStateChange(state));
 		this.state = state;
+	}
+
+	protected void onError(@NotNull Exception errorMessage) {
+		for (MessageListener listener : getMessageListeners()) {
+			StringWriter sw = new StringWriter();
+			PrintWriter ps = new PrintWriter(sw);
+			errorMessage.printStackTrace(ps);
+			listener.onMessage("Error while server run: " + sw.toString());
+		}
 	}
 
 }

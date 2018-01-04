@@ -15,8 +15,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -168,15 +166,6 @@ public abstract class CLIServer extends NamedServer {
 
 	public String[] getArgs() {
 		return args;
-	}
-
-	protected void onError(@NotNull Exception errorMessage) {
-		for (MessageListener listener : getMessageListeners()) {
-			StringWriter sw = new StringWriter();
-			PrintWriter ps = new PrintWriter(sw);
-			errorMessage.printStackTrace(ps);
-			listener.onMessage("Error while server run: " + sw.toString());
-		}
 	}
 
 	@Override

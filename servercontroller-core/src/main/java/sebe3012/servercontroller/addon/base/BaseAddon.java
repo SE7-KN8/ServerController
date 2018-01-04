@@ -1,5 +1,6 @@
 package sebe3012.servercontroller.addon.base;
 
+import sebe3012.servercontroller.addon.base.rcon.RConServerCreator;
 import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.addon.AddonRegistry;
 import sebe3012.servercontroller.api.gui.fileeditor.FileEditorCreator;
@@ -19,6 +20,8 @@ public class BaseAddon extends Addon {
 	private ServerCreator cliServerCreator = new CLIServerCreator();
 	private ServerCreator jarServerCreator = new JarServerCreator();
 
+	private ServerCreator rconServerCreator = new RConServerCreator();
+
 	@Override
 	protected void load(@NotNull AddonRegistry registry) {
 		registry.registerFileEditor(basicTextEditorCreator);
@@ -27,6 +30,9 @@ public class BaseAddon extends Addon {
 		registry.registerServerType(namedServerCreator);
 		registry.registerServerType(cliServerCreator);
 		registry.registerServerType(jarServerCreator);
+
+		//FIXME not working
+		//registry.registerServerType(rconServerCreator);
 	}
 
 	@Override
@@ -37,6 +43,9 @@ public class BaseAddon extends Addon {
 		registry.unregisterServerType(jarServerCreator);
 		registry.unregisterServerType(cliServerCreator);
 		registry.unregisterServerType(namedServerCreator);
+
+		//FIXME not working
+		//registry.unregisterServerType(rconServerCreator);
 	}
 
 }

@@ -14,7 +14,6 @@ import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.gui.dialog.AddonInstallDialog;
 import sebe3012.servercontroller.gui.dialog.CreditsDialog;
 import sebe3012.servercontroller.gui.dialog.LicenseDialog;
-import sebe3012.servercontroller.gui.dialog.RConDialog;
 import sebe3012.servercontroller.gui.dialog.ServerDialog;
 import sebe3012.servercontroller.gui.dialog.SettingsDialog;
 import sebe3012.servercontroller.gui.handler.ProgramExitHandler;
@@ -47,7 +46,6 @@ public class FrameHandler {
 	private Dialog addonInstallDialog;
 	private Dialog creditsDialog;
 	private Dialog licenseDialog;
-	private Dialog rconDialog;
 	private Dialog settingsDialog;
 	private Dialog serverDialog;
 
@@ -146,11 +144,6 @@ public class FrameHandler {
 	}
 
 	@FXML
-	void onRConClicked() {
-		rconDialog.showDialog();
-	}
-
-	@FXML
 	void onAddonInstallClicked() {
 		addonInstallDialog.showDialog();
 	}
@@ -203,7 +196,6 @@ public class FrameHandler {
 
 		serverDialog = new ServerDialog(serverManager);
 		settingsDialog = new SettingsDialog();
-		rconDialog = new RConDialog();
 		licenseDialog = new LicenseDialog();
 		creditsDialog = new CreditsDialog();
 		addonInstallDialog = new AddonInstallDialog();
