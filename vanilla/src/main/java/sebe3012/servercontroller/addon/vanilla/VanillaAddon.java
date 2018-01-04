@@ -10,11 +10,11 @@ import sebe3012.servercontroller.api.util.StringPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("unused") //Loaded by AddonLoader
 public class VanillaAddon extends Addon implements ServerCreator {
 
 	public static ResourceBundle bundle = ResourceBundle.getBundle("lang/addon_vanilla_lang");
@@ -41,17 +41,15 @@ public class VanillaAddon extends Addon implements ServerCreator {
 		return "vanilla";
 	}
 
+	@Nullable
+	@Override
+	public String getParent() {
+		return "servercontroller-base:jar-server";
+	}
+
 	@Override
 	@NotNull
 	public List<DialogRow> createServerDialogRows(@Nullable Map<String, String> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
-		DialogRow jarRow = new DialogRow();
-		jarRow.setName("Jar-Pfad");
-		jarRow.setUsingFileChooser(true);
-		jarRow.setFileExtension("*.jar");
-		jarRow.setFileType("JAR-ARCHIVE");
-		jarRow.setPropertyName("jarPath");
-		jarRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-
 		DialogRow propertiesRow = new DialogRow();
 		propertiesRow.setName("Properties-Pfad");
 		propertiesRow.setUsingFileChooser(true);
@@ -61,11 +59,10 @@ public class VanillaAddon extends Addon implements ServerCreator {
 		propertiesRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
 		if (useProperties && properties != null) {
-			jarRow.setDefaultValue(properties.get("jarPath"));
 			propertiesRow.setDefaultValue(properties.get("propertiesPath"));
 		}
 
-		Collections.addAll(parentRows, jarRow, propertiesRow);
+		parentRows.add(propertiesRow);
 
 		return parentRows;
 	}

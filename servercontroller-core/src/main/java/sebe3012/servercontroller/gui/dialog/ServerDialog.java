@@ -2,6 +2,7 @@ package sebe3012.servercontroller.gui.dialog;
 
 import sebe3012.servercontroller.addon.AddonUtil;
 import sebe3012.servercontroller.api.gui.dialog.Dialog;
+import sebe3012.servercontroller.api.gui.server.ServerCreator;
 import sebe3012.servercontroller.api.util.design.Designs;
 import sebe3012.servercontroller.server.ServerManager;
 import sebe3012.servercontroller.util.I18N;
@@ -38,7 +39,7 @@ public class ServerDialog implements Dialog {
 
 		List<String> serverCreators = new ArrayList<>();
 
-		serverManager.getRegistryHelper().getServerCreatorRegistry().getData().forEach((addon, serverCreatorsList) -> serverCreatorsList.forEach(serverCreator -> serverCreators.add(addon.getAddonInfo().getId() + ":" + serverCreator.getID())));
+		serverManager.getRegistryHelper().getServerCreatorRegistry().getData().forEach((addon, serverCreatorsList) -> serverCreatorsList.stream().filter(ServerCreator::isStandaloneServer).forEach(serverCreator -> serverCreators.add(addon.getAddonInfo().getId() + ":" + serverCreator.getID())));
 
 		ComboBox<String> box = new ComboBox<>();
 		box.setItems(FXCollections.observableArrayList(serverCreators));
