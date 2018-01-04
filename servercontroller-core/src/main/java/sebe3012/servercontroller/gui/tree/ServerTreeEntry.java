@@ -28,7 +28,7 @@ public class ServerTreeEntry implements TreeEntry<BasicServerHandler> {
 	public ServerTreeEntry(@NotNull BasicServerHandler item, @NotNull ServerManager manager) {
 		this.item = item;
 		this.manager = manager;
-		this.item.getServer().stateProperty().addListener((observable, oldValue, newValue) -> manager.getTreeHandler().refresh());
+		this.item.getServer().addStateListener(newState -> manager.getTreeHandler().refresh());
 	}
 
 	@NotNull

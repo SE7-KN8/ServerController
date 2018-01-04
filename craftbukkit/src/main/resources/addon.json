@@ -2,7 +2,7 @@
   "id": "craftbukkit",
   "name": "Craftbukkit",
   "version": "0.0.1.2",
-  "mainClass": "sebe3012.servercontroller.addon.craftbukkit.CraftbukkitAddon",
+  "mainClass": "sebe3012.servercontroller.addon.craftbukkit.CraftBukkitAddon",
   "authors": ["Sebe3012"],
   "dependencies": ["vanilla"]
 }

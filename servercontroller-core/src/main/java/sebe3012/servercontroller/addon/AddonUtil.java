@@ -140,24 +140,28 @@ public class AddonUtil {
 
 		findServerCreator(serverManager, addonID, serverCreatorID, serverCreator -> {
 			if (parent != null) {
+				//Creates row with filled values
 				createRows(serverCreator, rows, parent.getProperties(), true, serverManager);
 			} else {
+				//Creates empty rows
 				createRows(serverCreator, rows, null, false, serverManager);
 			}
 		});
 
-		openCreateDialog(addonID, serverCreatorID, serverManager, rows, parent, e -> {
+		//Opens Dialog
+		openCreateDialog(addonID, serverCreatorID, serverManager, rows, parent, editedProperties -> {
 			if (parent == null) {
+				//Creates new server
 				findServerCreator(serverManager, addonID, serverCreatorID, serverCreator -> {
 					try {
-						serverManager.createServerHandler(e, serverCreator.getServerClass(), true, addonID, serverCreatorID);
+						serverManager.createServerHandler(editedProperties, serverCreator.getServerClass(), true, addonID, serverCreatorID);
 					} catch (Exception ex) {
 						log.error("Could not create the server, because: ", ex);
 					}
 				});
 			} else {
-				Map<String, StringProperty> oldServerMap = parent.getProperties();
-				oldServerMap.forEach((key, value) -> value.set(e.get(key).get()));
+				//Re-initialize old one
+				parent.initialize(editedProperties);
 				serverManager.getTabHandler().refresh();
 				serverManager.getTreeHandler().refresh();
 			}
@@ -178,7 +182,7 @@ public class AddonUtil {
 				.findFirst();
 	}
 
-	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, StringProperty> properties, boolean useProperties, ServerManager manager) {
+	private static void createRows(ServerCreator creator, List<DialogRow> parentRows, Map<String, String> properties, boolean useProperties, ServerManager manager) {
 		if (creator.getParent() != null) {
 			String parentAddonID = creator.getParent().split(":")[0];
 			String parentCreatorID = creator.getParent().split(":")[1];
@@ -190,6 +194,7 @@ public class AddonUtil {
 
 	}
 
+
 	/**
 	 * Creates an dialog to create Addon-Specified server
 	 *
@@ -198,7 +203,7 @@ public class AddonUtil {
 	 * @param parent         A parent server if the dialog is used to edit. Can be null.
 	 * @param serverConsumer The function to create the server
 	 */
-	public static void openCreateDialog(@NotNull String addonID, String id, ServerManager manager, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, StringProperty>> serverConsumer) {
+	public static void openCreateDialog(@NotNull String addonID, String id, ServerManager manager, @NotNull List<DialogRow> values, @Nullable BasicServer parent, @NotNull Consumer<Map<String, String>> serverConsumer) {
 		Alert dialog = new Alert(Alert.AlertType.NONE);
 
 		GridPane root = getDialogLayout(addonID, values, serverConsumer, parent, v -> dialog.close());
@@ -211,13 +216,12 @@ public class AddonUtil {
 	}
 
 
-	private static GridPane getDialogLayout(String addonID, List<DialogRow> values, Consumer<Map<String, StringProperty>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
+	private static GridPane getDialogLayout(String addonID, List<DialogRow> values, Consumer<Map<String, String>> serverConsumer, BasicServer parent, Consumer<Void> closeCallback) {
 		DialogRow idRow = new DialogRow();
 
 		idRow.setName(I18N.translate("dialog_create_server_name"));
 		idRow.setPropertyName("name");
 		idRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
-
 
 		DialogRow argsRow = new DialogRow();
 		argsRow.setName(I18N.translate("dialog_create_server_args"));
@@ -226,11 +230,13 @@ public class AddonUtil {
 
 		if (parent != null) {
 			idRow.setDefaultValue(parent.getName());
-			argsRow.setDefaultValue(parent.getArgs());
+			argsRow.setDefaultValue("args");
+			//argsRow.setDefaultValue(parent.getArgs());
 		}
 
-		Map<String, StringProperty> properties = new HashMap<>();
+		Map<String, String> properties = new HashMap<>();
 		Map<String, DialogRow> rows = new HashMap<>();
+		Map<String, StringProperty> propertyMap = new HashMap<>();
 
 		//put the rows tree in the rows map
 		values.forEach(row -> rows.put(row.getPropertyName(), row));
@@ -266,15 +272,15 @@ public class AddonUtil {
 
 
 		//Add default rows
-		addRow(idRow, 1, layout, properties);
-		addRow(argsRow, 2, layout, properties);
+		addRow(idRow, 1, layout, propertyMap);
+		addRow(argsRow, 2, layout, propertyMap);
 
 
 		//Add addon-specified rows
 		int lastRow = 0;
 		for (int i = 0; i < values.size(); i++) {
 			DialogRow row = values.get(i);
-			addRow(row, i + 3, layout, properties);
+			addRow(row, i + 3, layout, propertyMap);
 			lastRow = i + 3;
 		}
 
@@ -287,31 +293,34 @@ public class AddonUtil {
 			BooleanProperty flag = new SimpleBooleanProperty(true);
 
 			log.debug("Start property analysis");
-			properties.forEach((k, v) -> {
+			propertyMap.forEach((k, v) -> {
 				DialogRow controlRow = rows.get(k);
+				String value = v.get();
 
 				//Non-Null check
 				if (controlRow == null) {
 					throw new IllegalStateException("Row is null");
 				}
 
-				if (v.get() == null) {
-					v.setValue("");
+				if (value == null) {
+					value = "";
 				}
-
+				log.info(v);
 				//Test the values
-				if (!controlRow.getStringPredicate().test(v.get())) {
+				if (!controlRow.getStringPredicate().test(value)) {
 					log.warn("Value '{}' do not match!", controlRow.getName());
 					DialogUtil.showWaringAlert(I18N.translate("dialog_wrong_content"), I18N.format("dialog_wrong_content_desc", controlRow.getName()));
 					flag.set(false);
 					return;
 				}
+				properties.put(k, value);
 			});
 
 			log.debug("End property analysis");
 			log.debug("Load server callback");
 
 			if (flag.get()) {
+				System.out.println("test:" +properties);
 				serverConsumer.accept(properties);
 				closeCallback.accept(null);
 			}

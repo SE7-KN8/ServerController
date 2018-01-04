@@ -4,12 +4,11 @@ import sebe3012.servercontroller.api.addon.Addon;
 import sebe3012.servercontroller.api.addon.AddonRegistry;
 import sebe3012.servercontroller.api.gui.server.DialogRow;
 import sebe3012.servercontroller.api.gui.server.ServerCreator;
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.CLIServer;
 import sebe3012.servercontroller.api.util.StringPredicates;
 
 import org.jetbrains.annotations.NotNull;
-
-import javafx.beans.property.StringProperty;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +28,7 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 
 	@NotNull
 	@Override
-	public Class<? extends BasicServer> getServerClass() {
+	public Class<? extends CLIServer> getServerClass() {
 		return BungeeCordServer.class;
 	}
 
@@ -41,13 +40,13 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 
 	@NotNull
 	@Override
-	public List<DialogRow> createServerDialogRows(@NotNull Map<String, StringProperty> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
+	public List<DialogRow> createServerDialogRows(@Nullable Map<String, String> properties, @NotNull List<DialogRow> parentRows, boolean useProperties) {
 		DialogRow jarRow = new DialogRow();
 		jarRow.setName("Jar-Pfad");
 		jarRow.setUsingFileChooser(true);
 		jarRow.setFileExtension("*.jar");
 		jarRow.setFileType("JAR-ARCHIVE");
-		jarRow.setPropertyName("jar");
+		jarRow.setPropertyName("jarPath");
 		jarRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
 		DialogRow configRow = new DialogRow();
@@ -55,12 +54,12 @@ public class BungeeCordAddon extends Addon implements ServerCreator {
 		configRow.setUsingFileChooser(true);
 		configRow.setFileExtension("*.yml");
 		configRow.setFileType("YML");
-		configRow.setPropertyName("bungeecord");
+		configRow.setPropertyName("bungeeCordConfig");
 		configRow.setStringPredicate(StringPredicates.DEFAULT_CHECK);
 
-		if (useProperties) {
-			jarRow.setDefaultValue(properties.get("jar").get());
-			configRow.setDefaultValue(properties.get("bungeecord").get());
+		if (useProperties && properties != null) {
+			jarRow.setDefaultValue(properties.get("jar"));
+			configRow.setDefaultValue(properties.get("bungeecord"));
 		}
 
 		Collections.addAll(parentRows, jarRow, configRow);

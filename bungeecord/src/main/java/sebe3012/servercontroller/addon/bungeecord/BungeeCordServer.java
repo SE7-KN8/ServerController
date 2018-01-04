@@ -1,23 +1,19 @@
 package sebe3012.servercontroller.addon.bungeecord;
 
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.JarServer;
 
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.Control;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class BungeeCordServer extends BasicServer {
-	private StringProperty configFile;
+public class BungeeCordServer extends JarServer {
+	private String configFile;
 
-	private List<Control> extraControls = new ArrayList<>();
+	@Override
+	public void initialize(@NotNull Map<String, String> properties) {
+		super.initialize(properties);
 
-	public BungeeCordServer(Map<String, StringProperty> properties){
-		super(properties);
-
-		configFile = properties.get("bungeecord");
+		configFile = properties.get("bungeeCordConfig");
 	}
 
 	@Override
@@ -25,20 +21,36 @@ public class BungeeCordServer extends BasicServer {
 		return 1;
 	}
 
+	@NotNull
 	public String getConfigFile() {
-		return configFile.get();
+		return configFile;
 	}
 
-	@Override
-	public List<Control> getExtraControls() {
-		return extraControls;
-	}
-
+	@NotNull
 	@Override
 	public String getStopCommand() {
 		return "end";
 	}
 
+	@NotNull
+	@Override
+	protected String getArgsAfterJar() {
+		return "";
+	}
+
+	@Override
+	public String[] getArgs() {
+		String[] oldArgs = super.getArgs();
+		String[] newArgs = new String[oldArgs.length + 2];
+		for (int i = 0; i < oldArgs.length; i++) {
+			newArgs[i] = oldArgs[i];
+		}
+		newArgs[oldArgs.length] = "-Djline.WindowsTerminal.directConsole=false";
+		newArgs[oldArgs.length + 1] = "-Djline.terminal=jline.UnsupportedTerminal";
+		return newArgs;
+	}
+
+	@NotNull
 	@Override
 	public String getDoneRegex() {
 		return ".*Listening on \\/\\d*.\\d*.\\d*.\\d*:\\d*";

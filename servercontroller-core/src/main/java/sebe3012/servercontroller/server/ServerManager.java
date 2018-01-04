@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
 import java.io.IOException;
@@ -78,12 +77,13 @@ public class ServerManager {
 	}
 
 	@NotNull
-	public BasicServerHandler createServerHandler(@NotNull Map<String, StringProperty> properties, @NotNull Class<? extends BasicServer> serverClass, boolean addServer, @NotNull String addonID, @NotNull String serverCreatorID) throws NoSuchMethodException, InstantiationException, InvocationTargetException, IllegalAccessException {
+	public BasicServerHandler createServerHandler(@NotNull Map<String, String> properties, @NotNull Class<? extends BasicServer> serverClass, boolean addServer, @NotNull String addonID, @NotNull String serverCreatorID) throws NoSuchMethodException, InstantiationException, InvocationTargetException, IllegalAccessException {
 		log.info("Creating server '{}' with properties: '{}'", serverClass.getSimpleName(), properties);
 
-		Constructor<? extends BasicServer> constructor = serverClass.getConstructor(Map.class);
-		BasicServer server = constructor.newInstance(properties);
-		server.setCreatorInfo(addonID, serverCreatorID);
+		Constructor<? extends BasicServer> constructor = serverClass.getConstructor();
+		BasicServer server = constructor.newInstance();
+		server.initialize(properties);
+		server.setServerCreatorInfo(addonID, serverCreatorID);
 		BasicServerHandler handler = new BasicServerHandler(server);
 
 		if (addServer) {
@@ -99,12 +99,19 @@ public class ServerManager {
 
 		ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
 
-		Platform.runLater(() -> rootTabHandler.addTab(tab));
+		Platform.runLater(() -> {
+			rootTabHandler.addTab(tab);
+			rootTabHandler.selectEntry(tab);
+		});
 
-		//TODO better way to implement this
-		TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
-		searchSubFolders(Paths.get(handler.getServer().getJarPath()).getParent(), item, tab.getServerTabHandler(), handler);
-		rootTreeHandler.addItem(item);
+		String path = handler.getServer().getProperties().get("jarPath");
+
+		if (path != null) {
+			//TODO better way to implement this
+			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
+			searchSubFolders(Paths.get(path).getParent(), item, tab.getServerTabHandler(), handler);
+			rootTreeHandler.addItem(item);
+		}
 	}
 
 	@Deprecated
@@ -186,7 +193,7 @@ public class ServerManager {
 
 	public void editSelectedServer() {
 		BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
-		AddonUtil.loadServerCreateDialog(handler.getServer().getAddonID(), handler.getServer().getCreatorID(), handler.getServer(), this);
+		AddonUtil.loadServerCreateDialog(handler.getServer().getAddonID(), handler.getServer().getServerCreatorID(), handler.getServer(), this);
 	}
 
 }

@@ -61,7 +61,7 @@ public class ServerConsoleTab implements TabEntry<BasicServerHandler>, BasicServ
 				if (currentListIndex > 0) {
 					currentListIndex--;
 					consoleInputField.setText(commandList.get(currentListIndex));
-				}else{
+				} else {
 					consoleInputField.setText("");
 				}
 				break;
@@ -137,8 +137,8 @@ public class ServerConsoleTab implements TabEntry<BasicServerHandler>, BasicServ
 
 	@Override
 	public void onStop(int code) {
-		Platform.runLater(()->{
-			consoleOutputArea.appendText("\n\n\n\n\n\n\n");
+		Platform.runLater(() -> {
+			consoleOutputArea.appendText("Server '" + serverHandler.getServer().getName() + "' has stopped with code " + code + "\n");
 			consoleOutputArea.showParagraphAtBottom(consoleOutputArea.getCurrentParagraph());
 		});
 	}

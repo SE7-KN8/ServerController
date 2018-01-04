@@ -1,7 +1,7 @@
 package sebe3012.servercontroller.addon.vanilla.dialog.ops;
 
 import sebe3012.servercontroller.addon.vanilla.VanillaAddon;
-import sebe3012.servercontroller.api.server.BasicServer;
+import sebe3012.servercontroller.api.server.CLIServer;
 import sebe3012.servercontroller.api.util.design.Designs;
 
 import javafx.application.Platform;
@@ -36,7 +36,7 @@ public class OpsDialogController {
 	private ListView<String> rightList;
 
 	private OpsHandler handler;
-	private BasicServer server;
+	private CLIServer server;
 
 	private ObservableList<String> main;
 	private ObservableList<String> left;
@@ -72,7 +72,7 @@ public class OpsDialogController {
 		leftList.getSelectionModel().select(rightList.getSelectionModel().getSelectedIndex());
 	}
 
-	public OpsDialogController(OpsHandler handler, BasicServer server) {
+	public OpsDialogController(OpsHandler handler, CLIServer server) {
 		this.handler = handler;
 		this.server = server;
 	}

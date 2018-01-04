@@ -47,13 +47,13 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 		loadServerInfo();
 	}
 
-	private void loadServerInfo(){
+	private void loadServerInfo() {
 		lblPane.getChildren().clear();
 		int index = 0;
 
 		for (int i = 0; i < lblPane.getRowConstraints().size(); i++) {
 			for (int k = 0; k < lblPane.getColumnConstraints().size(); k++) {
-				List<String> serverInfo = serverHandler.getServer().getServerInfos();
+				List<String> serverInfo = serverHandler.getServer().getServerInformation();
 
 				if (serverInfo.size() > index) {
 					String labelText = serverInfo.get(index);
@@ -117,10 +117,7 @@ public class ServerRootTab implements TabEntry<BasicServerHandler> {
 		}
 
 		FrameHandler.buttonList.getChildren().clear();
-		serverHandler.getServer().getExtraControls().forEach(control->{
-			control.setPrefWidth(1000);
-			FrameHandler.buttonList.getChildren().add(control);
-		});
+		serverHandler.getServer().getControls().forEach(node -> FrameHandler.buttonList.getChildren().add(node));
 	}
 
 	public TabHandler<TabEntry<?>> getServerTabHandler() {

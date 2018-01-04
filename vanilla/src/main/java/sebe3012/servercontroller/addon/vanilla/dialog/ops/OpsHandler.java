@@ -24,9 +24,6 @@ public class OpsHandler {
 		this.path = path;
 	}
 
-	public OpsHandler() {
-	}
-
 	public List<Operator> getAllValues() {
 		return operators;
 	}
