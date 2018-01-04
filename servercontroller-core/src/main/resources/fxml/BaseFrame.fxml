@@ -31,7 +31,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#onAddServerItemClicked" text="%menu_item_add_server" />
                         <MenuItem mnemonicParsing="false" onAction="#onServerEditItemClicked" text="%menu_item_edit_server" />
                         <MenuItem mnemonicParsing="false" onAction="#onServerRemoveItemClicked" text="%menu_item_remove_server" />
-                        <MenuItem mnemonicParsing="false" onAction="#onRConClicked" text="%menu_item_rcon_connection" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="%menu_help">

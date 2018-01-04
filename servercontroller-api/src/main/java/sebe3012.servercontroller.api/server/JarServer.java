@@ -16,7 +16,6 @@ public abstract class JarServer extends CLIServer {
 	@Override
 	public void initialize(@NotNull Map<String, String> properties) {
 		super.initialize(properties);
-		System.out.println(properties);
 		jarPath = Paths.get(properties.get("jarPath"));
 	}
 

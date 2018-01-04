@@ -104,14 +104,16 @@ public class ServerManager {
 			rootTabHandler.selectEntry(tab);
 		});
 
+		TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
+
 		String path = handler.getServer().getProperties().get("jarPath");
 
 		if (path != null) {
 			//TODO better way to implement this
-			TreeItem<TreeEntry<?>> item = new TreeItem<>(new ServerTreeEntry(handler, this));
 			searchSubFolders(Paths.get(path).getParent(), item, tab.getServerTabHandler(), handler);
-			rootTreeHandler.addItem(item);
 		}
+
+		rootTreeHandler.addItem(item);
 	}
 
 	@Deprecated
