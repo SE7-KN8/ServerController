@@ -6,7 +6,6 @@ dependencies {
     compile project(':servercontroller-api')
     compile 'com.google.guava:guava:23.3-jre'
     compile 'org.jdom:jdom2:2.0.6'
-    compile 'com.github.oshi:oshi-core:3.4.3'
     compile 'org.fxmisc.richtext:richtextfx:0.8.1'
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.controlsfx:controlsfx:8.40.14'
