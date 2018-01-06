@@ -109,6 +109,11 @@ public class FrameHandler {
 	}
 
 	@FXML
+	void onLicenseClicked() {
+		licenseDialog.showDialog();
+	}
+
+	@FXML
 	void onAddServerItemClicked() {
 		serverDialog.showDialog();
 	}
