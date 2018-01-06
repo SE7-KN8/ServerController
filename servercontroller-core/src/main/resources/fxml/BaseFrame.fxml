@@ -35,7 +35,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="%menu_help">
                     <items>
-                        <!--<MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="%menu_item_license" />-->
+                        <MenuItem mnemonicParsing="false" onAction="#onLicenseClicked" text="%menu_item_license" />
                         <MenuItem mnemonicParsing="false" onAction="#onDesignClicked" text="%menu_item_design" />
                         <MenuItem mnemonicParsing="false" onAction="#onCreditsItemClicked" text="%menu_item_credits" />
                     </items>
