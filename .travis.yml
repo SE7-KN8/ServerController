@@ -7,7 +7,7 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 deploy:
-  provider: releases
+  provider: master
   api_key:
     secure: gclapY/XkzD7WS6lwDzCuMfrBeOpuSU2GspKegWOR2aJc0QZeu6vfJh3ioPJ4ids2ySTiNk1ts7Q34oN5OvHtww4lc5inmg0EThz0/NU+/fgxmDU2j99KMCeqlxPkFnCosjCcmk/s+ry4VUJFaOgT30yY6iA2JAxcSCEuIS1ExDIbErmMTdnwJ9kTS+nHNcG9Ny/qpBZhwhsxBbXI78bdN2lQc+etzewYQ9AeQVGUd9v1trGYkq01ePi4JJO5qDPk7indrOl9sLZWlYgO1XCSgqUULOhtgnXwu9DBb/MCUrSgugQL5f4J/HOvAqYYisp9jPGtHxFWtKhWJdbnoWcZziU6XAK2oMH4I1tdr5q5gc/t0Scsr5i91XHuU+wjKU9thhihLnV/ANbwH+RepOsk4Q9d14W8wAKr3JQZCZqyyeJUtHodiDvHhO6bPiMloIuFtmyCQc62KutBkNYOtMQ9KviZnt2Q6UUisKAC/NXJsVbwAmJbgzdqZuGU7c2hVxRHruIsKvpaBYju0rZy1c796VlEESIAy8mdGPiqt/Opsc4JGVoaDoed5sBOZH+WQNLFStFDgYDzR7FotbJmFQ1uLe9xOtbOqh2QkTP8NISii7PSEMbBivS3sZJHNB06QBFr80nfsPJdJRDDj+R2fpQj0wA0iYnJ+8QJH6+vOowRoI=
   file_glob: true
