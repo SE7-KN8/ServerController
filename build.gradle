@@ -1,6 +1,6 @@
 allprojects {
     task info doLast { task -> println "Task $task.project.name loaded"}
-    task clearJarCopys doLast { delete "${buildDir}/jarCopys" }
+    task clearJarCopys doLast { delete "${projectDir}/jarCopys" }
 }
 
 subprojects {
@@ -11,6 +11,7 @@ subprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url "https://dl.bintray.com/buremba/maven" }
     }
 	
     uploadArchives {
@@ -25,7 +26,7 @@ subprojects {
 
 task copyJars(type: Copy) {
     from subprojects.collect { it.tasks.withType(Jar) }
-    into "$buildDir/jarCopys"
+    into "$projectDir/jarCopys"
 }
 
 task copyAddons(type: Copy){
