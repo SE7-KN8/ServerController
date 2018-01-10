@@ -3,6 +3,16 @@ allprojects {
     task clearJarCopys doLast { delete "${projectDir}/jarCopys" }
 }
 
+def static getBuildNumber(){
+
+    def number = System.getenv('TRAVIS_BUILD_NUMBER')
+    if(number == null){
+        number = "snapshot"
+    }
+
+    return number
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
@@ -22,7 +32,6 @@ subprojects {
         }
     }
 }
-
 
 task copyJars(type: Copy) {
     from subprojects.collect { it.tasks.withType(Jar) }

@@ -15,16 +15,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-def static getBuildNumber(){
-
-    def number = System.getenv('BUILD_NUMBER')
-    if(number == null){
-        number = "snapshot"
-    }
-
-    return number
-}
-
 version = '0.5.14.' + getBuildNumber() + '_alpha'
 
 jar {
