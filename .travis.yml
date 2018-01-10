@@ -11,7 +11,7 @@ notifications:
   email: false
 
 script:
-  - "./gradlew clean clearJarCopy build copyJars"
+  - "./gradlew clean clearJarCopy build createExe copyJars"
 
 deploy:
   skip_cleanup: true
