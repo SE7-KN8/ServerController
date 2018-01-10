@@ -2,7 +2,7 @@ dependencies {
     compile project(':vanilla')
 }
 
-version = '0.0.1.2'
+version = '0.1.2.' + getBuildNumber() + '_alpha'
 
 jar{
     baseName = 'ServerController-Addon-CraftBukkit'
