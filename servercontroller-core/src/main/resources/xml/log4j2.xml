@@ -83,6 +83,13 @@
             <AppenderRef ref="RollingFileFull"/>
         </Logger>
 
+        <!--Default logger for jetty-->
+        <Logger name="org.eclipse.jetty" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ConsoleError"/>
+            <AppenderRef ref="RollingFileFull"/>
+        </Logger>
+
         <Logger name="SYSOUT" level="debug" additivity="false">
             <AppenderRef ref="ConsoleFull"/>
             <AppenderRef ref="RollingFileFull"/>
