@@ -31,5 +31,6 @@ deploy:
   on:
     branch: master
     repo: SE7-KN8/ServerController
+    tags: true
 after_deploy:
   - "./gradlew clearJarCopy"
