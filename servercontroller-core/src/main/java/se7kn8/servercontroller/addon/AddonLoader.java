@@ -10,8 +10,6 @@ import se7kn8.servercontroller.util.I18N;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -31,7 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -78,7 +78,7 @@ public final class AddonLoader {
 	public static final Path ADDON_TEMP_PATH = FileUtil.createRelativePath("temp/addons");
 	public static final PathMatcher JAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**.jar");
 	public static final List<Path> JAR_PATHS = new ArrayList<>();
-	public static final BiMap<String, Addon> ADDONS = HashBiMap.create();
+	public static final Map<String, Addon> ADDONS = new HashMap<>();
 
 	private List<AddonInfo> addonsToLoad = new ArrayList<>();
 	private List<AddonInfo> addonsToLoadSorted = new ArrayList<>();
