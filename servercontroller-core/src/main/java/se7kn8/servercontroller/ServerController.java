@@ -41,8 +41,8 @@ public class ServerController {
 	 * @param args Arguments from the console
 	 */
 	public static void main(String[] args) {
-		log.info("ServerController ({}) is starting!", ServerController.VERSION);
 		START_TIME = System.currentTimeMillis();
+		log.info("ServerController ({}) is starting!", ServerController.VERSION);
 
 		CLIOptions.loadOptions(args);
 

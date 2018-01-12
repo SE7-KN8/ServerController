@@ -18,6 +18,7 @@ import se7kn8.servercontroller.gui.dialog.ServerDialog;
 import se7kn8.servercontroller.gui.dialog.SettingsDialog;
 import se7kn8.servercontroller.gui.handler.ProgramExitHandler;
 import se7kn8.servercontroller.gui.tree.RootTreeEntry;
+import se7kn8.servercontroller.rest.RestServer;
 import se7kn8.servercontroller.save.ServerSave;
 import se7kn8.servercontroller.server.ServerManager;
 import se7kn8.servercontroller.util.GUIUtil;
@@ -55,7 +56,7 @@ public class FrameHandler {
 
 	private TabHandler<TabEntry<BasicServerHandler>> handler;
 	private TreeHandler<TreeEntry<?>> treeHandler;
-
+	private RestServer server;
 	private ServerManager serverManager;
 
 	private static final Logger log = LogManager.getLogger();
@@ -161,7 +162,10 @@ public class FrameHandler {
 
 		serverManager = new ServerManager(handler, treeHandler, Addons.getAddonLoader().getRegistryHelper());
 
-		this.primaryStage.setOnCloseRequest(new ProgramExitHandler(handler));
+		server = new RestServer(7890, "/servercontroller", serverManager);
+		server.start();
+
+		this.primaryStage.setOnCloseRequest(new ProgramExitHandler(serverManager, server));
 
 		String designID = ServerControllerPreferences.loadSetting(Designs.SAVE_KEY, Designs.getDefaultDesign().getId());
 
