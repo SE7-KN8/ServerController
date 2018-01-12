@@ -14,7 +14,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-version = '0.5.14.' + getBuildNumber() + '_alpha'
+version = '0.5.15.' + getBuildNumber() + '_alpha'
 
 jar {
 
