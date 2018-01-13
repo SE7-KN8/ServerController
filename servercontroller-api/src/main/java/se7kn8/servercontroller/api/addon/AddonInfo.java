@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Created by Sebe3012 on 28.02.2017.
+ * Created by se7kn8 on 28.02.2017.
  * All information about an addon
  */
 @SuppressWarnings("unused")
