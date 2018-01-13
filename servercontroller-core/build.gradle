@@ -22,7 +22,7 @@ jar {
 
     manifest {
         attributes 'Version': project.version
-        attributes 'Main-Class': 'sebe3012.servercontroller.ServerController'
+        attributes 'Main-Class': 'se7kn8.servercontroller.ServerController'
         attributes 'Implementation-Title' : project.name
         attributes 'Implementation-Version' : project.version
     }
@@ -34,7 +34,7 @@ jar {
 }
 
 launch4j {
-    mainClassName = 'sebe3012.servercontroller.ServerController'
+    mainClassName = 'se7kn8.servercontroller.ServerController'
     icon = "$rootDir/raw/icon.ico"
     copyright = '2016-2017 by Sebastian Knackstedt'
     outfile = project.name + '-' + project.version + '.exe'

@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Created by Sebe3012 on 01.04.2017.
+ * Created by se7kn8 on 01.04.2017.
  * Util class for all designs
  */
 //TODO don't use static methods

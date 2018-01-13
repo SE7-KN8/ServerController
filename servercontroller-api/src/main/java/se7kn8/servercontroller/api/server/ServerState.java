@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import javafx.scene.paint.Color;
 
 /**
- * Created by Sebe3012 on 28.01.2017.
+ * Created by se7kn8 on 28.01.2017.
  * All states that a {@link BasicServer} can have
  */
 public enum ServerState {
