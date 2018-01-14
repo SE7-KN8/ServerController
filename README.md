@@ -6,4 +6,4 @@ A program to control servers (e.g. Spigot, Vanilla, BungeeCord).
 [Installation guide](https://github.com/SE7-KN8/ServerController/wiki)
 
 ## Discord Server
-[Link to the ServerController Discord-Sever](https://discord.gg/vPeHPdy)
+[Link to the ServerController Discord-Server](https://discord.gg/vPeHPdy)
