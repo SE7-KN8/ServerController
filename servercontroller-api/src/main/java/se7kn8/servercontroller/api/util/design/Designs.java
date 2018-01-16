@@ -95,7 +95,10 @@ public class Designs {
 
 	public static void showDesignDialog(Stage primaryStage) {
 		ChoiceDialog<Design> cd = new ChoiceDialog<>();
-		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
+		ImageView view = new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm());
+		view.setFitWidth(64);
+		view.setFitHeight(64);
+		cd.setGraphic(view);
 		Designs.applyCurrentDesign(cd.getDialogPane());
 		cd.setTitle(bundle.getString("dialog_choose_design"));
 		cd.setHeaderText(bundle.getString("dialog_choose_design_desc"));

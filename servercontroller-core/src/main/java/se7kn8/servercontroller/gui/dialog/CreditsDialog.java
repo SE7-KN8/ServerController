@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -29,7 +30,11 @@ public class CreditsDialog extends AlertDialog {
 
 	@Override
 	public DialogPane createDialog(DialogPane dialogPane) {
-
+		ImageView view = new ImageView(ClassLoader.getSystemResource("png/splash.png").toExternalForm());
+		double ratio = view.getImage().getWidth() / view.getImage().getHeight();
+		view.setFitWidth(200 * ratio);
+		view.setFitHeight(200);
+		dialogPane.setGraphic(view);
 		try {
 			VBox content = FXMLLoader.load(ClassLoader.getSystemResource("fxml/CreditsDialog.fxml"), I18N.getDefaultBundle());
 
