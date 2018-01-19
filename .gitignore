@@ -1,33 +1,16 @@
 #All gradle files
 .gradle
 
-#Build files
-/build/
-/versions/
+# Build
+versions
+build
+out
 
-/vanilla/versions/
-/vanilla/build/
-/vanilla/out/
-
-/bungeecord/versions/
-/bungeecord/build/
-/bungeecord/out/
-
-/spigot/versions/
-/spigot/build/
-/spigot/out/
-
-/craftbukkit/versions/
-/craftbukkit/build/
-/craftbukkit/out/
-
-/servercontroller-core/versions/
-/servercontroller-core/build/
-/servercontroller-core/out/
-
-/servercontroller-api/versions/
-/servercontroller-api/build/
-/servercontroller-api/out/
+# Eclipse
+.project
+.classpath
+.settings
+bin
 
 # Ignore Gradle GUI config
 gradle-app.setting
