@@ -30,9 +30,7 @@ public class BaseAddon extends Addon {
 		registry.registerServerType(namedServerCreator);
 		registry.registerServerType(cliServerCreator);
 		registry.registerServerType(jarServerCreator);
-
-		//FIXME not working
-		//registry.registerServerType(rconServerCreator);
+		registry.registerServerType(rconServerCreator);
 	}
 
 	@Override
@@ -43,9 +41,7 @@ public class BaseAddon extends Addon {
 		registry.unregisterServerType(jarServerCreator);
 		registry.unregisterServerType(cliServerCreator);
 		registry.unregisterServerType(namedServerCreator);
-
-		//FIXME not working
-		//registry.unregisterServerType(rconServerCreator);
+		registry.unregisterServerType(rconServerCreator);
 	}
 
 }
