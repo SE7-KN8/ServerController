@@ -197,6 +197,7 @@ public class ServerSave {
 						serverManager.addServerHandler(serverHandler);
 
 					} else {
+						//TODO better warning
 						log.warn("No plugin found with name: {}", addonID);
 						Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.format("dialog_save_no_plugin", addonID)));
 					}
