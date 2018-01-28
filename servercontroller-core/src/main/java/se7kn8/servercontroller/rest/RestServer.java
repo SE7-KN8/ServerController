@@ -31,6 +31,7 @@ public class RestServer implements Runnable {
 
 	private final String ERROR_NOT_FOUND = "Not found";
 	private final String UNAUTHORIZED = "Unauthorized";
+	private final String SUCCESSFUL = "Successful";
 
 	private Javalin javalin;
 	private int port;
@@ -83,9 +84,7 @@ public class RestServer implements Runnable {
 			}
 			sendError(UNAUTHORIZED, 401, ctx);
 		});
-		javalin.error(404, ctx -> {
-			sendError(ERROR_NOT_FOUND, 404, ctx);
-		});
+		javalin.error(404, ctx -> sendError(ERROR_NOT_FOUND, 404, ctx));
 		/*javalin.embeddedServer(new EmbeddedJettyFactory(() -> {
 
 			Server server = new Server();
@@ -118,6 +117,9 @@ public class RestServer implements Runnable {
 		createServerStartEndpoint();
 		createServerStopEndpoint();
 		createServerRestartEndpoint();
+		createServersStartEndpoint();
+		createServersStopEndpoint();
+		createServersRestartEndpoint();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -196,9 +198,7 @@ public class RestServer implements Runnable {
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
 			if (handler.isPresent()) {
 				handler.get().startServer();
-				ServerControllerMessage message = new ServerControllerMessage();
-				message.setMessage("Successful");
-				ctx.json(message);
+				sendMessage(SUCCESSFUL, 200, ctx);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
@@ -210,9 +210,7 @@ public class RestServer implements Runnable {
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
 			if (handler.isPresent()) {
 				handler.get().stopServer();
-				ServerControllerMessage message = new ServerControllerMessage();
-				message.setMessage("Successful");
-				ctx.json(message);
+				sendMessage(SUCCESSFUL, 200, ctx);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
@@ -224,19 +222,44 @@ public class RestServer implements Runnable {
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
 			if (handler.isPresent()) {
 				handler.get().restartServer();
-				ServerControllerMessage message = new ServerControllerMessage();
-				message.setMessage("Successful");
-				ctx.json(message);
+				sendMessage(SUCCESSFUL, 200, ctx);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.restart"));
 	}
 
+	private void createServersStartEndpoint() {
+		javalin.post("/servers/start", ctx -> {
+			manager.startAllServers();
+			sendMessage(SUCCESSFUL, 200, ctx);
+		}, createRoleForPermission("servercontroller.servers.start"));
+	}
+
+	private void createServersStopEndpoint() {
+		javalin.post("/servers/stop", ctx -> {
+			manager.stopAllServers();
+			sendMessage(SUCCESSFUL, 200, ctx);
+		}, createRoleForPermission("servercontroller.servers.stop"));
+	}
+
+	private void createServersRestartEndpoint() {
+		javalin.post("/servers/restart", ctx -> {
+			manager.restartAllServers();
+			sendMessage(SUCCESSFUL, 200, ctx);
+		}, createRoleForPermission("servercontroller.servers.restart"));
+	}
+
 	private void sendError(String message, int code, Context ctx) {
 		ServerControllerError error = new ServerControllerError();
 		error.setErrorMessage(message);
 		ctx.status(code).json(error);
+	}
+
+	private void sendMessage(String message, int code, Context ctx) {
+		ServerControllerMessage serverControllerMessage = new ServerControllerMessage();
+		serverControllerMessage.setMessage(message);
+		ctx.status(code).json(message);
 	}
 
 	@NotNull
