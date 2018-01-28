@@ -97,12 +97,12 @@ public class ServerManager {
 
 	public void addServerHandler(@NotNull BasicServerHandler handler) {
 		log.info("Adding server handler");
-		servers.add(handler);
 
 		if (getServerIds().contains(handler.getServer().getName())) {
 			throw new IllegalArgumentException("ID '" + handler.getServer().getName() + "' is already present!");
 		}
 
+		servers.add(handler);
 		ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
 
 		Platform.runLater(() -> {
