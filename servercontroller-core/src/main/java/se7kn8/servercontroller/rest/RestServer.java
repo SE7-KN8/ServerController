@@ -8,6 +8,7 @@ import se7kn8.servercontroller.addon.AddonLoader;
 import se7kn8.servercontroller.api.rest.ServerControllerAddons;
 import se7kn8.servercontroller.api.rest.ServerControllerError;
 import se7kn8.servercontroller.api.rest.ServerControllerMessage;
+import se7kn8.servercontroller.api.rest.ServerControllerPermissions;
 import se7kn8.servercontroller.api.rest.ServerControllerServerState;
 import se7kn8.servercontroller.api.rest.ServerControllerServers;
 import se7kn8.servercontroller.api.rest.ServerControllerVersion;
@@ -120,6 +121,7 @@ public class RestServer implements Runnable {
 		createServersStartEndpoint();
 		createServersStopEndpoint();
 		createServersRestartEndpoint();
+		createUserPermissionsEndpoint();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -248,6 +250,25 @@ public class RestServer implements Runnable {
 			manager.restartAllServers();
 			sendMessage(SUCCESSFUL, 200, ctx);
 		}, createRoleForPermission("servercontroller.servers.restart"));
+	}
+
+	private void createUserPermissionsEndpoint() {
+		javalin.get("/user/permissions", ctx -> {
+			String apiKey = ctx.header("token");
+			if (apiKey == null) {
+				apiKey = "";
+			}
+			List<Permission> permissions = apiKeyManager.getPermissions(apiKey);
+			ServerControllerPermissions serverControllerPermissions = new ServerControllerPermissions();
+			List<ServerControllerPermissions.ServerControllerPermission> permissionList = new ArrayList<>();
+			for (Permission permission : permissions) {
+				ServerControllerPermissions.ServerControllerPermission serverControllerPermission = new ServerControllerPermissions.ServerControllerPermission();
+				serverControllerPermission.setName(permission.getPermission());
+				permissionList.add(serverControllerPermission);
+			}
+			serverControllerPermissions.setPermissionList(permissionList);
+			ctx.json(serverControllerPermissions);
+		}, createRoleForPermission("servercontroller.user.permissions"));
 	}
 
 	private void sendError(String message, int code, Context ctx) {
