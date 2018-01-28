@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ServerManager {
 
@@ -96,6 +98,10 @@ public class ServerManager {
 	public void addServerHandler(@NotNull BasicServerHandler handler) {
 		log.info("Adding server handler");
 		servers.add(handler);
+
+		if (getServerIds().contains(handler.getServer().getName())) {
+			throw new IllegalArgumentException("ID '" + handler.getServer().getName() + "' is already present!");
+		}
 
 		ServerRootTab tab = ServerRootTab.createRootTab(handler, this);
 
@@ -196,6 +202,15 @@ public class ServerManager {
 	public void editSelectedServer() {
 		BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
 		AddonUtil.loadServerCreateDialog(handler.getServer().getAddonID(), handler.getServer().getServerCreatorID(), handler.getServer(), this);
+	}
+
+	public List<String> getServerIds() {
+		return servers.stream().map(basicServerHandler -> basicServerHandler.getServer().getName()).collect(Collectors.toList());
+	}
+
+	@NotNull
+	public Optional<BasicServerHandler> findServerByID(String id) {
+		return servers.stream().filter(basicServerHandler -> basicServerHandler.getServer().getName().equals(id)).findFirst();
 	}
 
 }

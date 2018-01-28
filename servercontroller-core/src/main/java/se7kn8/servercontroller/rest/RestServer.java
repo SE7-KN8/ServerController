@@ -112,13 +112,13 @@ public class RestServer implements Runnable {
 
 	}*///TODO add way to load user created certificates
 
-	public void createVersionEndpoint() {
+	private void createVersionEndpoint() {
 		ServerControllerVersion version = new ServerControllerVersion();
 		version.setVersion(ServerController.VERSION);
 		javalin.get(basePath + "/version", ctx -> ctx.json(version), createRoleForPermission("servercontroller.version"));
 	}
 
-	public void createAddonsEndpoint() {
+	private void createAddonsEndpoint() {
 		List<ServerControllerAddons.ServerControllerAddonInfo> addonInfoList = new ArrayList<>();
 		AddonLoader.ADDONS.forEach((id, addon) -> {
 			ServerControllerAddons.ServerControllerAddonInfo info = new ServerControllerAddons.ServerControllerAddonInfo();
