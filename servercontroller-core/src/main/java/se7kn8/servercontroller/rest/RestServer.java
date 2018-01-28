@@ -5,17 +5,23 @@ import io.javalin.security.Role;
 import se7kn8.servercontroller.ServerController;
 import se7kn8.servercontroller.addon.AddonLoader;
 import se7kn8.servercontroller.api.rest.ServerControllerAddons;
+import se7kn8.servercontroller.api.rest.ServerControllerServers;
 import se7kn8.servercontroller.api.rest.ServerControllerVersion;
 import se7kn8.servercontroller.rest.authentication.ApiKeyManager;
+import se7kn8.servercontroller.rest.authentication.permission.Permission;
 import se7kn8.servercontroller.rest.authentication.permission.PermissionRole;
+import se7kn8.servercontroller.rest.authentication.permission.node.GlobNode;
 import se7kn8.servercontroller.server.ServerManager;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RestServer implements Runnable {
+
+	public static final String API_VERSION = "1.0";
 
 	private Javalin javalin;
 	private int port;
@@ -44,8 +50,11 @@ public class RestServer implements Runnable {
 	public void run() {
 		apiKeyManager = new ApiKeyManager();
 		//TODO add gui to generate api keys
-		//apiKeyManager.generateApiKey(Arrays.asList(new Permission(new GlobNode())));
+		if (ServerController.DEBUG) {
+			apiKeyManager.generateApiKey(Arrays.asList(new Permission(new GlobNode())));
+		}
 		javalin = Javalin.create();
+		javalin.contextPath(basePath);
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
 			String apiToken = ctx.header("token");
 			if (permittedRoles.size() > 1) {
@@ -92,6 +101,7 @@ public class RestServer implements Runnable {
 		javalin.start();
 		createVersionEndpoint();
 		createAddonsEndpoint();
+		createServersEndpoint();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -115,7 +125,8 @@ public class RestServer implements Runnable {
 	private void createVersionEndpoint() {
 		ServerControllerVersion version = new ServerControllerVersion();
 		version.setVersion(ServerController.VERSION);
-		javalin.get(basePath + "/version", ctx -> ctx.json(version), createRoleForPermission("servercontroller.version"));
+		version.setApiVersion(RestServer.API_VERSION);
+		javalin.get("/version", ctx -> ctx.json(version), createRoleForPermission("servercontroller.version"));
 	}
 
 	private void createAddonsEndpoint() {
@@ -128,7 +139,27 @@ public class RestServer implements Runnable {
 			info.setVersion(addon.getAddonInfo().getVersion().toString());
 			addonInfoList.add(info);
 		});
-		javalin.get(basePath + "/addons", ctx -> ctx.json(addonInfoList), createRoleForPermission("servercontroller.addons"));
+		ServerControllerAddons addons = new ServerControllerAddons();
+		addons.setAddons(addonInfoList);
+		javalin.get("/addons", ctx -> ctx.json(addons), createRoleForPermission("servercontroller.addons"));
+	}
+
+	private void createServersEndpoint() {
+		javalin.get("/servers", ctx -> {
+			List<ServerControllerServers.ServerControllerServer> serverList = new ArrayList<>();
+
+			manager.getServerList().forEach(basicServerHandler -> {
+				ServerControllerServers.ServerControllerServer server = new ServerControllerServers.ServerControllerServer();
+				server.setName(basicServerHandler.getServer().getName());
+				server.setServerCreatorInfo(basicServerHandler.getServer().getAddonID() + ":" + basicServerHandler.getServer().getServerCreatorID());
+				server.setServerInformation(basicServerHandler.getServer().getServerInformation());
+				serverList.add(server);
+			});
+
+			ServerControllerServers servers = new ServerControllerServers();
+			servers.setServerList(serverList);
+			ctx.json(servers);
+		}, createRoleForPermission("servercontroller.servers"));
 	}
 
 	@NotNull
