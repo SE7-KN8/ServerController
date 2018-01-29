@@ -9,6 +9,7 @@ import se7kn8.servercontroller.api.rest.ServerControllerAddons;
 import se7kn8.servercontroller.api.rest.ServerControllerError;
 import se7kn8.servercontroller.api.rest.ServerControllerMessage;
 import se7kn8.servercontroller.api.rest.ServerControllerPermissions;
+import se7kn8.servercontroller.api.rest.ServerControllerServerProperties;
 import se7kn8.servercontroller.api.rest.ServerControllerServerState;
 import se7kn8.servercontroller.api.rest.ServerControllerServers;
 import se7kn8.servercontroller.api.rest.ServerControllerVersion;
@@ -122,6 +123,7 @@ public class RestServer implements Runnable {
 		createServersStopEndpoint();
 		createServersRestartEndpoint();
 		createUserPermissionsEndpoint();
+		createServerPropertiesEndpoint();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -269,6 +271,19 @@ public class RestServer implements Runnable {
 			serverControllerPermissions.setPermissionList(permissionList);
 			ctx.json(serverControllerPermissions);
 		}, createRoleForPermission("servercontroller.user.permissions"));
+	}
+
+	private void createServerPropertiesEndpoint() {
+		javalin.get("/server/:id/properties", ctx -> {
+			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
+			if (handler.isPresent()) {
+				ServerControllerServerProperties serverProperties = new ServerControllerServerProperties();
+				serverProperties.setProperties(handler.get().getServer().getProperties());
+				ctx.json(serverProperties);
+			} else {
+				sendError(ERROR_NOT_FOUND, 404, ctx);
+			}
+		}, createRoleForPermission("servercontroller.server.properties"));
 	}
 
 	private void sendError(String message, int code, Context ctx) {
