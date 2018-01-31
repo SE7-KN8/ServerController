@@ -1,13 +1,68 @@
 package se7kn8.servercontroller.rest.authentication.permission;
 
 import se7kn8.servercontroller.rest.authentication.permission.node.GlobNode;
+import se7kn8.servercontroller.rest.authentication.permission.node.NamedPermissionNode;
 import se7kn8.servercontroller.rest.authentication.permission.node.PermissionNode;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Permission {
+
+	private static class PermissionTypeAdapter extends TypeAdapter<Permission> {
+
+		@Override
+		public void write(JsonWriter out, Permission value) throws IOException {
+			out.beginObject().name("nodes").beginArray();
+			for (PermissionNode node : value.getNodes()) {
+				out.beginObject();
+				if (node instanceof GlobNode) {
+					out.name("type").value("GLOB");
+				} else if (node instanceof NamedPermissionNode) {
+					out.name("type").value("NAMED");
+				}
+				out.name("path").value(node.getPath());
+				out.endObject();
+			}
+			out.endArray().endObject();
+		}
+
+		@Override
+		public Permission read(JsonReader in) throws IOException {
+			in.beginObject();
+			in.nextName();
+			in.beginArray();
+			List<PermissionNode> nodes = new ArrayList<>();
+			while (in.hasNext()) {
+				in.beginObject();
+				in.nextName();
+				String type = in.nextString();
+				in.nextName();
+				String path = in.nextString();
+				switch (type) {
+					case "NAMED":
+						nodes.add(new NamedPermissionNode(path));
+						break;
+					case "GLOB":
+						nodes.add(new GlobNode());
+						break;
+				}
+				in.endObject();
+			}
+			in.endArray();
+			in.endObject();
+			return new Permission(nodes.toArray(new PermissionNode[nodes.size()]));
+		}
+	}
 
 	private String permission;
 	private List<PermissionNode> nodes;
@@ -56,6 +111,20 @@ public class Permission {
 		}
 
 		return true;
+	}
+
+	public static JsonElement toJson(Permission permission) {
+		Gson gson = new GsonBuilder()
+				.registerTypeHierarchyAdapter(Permission.class, new PermissionTypeAdapter())
+				.create();
+		return gson.toJsonTree(permission);
+	}
+
+	public static Permission fromJson(JsonElement element) {
+		Gson gson = new GsonBuilder()
+				.registerTypeHierarchyAdapter(Permission.class, new PermissionTypeAdapter())
+				.create();
+		return gson.fromJson(element, Permission.class);
 	}
 
 }
