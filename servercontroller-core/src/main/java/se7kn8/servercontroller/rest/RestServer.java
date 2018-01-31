@@ -14,22 +14,23 @@ import se7kn8.servercontroller.api.rest.ServerControllerServerState;
 import se7kn8.servercontroller.api.rest.ServerControllerServers;
 import se7kn8.servercontroller.api.rest.ServerControllerVersion;
 import se7kn8.servercontroller.api.server.BasicServerHandler;
+import se7kn8.servercontroller.api.util.FileUtil;
 import se7kn8.servercontroller.rest.authentication.ApiKeyManager;
 import se7kn8.servercontroller.rest.authentication.permission.Permission;
 import se7kn8.servercontroller.rest.authentication.permission.PermissionRole;
-import se7kn8.servercontroller.rest.authentication.permission.node.GlobNode;
 import se7kn8.servercontroller.server.ServerManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class RestServer implements Runnable {
 
 	public static final String API_VERSION = "1.0";
+	private static final Path SAVE_PATH = FileUtil.createRelativePath("data/rest-api/api-keys.json");
 
 	private final String ERROR_NOT_FOUND = "Not found";
 	private final String UNAUTHORIZED = "Unauthorized";
@@ -55,16 +56,13 @@ public class RestServer implements Runnable {
 
 	public void stop() {
 		javalin.stop();
-		javalin.stop();
+		ApiKeyManager.saveToFile(apiKeyManager, SAVE_PATH);
 	}
 
 	@Override
 	public void run() {
-		apiKeyManager = new ApiKeyManager();
+		apiKeyManager = ApiKeyManager.loadFromFile(SAVE_PATH);
 		//TODO add gui to generate api keys
-		if (ServerController.DEBUG) {
-			apiKeyManager.generateApiKey(Arrays.asList(new Permission(new GlobNode())));
-		}
 		javalin = Javalin.create();
 		javalin.contextPath(basePath);
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
