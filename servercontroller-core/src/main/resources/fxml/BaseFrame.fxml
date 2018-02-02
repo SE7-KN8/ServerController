@@ -24,6 +24,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onOpenItemClicked" text="%menu_item_load_servers" />
                         <MenuItem mnemonicParsing="false" onAction="#onSettingsClicked" text="%menu_item_settings" />
                         <MenuItem mnemonicParsing="false" onAction="#onAddonInstallClicked" text="%menu_item_addon_install" />
+                        <MenuItem mnemonicParsing="false" onAction="#onApiKeysItemClicked" text="%menu_item_api_keys"/>
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="%menu_server">

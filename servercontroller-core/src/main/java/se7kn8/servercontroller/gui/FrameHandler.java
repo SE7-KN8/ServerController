@@ -16,6 +16,7 @@ import se7kn8.servercontroller.gui.dialog.CreditsDialog;
 import se7kn8.servercontroller.gui.dialog.LicenseDialog;
 import se7kn8.servercontroller.gui.dialog.ServerDialog;
 import se7kn8.servercontroller.gui.dialog.SettingsDialog;
+import se7kn8.servercontroller.gui.dialog.apikey.ApiKeyDialog;
 import se7kn8.servercontroller.gui.handler.ProgramExitHandler;
 import se7kn8.servercontroller.gui.tree.RootTreeEntry;
 import se7kn8.servercontroller.rest.RestServer;
@@ -49,6 +50,7 @@ public class FrameHandler {
 	private Dialog licenseDialog;
 	private Dialog settingsDialog;
 	private Dialog serverDialog;
+	private Dialog apiKeyDialog;
 
 	public static ProgressBar currentProgress;
 	public static VBox buttonList;
@@ -149,6 +151,11 @@ public class FrameHandler {
 		addonInstallDialog.showDialog();
 	}
 
+	@FXML
+	void onApiKeysItemClicked() {
+		apiKeyDialog.showDialog();
+	}
+
 	private void init() {
 		Designs.registerDesign(new Design("css/bright", "bright", I18N.getDefaultBundle()));
 		Designs.registerDesign(new Design("css/dark", "dark", I18N.getDefaultBundle()));
@@ -199,6 +206,7 @@ public class FrameHandler {
 
 
 		serverDialog = new ServerDialog(serverManager);
+		apiKeyDialog = new ApiKeyDialog(server);
 		settingsDialog = new SettingsDialog();
 		licenseDialog = new LicenseDialog();
 		creditsDialog = new CreditsDialog();

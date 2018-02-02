@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+//TODO switch to json
 public class ServerSave {
 
 	private static final String SAVE_KEY = "last_servers";

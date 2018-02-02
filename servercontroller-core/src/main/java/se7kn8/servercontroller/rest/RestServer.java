@@ -36,6 +36,8 @@ public class RestServer implements Runnable {
 	private final String UNAUTHORIZED = "Unauthorized";
 	private final String SUCCESSFUL = "Successful";
 
+	private List<String> permissions;
+
 	private Javalin javalin;
 	private int port;
 	private String basePath;
@@ -61,6 +63,7 @@ public class RestServer implements Runnable {
 
 	@Override
 	public void run() {
+		permissions = new ArrayList<>();
 		apiKeyManager = ApiKeyManager.loadFromFile(SAVE_PATH);
 		//TODO add gui to generate api keys
 		javalin = Javalin.create();
@@ -298,6 +301,15 @@ public class RestServer implements Runnable {
 
 	@NotNull
 	private List<Role> createRoleForPermission(@NotNull String permission) {
+		permissions.add(permission);
 		return Role.roles(new PermissionRole(permission));
+	}
+
+	public List<String> getPermissions() {
+		return permissions;
+	}
+
+	public ApiKeyManager getApiKeyManager() {
+		return apiKeyManager;
 	}
 }

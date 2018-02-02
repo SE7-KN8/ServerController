@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class LicenseDialog extends StageDialog {
 
@@ -16,7 +17,7 @@ public class LicenseDialog extends StageDialog {
 	}
 
 	@Override
-	public Scene createDialog() {
+	public Scene createDialog(Stage stage) {
 		VBox root = new VBox();
 
 		WebView wv = new WebView();
