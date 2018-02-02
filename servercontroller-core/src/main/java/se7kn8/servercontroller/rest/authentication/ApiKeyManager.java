@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ApiKeyManager {
 
@@ -135,6 +136,10 @@ public class ApiKeyManager {
 		return apiKey;
 	}
 
+	public void setPermission(@NotNull String apiKey, @NotNull List<Permission> permissions){
+		keys.put(apiKey, permissions);
+	}
+
 	public static void saveToFile(ApiKeyManager manager, Path path) {
 		if (Files.isDirectory(path)) {
 			throw new IllegalArgumentException("Path isn't a file!");
@@ -170,4 +175,7 @@ public class ApiKeyManager {
 		return new ApiKeyManager();
 	}
 
+	public Set<String> getKeys() {
+		return keys.keySet();
+	}
 }

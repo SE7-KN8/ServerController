@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class AddonInstallDialog extends StageDialog {
 	}
 
 	@Override
-	public Scene createDialog() {
+	public Scene createDialog(Stage stage) {
 		BorderPane root = new BorderPane();
 
 		Button openBtn = new Button(I18N.translate("file_choose"));
