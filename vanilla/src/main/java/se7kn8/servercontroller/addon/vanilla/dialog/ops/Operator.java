@@ -1,7 +1,7 @@
 package se7kn8.servercontroller.addon.vanilla.dialog.ops;
 
 /**
- * Created by Sebe3012 on 28.02.2017.
+ * Created by se7kn8 on 28.02.2017.
  * A wrapper class for the operators of a server
  */
 public class Operator {

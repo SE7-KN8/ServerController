@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
 import java.util.function.Predicate;
 
 /**
- * Created by Sebe3012 on 15.01.2017.
+ * Created by se7kn8 on 15.01.2017.
  * This class is a wrapper for parameters that can used
  */
 public class DialogRow {

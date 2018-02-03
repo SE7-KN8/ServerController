@@ -3,7 +3,7 @@ package se7kn8.servercontroller.api.addon;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Sebe3012 on 28.02.2017.
+ * Created by se7kn8 on 28.02.2017.
  * Basic type for all addons
  */
 public abstract class Addon {

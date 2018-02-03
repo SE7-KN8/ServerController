@@ -27,7 +27,7 @@ deploy:
   file: 
     - "jarCopys/*"
     - "servercontroller-core/build/launch4j/*.exe"
-  name: "${TRAVIS_BUILD_NUMBER}-${TRAVIS_BRANCH}-${TRAVIS_BUILD_ID}"
+  name: "servercontroller-${TRAVIS_TAG}_alpha"
   on:
     branch: master
     repo: SE7-KN8/ServerController

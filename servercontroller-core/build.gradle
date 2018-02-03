@@ -5,7 +5,6 @@ plugins {
 dependencies {
     compile project(':servercontroller-api')
     compile project(':servercontroller-rest-api')
-    compile 'com.google.guava:guava:23.3-jre'
     compile 'org.jdom:jdom2:2.0.6'
     compile 'org.fxmisc.richtext:richtextfx:0.8.1'
     compile 'commons-cli:commons-cli:1.4'
@@ -21,7 +20,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-version = '0.5.14.' + getBuildNumber() + '_alpha'
+version = '0.5.16.' + getBuildNumber() + '_alpha'
 
 jar {
 
@@ -29,7 +28,7 @@ jar {
 
     manifest {
         attributes 'Version': project.version
-        attributes 'Main-Class': 'sebe3012.servercontroller.ServerController'
+        attributes 'Main-Class': 'se7kn8.servercontroller.ServerController'
         attributes 'Implementation-Title' : project.name
         attributes 'Implementation-Version' : project.version
     }
@@ -41,7 +40,7 @@ jar {
 }
 
 launch4j {
-    mainClassName = 'sebe3012.servercontroller.ServerController'
+    mainClassName = 'se7kn8.servercontroller.ServerController'
     icon = "$rootDir/raw/icon.ico"
     copyright = '2016-2017 by Sebastian Knackstedt'
     outfile = project.name + '-' + project.version + '.exe'

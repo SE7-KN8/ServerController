@@ -1,17 +1,16 @@
 #All gradle files
 .gradle
 
-Build files
+# Build
+versions
 build
 out
-versions
 
 # Eclipse
-bin
-.settings
 .project
 .classpath
-
+.settings
+bin
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -28,5 +27,4 @@ Thumbs.db
 # Intellij
 .idea/
 classes
-/scenicView.properties
 jarCopys/

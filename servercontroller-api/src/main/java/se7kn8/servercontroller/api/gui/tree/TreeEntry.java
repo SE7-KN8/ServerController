@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 
 /**
- * Created by Sebe3012 on 21.04.2017.
+ * Created by se7kn8 on 21.04.2017.
  * A entry for the structure view
  */
 public interface TreeEntry<T> {

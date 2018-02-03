@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Sebe3012 on 14.05.2017.
+ * Created by se7kn8 on 14.05.2017.
  * A interface for all addons that create a new server type
  */
 public interface ServerCreator {

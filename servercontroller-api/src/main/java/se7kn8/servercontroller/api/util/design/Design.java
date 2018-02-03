@@ -16,7 +16,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Created by Sebe3012 on 18.02.2017.
+ * Created by se7kn8 on 18.02.2017.
  * A design for the gui
  */
 public class Design {
