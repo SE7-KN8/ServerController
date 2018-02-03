@@ -33,9 +33,7 @@ public abstract class CLIServer extends NamedServer {
 						if (CLIServer.this.getState() == ServerState.STARTING && line.matches(getDoneRegex())) {
 							CLIServer.this.setState(ServerState.RUNNING);
 						}
-
-						CLIServer.this.getMessageListeners().forEach(listener -> listener.onMessage(line));
-
+						CLIServer.this.sendLine(line);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,11 +48,8 @@ public abstract class CLIServer extends NamedServer {
 		public void run() {
 			try {
 				int code = serverProcess.waitFor();
-				log.info("[{}]: Stopped with code {}", CLIServer.this.getName(), code);
-
 				CLIServer.this.destroy();
-				CLIServer.this.getStopListeners().forEach(listener -> listener.onStop(code));
-
+				CLIServer.this.sendStop(code);
 
 				messageReaderThread.interrupt();
 			} catch (Exception e) {

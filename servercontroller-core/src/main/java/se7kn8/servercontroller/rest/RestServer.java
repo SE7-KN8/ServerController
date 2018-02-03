@@ -9,6 +9,7 @@ import se7kn8.servercontroller.api.rest.ServerControllerAddons;
 import se7kn8.servercontroller.api.rest.ServerControllerError;
 import se7kn8.servercontroller.api.rest.ServerControllerMessage;
 import se7kn8.servercontroller.api.rest.ServerControllerPermissions;
+import se7kn8.servercontroller.api.rest.ServerControllerServerLog;
 import se7kn8.servercontroller.api.rest.ServerControllerServerProperties;
 import se7kn8.servercontroller.api.rest.ServerControllerServerState;
 import se7kn8.servercontroller.api.rest.ServerControllerServers;
@@ -125,6 +126,7 @@ public class RestServer implements Runnable {
 		createServersRestartEndpoint();
 		createUserPermissionsEndpoint();
 		createServerPropertiesEndpoint();
+		createServerLogEndpoint();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -285,6 +287,20 @@ public class RestServer implements Runnable {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.properties"));
+	}
+
+	//TODO make it possible to get only a part of the log
+	private void createServerLogEndpoint() {
+		javalin.get("/server/:id/log", ctx -> {
+			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
+			if(handler.isPresent()){
+				ServerControllerServerLog serverLog = new ServerControllerServerLog();
+				serverLog.setLines(handler.get().getServer().getLatestLog());
+				ctx.json(serverLog);
+			}else{
+				sendError(ERROR_NOT_FOUND, 404, ctx);
+			}
+		}, createRoleForPermission("servercontroller.server.log"));
 	}
 
 	private void sendError(String message, int code, Context ctx) {
