@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Created by Sebe3012 on 01.04.2017.
+ * Created by se7kn8 on 01.04.2017.
  * Util class for all designs
  */
 //TODO don't use static methods
@@ -95,7 +95,10 @@ public class Designs {
 
 	public static void showDesignDialog(Stage primaryStage) {
 		ChoiceDialog<Design> cd = new ChoiceDialog<>();
-		cd.setGraphic(new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm()));
+		ImageView view = new ImageView(ClassLoader.getSystemResource("png/icon.png").toExternalForm());
+		view.setFitWidth(64);
+		view.setFitHeight(64);
+		cd.setGraphic(view);
 		Designs.applyCurrentDesign(cd.getDialogPane());
 		cd.setTitle(bundle.getString("dialog_choose_design"));
 		cd.setHeaderText(bundle.getString("dialog_choose_design_desc"));

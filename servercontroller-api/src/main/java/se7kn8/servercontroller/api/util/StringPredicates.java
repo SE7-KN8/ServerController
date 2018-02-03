@@ -3,7 +3,7 @@ package se7kn8.servercontroller.api.util;
 import java.util.function.Predicate;
 
 /**
- * Created by Sebe3012 on 18.01.2017.
+ * Created by se7kn8 on 18.01.2017.
  * This class contains some string predicates
  */
 public class StringPredicates {

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Sebe3012 on 19.04.2017.
+ * Created by se7kn8 on 19.04.2017.
  * A util class for all things with files
  */
 public class FileUtil {
