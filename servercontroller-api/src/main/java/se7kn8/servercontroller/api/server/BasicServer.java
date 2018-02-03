@@ -77,6 +77,9 @@ public interface BasicServer {
 	}
 
 	@NotNull
+	List<String> getLatestLog();
+
+	@NotNull
 	default List<Node> getControls() {
 		//Do nothing by default
 		return new ArrayList<>();
