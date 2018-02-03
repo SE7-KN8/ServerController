@@ -16,7 +16,7 @@ public abstract class StageDialog implements Dialog {
 		this.title = title;
 	}
 
-	public abstract Scene createDialog();
+	public abstract Scene createDialog(Stage stage);
 
 	@Override
 	public final void showDialog() {
@@ -24,7 +24,7 @@ public abstract class StageDialog implements Dialog {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("png/icon.png")));
 		stage.setTitle(title);
-		Scene scene = createDialog();
+		Scene scene = createDialog(stage);
 		Designs.applyCurrentDesign(scene);
 		stage.setScene(scene);
 		stage.showAndWait();

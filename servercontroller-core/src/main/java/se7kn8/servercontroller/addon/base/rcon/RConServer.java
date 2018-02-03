@@ -97,7 +97,7 @@ public class RConServer extends NamedServer {
 		} catch (Exception e) {
 			log.error("Can't stop server: ", e);
 		} finally {
-			getStopListeners().forEach(listener -> listener.onStop(0));
+			sendStop(0);
 			setState(ServerState.STOPPED);
 		}
 		return ErrorCode.ERROR;
@@ -105,13 +105,11 @@ public class RConServer extends NamedServer {
 
 	@Override
 	public void sendCommand(@NotNull String command) {
-		getMessageListeners().forEach(listener -> {
-			try {
-				listener.onMessage(new String(send(RConType.COMMAND, command.getBytes(StandardCharsets.US_ASCII)), StandardCharsets.US_ASCII));
-			} catch (Exception e) {
-				onError(e);
-			}
-		});
+		try {
+			sendLine(new String(send(RConType.COMMAND, command.getBytes(StandardCharsets.US_ASCII)), StandardCharsets.US_ASCII));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

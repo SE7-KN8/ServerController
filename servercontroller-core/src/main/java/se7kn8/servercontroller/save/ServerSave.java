@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+//TODO switch to json
 public class ServerSave {
 
 	private static final String SAVE_KEY = "last_servers";
@@ -197,6 +198,7 @@ public class ServerSave {
 						serverManager.addServerHandler(serverHandler);
 
 					} else {
+						//TODO better warning
 						log.warn("No plugin found with name: {}", addonID);
 						Platform.runLater(() -> DialogUtil.showErrorAlert("", I18N.format("dialog_save_no_plugin", addonID)));
 					}

@@ -22,6 +22,9 @@ public abstract class NamedServer implements BasicServer {
 	private List<StopListener> stopListeners = new ArrayList<>();
 	private List<StateListener> stateListeners = new ArrayList<>();
 
+	private static final int LATEST_LOG_SIZE = 100; //TODO make it changeable
+	private List<String> latestLog = new ArrayList<>();
+
 	@Override
 	public void initialize(@NotNull Map<String, String> properties) {
 		this.properties = properties;
@@ -101,28 +104,32 @@ public abstract class NamedServer implements BasicServer {
 	}
 
 	@NotNull
-	protected List<MessageListener> getMessageListeners() {
-		return messageListeners;
+	@Override
+	public List<String> getLatestLog() {
+		return latestLog;
 	}
 
-	@NotNull
-	protected List<StopListener> getStopListeners() {
-		return stopListeners;
+	protected void sendStop(int code) {
+		log.info("[{}] Stopped with code: {}", name, code);
+		stopListeners.forEach(listener -> listener.onStop(code));
 	}
 
-	@NotNull
-	protected List<StateListener> getStateListeners() {
-		return stateListeners;
+	protected void sendLine(@NotNull String message) {
+		if (latestLog.size() >= NamedServer.LATEST_LOG_SIZE) {
+			latestLog.remove(latestLog.size() - 1);
+		}
+		latestLog.add(0, message);
+		messageListeners.forEach(listener -> listener.onMessage(message));
 	}
 
 	protected void setState(@NotNull ServerState state) {
 		log.info("[{}] Set state from {} to {}", name, this.state, state);
-		getStateListeners().forEach(listener -> listener.onStateChange(state));
+		stateListeners.forEach(listener -> listener.onStateChange(state));
 		this.state = state;
 	}
 
 	protected void onError(@NotNull Exception errorMessage) {
-		for (MessageListener listener : getMessageListeners()) {
+		for (MessageListener listener : messageListeners) {
 			StringWriter sw = new StringWriter();
 			PrintWriter ps = new PrintWriter(sw);
 			errorMessage.printStackTrace(ps);

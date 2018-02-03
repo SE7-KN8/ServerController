@@ -4,10 +4,16 @@ plugins {
 
 dependencies {
     compile project(':servercontroller-api')
+    compile project(':servercontroller-rest-api')
     compile 'org.jdom:jdom2:2.0.6'
     compile 'org.fxmisc.richtext:richtextfx:0.8.1'
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.controlsfx:controlsfx:8.40.14'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.3'
+    compile 'io.javalin:javalin:1.2.1'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.10.0'
+
+
     // For future use
     // compile 'io.github.lukehutch:fast-classpath-scanner:2.8.2'
 
