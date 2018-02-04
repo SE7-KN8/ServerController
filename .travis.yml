@@ -21,14 +21,14 @@ matrix:
       script:
         - "./gradlew clean clearJarCopy build createExe copyJars"
     - language: android
+      before-install:
+        - yes | sdkmanager "platforms;android-27"
       jdk: oraclejdk8
-      licenses:
+      android:
+        licenses:
           - 'android-sdk-preview-license-.+'
           - 'android-sdk-license-.+'
           - 'google-gdk-license-.+'
-      before-install:
-        - yes | sdkmanager "platforms;android-27"
-      android:
         components:
           - tools
           - android-27
