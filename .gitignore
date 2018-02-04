@@ -1,5 +1,6 @@
 #All gradle files
 .gradle
+local.properties
 
 # Build
 versions
@@ -26,5 +27,6 @@ Thumbs.db
 
 # Intellij
 .idea/
+*.iml
 classes
 jarCopys/

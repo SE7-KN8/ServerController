@@ -14,21 +14,25 @@ def static getBuildNumber(){
 }
 
 subprojects {
-    apply plugin: 'java'
     apply plugin: 'eclipse'
-	apply plugin: 'idea'
-	
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-	
-    uploadArchives {
-        repositories {
-            flatDir {
-                dirs 'versions'
+    apply plugin: 'idea'
+
+    if (!it.name.startsWith("servercontroller-android-app")) {
+        apply plugin: 'java'
+
+        uploadArchives {
+            repositories {
+                flatDir {
+                    dirs 'versions'
+                }
             }
         }
+    }
+
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
     }
 }
 
