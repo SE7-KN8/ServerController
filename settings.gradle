@@ -17,16 +17,39 @@ include 'services:webservice'
 */
 
 rootProject.name = 'ServerController'
-include 'servercontroller-api'
-include 'servercontroller-core'
-include 'servercontroller-rest-api'
 
-if (System.getenv("BUILD_ANDROID")) {
+if(System.getenv("CI")){
+    if (System.getenv("BUILD_ANDROID")) {
+        includeApp()
+        includeRest()
+    }else{
+        includeCore()
+        includeRest()
+        includeAddons()
+    }
+}else{
+    includeCore()
+    includeRest()
+    includeApp()
+    includeAddons()
+}
+
+def includeRest(){
+    include 'servercontroller-rest-api'
+}
+
+def includeCore(){
+    include 'servercontroller-api'
+    include 'servercontroller-core'
+}
+
+def includeApp(){
     include 'servercontroller-android-app'
 }
 
-
-include 'vanilla'
-include 'bungeecord'
-include 'craftbukkit'
-include 'spigot'
+def includeAddons() {
+    include 'vanilla'
+    include 'bungeecord'
+    include 'craftbukkit'
+    include 'spigot'
+}

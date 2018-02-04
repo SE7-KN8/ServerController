@@ -28,7 +28,7 @@ matrix:
           - android-27
           - build-tools-27.0.3
       env:
-        - BUILD-ANDROID=build
+        - BUILD_ANDROID=build
       script:
               - "./gradlew clean clearJarCopy build createExe copyJars"
 deploy:
