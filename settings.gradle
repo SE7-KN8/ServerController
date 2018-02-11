@@ -20,8 +20,9 @@ rootProject.name = 'ServerController'
 
 if(System.getenv("CI")){
     if (System.getenv("BUILD_ANDROID")) {
-        includeApp()
-        includeRest()
+        //Disabled until .travis.yml is fixed
+        //includeApp()
+        //includeRest()
     }else{
         includeCore()
         includeRest()
