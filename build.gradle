@@ -1,3 +1,6 @@
+apply plugin: 'maven'
+group = 'com.github.SE7-KN8'
+
 allprojects {
     task info doLast { task -> println "Task $task.project.name loaded"}
     task clearJarCopys doLast { delete "${projectDir}/jarCopys" }
