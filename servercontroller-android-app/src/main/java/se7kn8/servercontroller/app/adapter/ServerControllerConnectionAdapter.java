@@ -56,9 +56,11 @@ public class ServerControllerConnectionAdapter extends SelectableRecyclerViewAda
 		holder.bind(mConnections.get(position));
 		CardView view = ((CardView) holder.itemView);
 		float startValue = view.getCardElevation();
-		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "cardElevation", startValue, getSelectedIds().get(position) ?
+		float endValue = getSelectedIds().get(position) ?
 				Util.convertDpToPixel(8.0f, holder.mName.getContext()) :
-				Util.convertDpToPixel(2.0f, holder.mName.getContext()));
+				Util.convertDpToPixel(2.0f, holder.mName.getContext());
+
+		ObjectAnimator animator = ObjectAnimator.ofFloat(view, "cardElevation", startValue, endValue);
 		animator.start();
 	}
 

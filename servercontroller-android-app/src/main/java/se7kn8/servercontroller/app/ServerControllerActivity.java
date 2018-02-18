@@ -7,13 +7,17 @@ import se7kn8.servercontroller.app.fragment.ServerControllerOverviewFragment;
 
 public class ServerControllerActivity extends AppCompatActivity {
 
+	public static final String FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW = "servercontroller_overview_fragment";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new ServerControllerOverviewFragment()).commit();
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ServerControllerOverviewFragment(), FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW).commit();
+		}
 	}
 }
