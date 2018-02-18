@@ -10,7 +10,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.controlsfx:controlsfx:8.40.14'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.3'
-    compile 'io.javalin:javalin:1.2.1'
+    compile 'io.javalin:javalin:1.3.0'
     compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.10.0'
 
 
