@@ -59,7 +59,7 @@ public class ServerControllerOverviewFragment extends Fragment implements AddSer
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		CoordinatorLayout layout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_server_overview, container, false);
+		CoordinatorLayout layout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_servercontroller_overview, container, false);
 		RecyclerView view = layout.findViewById(R.id.server_overview_recycler);
 
 		mAdapter = new ServerControllerConnectionAdapter(mConnections);
