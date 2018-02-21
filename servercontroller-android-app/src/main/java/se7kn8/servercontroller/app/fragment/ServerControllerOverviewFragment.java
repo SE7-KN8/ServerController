@@ -46,14 +46,15 @@ public class ServerControllerOverviewFragment extends Fragment implements AddSer
 	@SuppressWarnings("unchecked")
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 
 		if (savedInstanceState == null) {
-			setHasOptionsMenu(true);
 			mConnections = loadList();
 		} else {
 			mConnections = (ArrayList<ServerControllerConnection>) savedInstanceState.getSerializable(STATE_CONNECTIONS);
 		}
 	}
+
 
 	@Nullable
 	@Override
@@ -130,15 +131,15 @@ public class ServerControllerOverviewFragment extends Fragment implements AddSer
 		switch (id) {
 			case R.id.item_delete:
 				SparseBooleanArray array = mAdapter.getSelectedIds();
-				for (int i = 0; i < array.size(); i++) {
+				for (int i = (array.size()); i >= 0; i--) {
 					if (array.valueAt(i)) {
 						mConnections.remove(array.keyAt(i));
 						mAdapter.notifyDataSetChanged();
 					}
 				}
-				if (mConnections.size() == 0) {
-					mActionMode.finish();
-				}
+				saveList();
+				mActionMode.finish();
+				return true;
 			default:
 				return false;
 		}
@@ -148,6 +149,7 @@ public class ServerControllerOverviewFragment extends Fragment implements AddSer
 	public void setNullToActionMode() {
 		if (mActionMode != null) {
 			mActionMode = null;
+
 		}
 	}
 
