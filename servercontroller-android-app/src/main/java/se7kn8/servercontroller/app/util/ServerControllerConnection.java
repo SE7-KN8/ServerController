@@ -31,4 +31,8 @@ public class ServerControllerConnection implements Serializable {
 	public String getApiKey() {
 		return apiKey;
 	}
+
+	public String toURL() {
+		return "http://" + ip + ":" + port+"/servercontroller/";
+	}
 }

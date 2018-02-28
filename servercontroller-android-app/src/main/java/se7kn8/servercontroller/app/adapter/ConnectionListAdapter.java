@@ -15,7 +15,7 @@ import se7kn8.servercontroller.app.util.Util;
 
 import java.util.List;
 
-public class ServerControllerConnectionAdapter extends SelectableRecyclerViewAdapter<ServerControllerConnectionAdapter.ServerControllerConnectionViewHolder> {
+public class ConnectionListAdapter extends SelectableRecyclerViewAdapter<ConnectionListAdapter.ServerControllerConnectionViewHolder> {
 
 	class ServerControllerConnectionViewHolder extends RecyclerView.ViewHolder {
 		private TextView mName;
@@ -36,7 +36,7 @@ public class ServerControllerConnectionAdapter extends SelectableRecyclerViewAda
 
 	private List<ServerControllerConnection> mConnections;
 
-	public ServerControllerConnectionAdapter(List<ServerControllerConnection> connections) {
+	public ConnectionListAdapter(List<ServerControllerConnection> connections) {
 		super(new SparseBooleanArray());
 		this.mConnections = connections;
 	}

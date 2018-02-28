@@ -15,4 +15,7 @@
     <string name="invalid_port">Port is invalid</string>
     <string name="invalid_name">Invalid name</string>
     <string name="invalid_ip">Invalid IP</string>
+    <string name="console">Console</string>
+    <string name="servers">Servers</string>
+    <string name="info">Infomation</string>
 </resources>
