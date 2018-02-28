@@ -1,6 +1,8 @@
 package se7kn8.servercontroller.api.rest;
 
-public class ServerControllerMessage {
+import java.io.Serializable;
+
+public class ServerControllerMessage implements Serializable {
 
 	private String message;
 

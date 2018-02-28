@@ -1,8 +1,9 @@
 package se7kn8.servercontroller.api.rest;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class ServerControllerServerProperties {
+public class ServerControllerServerProperties implements Serializable {
 
 	private Map<String, String> properties;
 

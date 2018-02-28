@@ -1,8 +1,9 @@
 package se7kn8.servercontroller.api.rest;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ServerControllerServers {
+public class ServerControllerServers implements Serializable {
 
 	private List<ServerControllerServer> serverList;
 

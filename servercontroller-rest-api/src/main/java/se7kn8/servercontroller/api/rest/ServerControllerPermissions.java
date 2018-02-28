@@ -1,8 +1,9 @@
 package se7kn8.servercontroller.api.rest;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ServerControllerPermissions {
+public class ServerControllerPermissions implements Serializable {
 
 	private List<ServerControllerPermission> permissionList;
 

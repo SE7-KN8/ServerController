@@ -1,8 +1,9 @@
 package se7kn8.servercontroller.api.rest;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ServerControllerAddons {
+public class ServerControllerAddons implements Serializable {
 
 	private List<ServerControllerAddonInfo> addons;
 

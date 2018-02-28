@@ -1,6 +1,8 @@
 package se7kn8.servercontroller.api.rest;
 
-public class ServerControllerVersion {
+import java.io.Serializable;
+
+public class ServerControllerVersion implements Serializable {
 
 	private String version;
 	private String apiVersion;

@@ -1,6 +1,8 @@
 package se7kn8.servercontroller.api.rest;
 
-public class ServerControllerServerState {
+import java.io.Serializable;
+
+public class ServerControllerServerState implements Serializable {
 	private String state;
 
 	public void setState(String state) {
