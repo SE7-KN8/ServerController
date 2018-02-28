@@ -105,7 +105,7 @@ public class ApiKeyManager {
 
 	@NotNull
 	public List<Permission> getPermissions(@NotNull String apiKey) {
-		return keys.computeIfAbsent(apiKey, key -> new ArrayList<>());
+		return keys.containsKey(apiKey) ? keys.get(apiKey) : new ArrayList<>();
 	}
 
 	public void deleteApiKey(@NotNull String apiKey) {
@@ -136,7 +136,7 @@ public class ApiKeyManager {
 		return apiKey;
 	}
 
-	public void setPermission(@NotNull String apiKey, @NotNull List<Permission> permissions){
+	public void setPermission(@NotNull String apiKey, @NotNull List<Permission> permissions) {
 		keys.put(apiKey, permissions);
 	}
 
@@ -161,7 +161,7 @@ public class ApiKeyManager {
 			throw new IllegalArgumentException("Path isn't a file!");
 		}
 
-		if(!Files.exists(path)){
+		if (!Files.exists(path)) {
 			return new ApiKeyManager();
 		}
 

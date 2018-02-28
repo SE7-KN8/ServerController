@@ -21,6 +21,8 @@ import se7kn8.servercontroller.rest.authentication.permission.Permission;
 import se7kn8.servercontroller.rest.authentication.permission.PermissionRole;
 import se7kn8.servercontroller.server.ServerManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -44,6 +46,7 @@ public class RestServer implements Runnable {
 	private String basePath;
 	private ServerManager manager;
 	private ApiKeyManager apiKeyManager;
+	private Logger log = LogManager.getLogger();
 
 	public RestServer(int port, String basePath, ServerManager manager) {
 		this.port = port;
@@ -70,6 +73,7 @@ public class RestServer implements Runnable {
 		javalin = Javalin.create();
 		javalin.contextPath(basePath);
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
+			log.debug("{} requested {}", ctx.ip(), ctx.path());
 			String apiToken = ctx.header("token");
 			if (permittedRoles.size() > 1) {
 				throw new IllegalArgumentException("Path: " + ctx.path() + " has more than one permission. Currently this is not allowed");
@@ -82,10 +86,13 @@ public class RestServer implements Runnable {
 			if (apiToken != null) {
 				PermissionRole role = (PermissionRole) permittedRoles.get(0);
 				if (apiKeyManager.canExecute(apiToken, role.getPermission())) {
+					log.info("Allowed request from {]", ctx.ip());
 					handler.handle(ctx);
 					return;
 				}
 			}
+
+			log.info("Denied request from {}", ctx.ip());
 			sendError(UNAUTHORIZED, 401, ctx);
 		});
 		javalin.error(404, ctx -> sendError(ERROR_NOT_FOUND, 404, ctx));
@@ -293,11 +300,11 @@ public class RestServer implements Runnable {
 	private void createServerLogEndpoint() {
 		javalin.get("/server/:id/log", ctx -> {
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
-			if(handler.isPresent()){
+			if (handler.isPresent()) {
 				ServerControllerServerLog serverLog = new ServerControllerServerLog();
 				serverLog.setLines(handler.get().getServer().getLatestLog());
 				ctx.json(serverLog);
-			}else{
+			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.log"));
