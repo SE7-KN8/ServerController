@@ -51,7 +51,7 @@ public class ServerControllerOverviewFragment extends Fragment implements Bottom
 				createFragment(new ServerConsoleFragment());
 				return true;
 			case R.id.item_info:
-				createFragment(new ServerControllerOverviewFragment());
+				createFragment(new ServerControllerInfoFragment());
 				return true;
 			default:
 				return false;

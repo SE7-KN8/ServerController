@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,13 +22,15 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 
-public class ServerListFragment extends Fragment implements Response.Listener<ServerControllerServers>, Response.ErrorListener {
+public class ServerListFragment extends Fragment implements Response.Listener<ServerControllerServers>, Response.ErrorListener, SwipeRefreshLayout.OnRefreshListener {
 	private static final String STATE_CONNECTION = "connection";
 	private static final String STATE_SERVERS = "servers";
 
 	private ServerControllerConnection mConnection;
 	private ArrayList<ServerControllerServers.ServerControllerServer> mServers;
 	private ServerListAdapter mAdapter;
+
+	private SwipeRefreshLayout mSwipeRefresh;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -49,14 +52,20 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_server_list, container, false);
 
+		mSwipeRefresh = view.findViewById(R.id.server_list_swipe);
+		mSwipeRefresh.setOnRefreshListener(this);
+
 		RecyclerView recyclerView = view.findViewById(R.id.server_list_recycler);
 		mAdapter = new ServerListAdapter(mServers);
 		recyclerView.setAdapter(mAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "servers/", this, ServerControllerServers.class, mConnection.getApiKey(), this), this.getContext());
+		loadData();
 
 		return view;
+	}
+
+	private void loadData(){
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "servers/", this, ServerControllerServers.class, mConnection.getApiKey(), this), this.getContext());
 	}
 
 	@Override
@@ -76,5 +85,11 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(STATE_CONNECTION, mConnection);
 		outState.putSerializable(STATE_SERVERS, mServers);
+	}
+
+	@Override
+	public void onRefresh() {
+		loadData();
+		mSwipeRefresh.setRefreshing(false);
 	}
 }
