@@ -86,7 +86,7 @@ public class RestServer implements Runnable {
 			if (apiToken != null) {
 				PermissionRole role = (PermissionRole) permittedRoles.get(0);
 				if (apiKeyManager.canExecute(apiToken, role.getPermission())) {
-					log.info("Allowed request from {]", ctx.ip());
+					log.info("Allowed request from {}", ctx.ip());
 					handler.handle(ctx);
 					return;
 				}
