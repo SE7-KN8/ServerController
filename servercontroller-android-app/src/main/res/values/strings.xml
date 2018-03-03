@@ -25,4 +25,7 @@
     <string name="permissions">Permissions</string>
     <string name="addon_name">%1$s (%2$s)</string>
     <string name="authors">Authors: %1$s</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="restart">Restart</string>
 </resources>

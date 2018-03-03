@@ -25,12 +25,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textSize="14sp"/>
 
         <TextView
                 android:id="@+id/text_view_url"
                 android:layout_width="match_parent"
+                android:textSize="14sp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_view_title"/>
 

@@ -2,12 +2,10 @@ package se7kn8.servercontroller.app.util;
 
 import se7kn8.servercontroller.api.rest.ServerControllerError;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -17,20 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GsonRequest<T> extends Request<T> {
-
-	private static class ServerControlllerException extends VolleyError {
-
-		private ServerControllerError mError;
-
-		public ServerControlllerException(ServerControllerError error) {
-			super(error.getErrorMessage());
-			this.mError = error;
-		}
-
-		public ServerControllerError getServerControllerError() {
-			return mError;
-		}
-	}
 
 	private Gson mGson = new Gson();
 	private Class<T> mClass;
@@ -46,7 +30,7 @@ public class GsonRequest<T> extends Request<T> {
 	}
 
 	@Override
-	public Map<String, String> getHeaders() throws AuthFailureError {
+	public Map<String, String> getHeaders() {
 		return mHeaders;
 	}
 
@@ -63,7 +47,7 @@ public class GsonRequest<T> extends Request<T> {
 			if (response.statusCode == 200) {
 				return Response.success(mGson.fromJson(json, mClass), HttpHeaderParser.parseCacheHeaders(response));
 			} else {
-				return Response.error(new ServerControlllerException(mGson.fromJson(json, ServerControllerError.class)));
+				return Response.error(new ServerControllerException(mGson.fromJson(json, ServerControllerError.class)));
 			}
 
 		} catch (UnsupportedEncodingException | JsonSyntaxException e) {

@@ -124,7 +124,12 @@ public class ServerControllerInfoFragment extends Fragment {
 
 		mAddonAdapter = new AddonListAdapter(mAddons);
 		RecyclerView recyclerViewAddons = layout.findViewById(R.id.info_addon_recycler);
-		LinearLayoutManager manager = new LinearLayoutManager(getContext());
+		LinearLayoutManager manager = new LinearLayoutManager(getContext()){
+			@Override
+			public boolean canScrollVertically() {
+				return false;
+			}
+		};
 		recyclerViewAddons.setLayoutManager(manager);
 		DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), manager.getOrientation());
 		recyclerViewAddons.addItemDecoration(itemDecoration);
@@ -135,7 +140,12 @@ public class ServerControllerInfoFragment extends Fragment {
 
 		mPermissionsAdapter = new StringListAdapter(mPermissions);
 		RecyclerView recyclerViewPermissions = layout.findViewById(R.id.info_permissions_recycler);
-		manager = new LinearLayoutManager(getContext());
+		manager = new LinearLayoutManager(getContext()){
+			@Override
+			public boolean canScrollVertically() {
+				return false;
+			}
+		};
 		recyclerViewPermissions.setLayoutManager(manager);
 		itemDecoration = new DividerItemDecoration(getContext(), manager.getOrientation());
 		recyclerViewPermissions.addItemDecoration(itemDecoration);

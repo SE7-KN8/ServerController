@@ -56,7 +56,7 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 		mSwipeRefresh.setOnRefreshListener(this);
 
 		RecyclerView recyclerView = view.findViewById(R.id.server_list_recycler);
-		mAdapter = new ServerListAdapter(mServers);
+		mAdapter = new ServerListAdapter(mServers, mConnection);
 		recyclerView.setAdapter(mAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		loadData();
