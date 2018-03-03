@@ -15,7 +15,7 @@ public class ServerControllerAddons implements Serializable {
 		this.addons = addons;
 	}
 
-	public static class ServerControllerAddonInfo{
+	public static class ServerControllerAddonInfo implements Serializable{
 		private String name;
 		private String id;
 		private String version;

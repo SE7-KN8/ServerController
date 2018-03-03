@@ -15,7 +15,7 @@ public class ServerControllerServers implements Serializable {
 		return serverList;
 	}
 
-	public static class ServerControllerServer {
+	public static class ServerControllerServer implements Serializable{
 		private String name;
 		private String serverCreatorInfo;
 		private List<String> serverInformation;

@@ -15,7 +15,7 @@ public class ServerControllerPermissions implements Serializable {
 		return permissionList;
 	}
 
-	public static class ServerControllerPermission {
+	public static class ServerControllerPermission implements Serializable{
 		private String name;
 
 		public void setName(String name) {
