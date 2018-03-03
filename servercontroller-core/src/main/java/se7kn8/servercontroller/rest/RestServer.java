@@ -319,7 +319,7 @@ public class RestServer implements Runnable {
 	private void sendMessage(String message, int code, Context ctx) {
 		ServerControllerMessage serverControllerMessage = new ServerControllerMessage();
 		serverControllerMessage.setMessage(message);
-		ctx.status(code).json(message);
+		ctx.status(code).json(serverControllerMessage);
 	}
 
 	@NotNull
