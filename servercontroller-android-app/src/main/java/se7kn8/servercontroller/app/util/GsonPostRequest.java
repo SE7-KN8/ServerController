@@ -2,7 +2,6 @@ package se7kn8.servercontroller.app.util;
 
 import se7kn8.servercontroller.api.rest.ServerControllerError;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -34,7 +33,7 @@ public class GsonPostRequest<T, R> extends Request<R> {
 	}
 
 	@Override
-	public Map<String, String> getHeaders() throws AuthFailureError {
+	public Map<String, String> getHeaders() {
 		return mHeaders;
 	}
 
@@ -65,7 +64,7 @@ public class GsonPostRequest<T, R> extends Request<R> {
 	}
 
 	@Override
-	public byte[] getBody() throws AuthFailureError {
+	public byte[] getBody() {
 		try{
 			String requestBody = mGson.toJson(mToTransmit);
 			return requestBody == null ? null : requestBody.getBytes("utf-8");
