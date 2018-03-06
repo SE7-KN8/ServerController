@@ -1,6 +1,7 @@
 package se7kn8.servercontroller.app.adapter;
 
 import android.animation.ObjectAnimator;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
@@ -47,12 +48,13 @@ public class ConnectionListAdapter extends SelectableRecyclerViewAdapter<Connect
 	}
 
 	@Override
-	public ServerControllerConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@NonNull
+	public ServerControllerConnectionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		return new ServerControllerConnectionViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_servercontroller_connection, parent, false));
 	}
 
 	@Override
-	public void onBindViewHolder(ServerControllerConnectionViewHolder holder, int position) {
+	public void onBindViewHolder(@NonNull ServerControllerConnectionViewHolder holder, int position) {
 		holder.bind(mConnections.get(position));
 		CardView view = ((CardView) holder.itemView);
 		float startValue = view.getCardElevation();

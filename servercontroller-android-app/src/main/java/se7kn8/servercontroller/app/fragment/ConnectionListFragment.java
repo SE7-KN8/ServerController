@@ -65,20 +65,18 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 
 		mAdapter = new ConnectionListAdapter(mConnections);
 		view.setAdapter(mAdapter);
-		view.setLayoutManager(new LinearLayoutManager(getActivity()));
-		view.addOnItemTouchListener(new RecyclerViewTouchListener(getActivity(), view, new RecyclerViewTouchListener.RecyclerViewClickListener() {
+		view.setLayoutManager(new LinearLayoutManager(requireActivity()));
+		view.addOnItemTouchListener(new RecyclerViewTouchListener(requireActivity(), view, new RecyclerViewTouchListener.RecyclerViewClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
 				if (mActionMode != null) {
 					onItemSelected(position);
 				} else {
-					if (getActivity() != null) {
-						Fragment fragment = new ServerControllerOverviewFragment();
-						Bundle args = new Bundle();
-						args.putSerializable("connection", mConnections.get(position));
-						fragment.setArguments(args);
-						getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.fragment_container, fragment).addToBackStack(ServerControllerActivity.FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW).commit();
-					}
+					Fragment fragment = new ServerControllerOverviewFragment();
+					Bundle args = new Bundle();
+					args.putSerializable("connection", mConnections.get(position));
+					fragment.setArguments(args);
+					requireActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.fragment_container, fragment).addToBackStack(ServerControllerActivity.FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW).commit();
 				}
 			}
 
@@ -126,7 +124,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 
 		boolean hasCheckedItems = mAdapter.getSelectedItemCount() > 0;
 		if (hasCheckedItems && mActionMode == null) {
-			mActionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ToolbarActionModeCallback(this, mAdapter));
+			mActionMode = ((AppCompatActivity) requireActivity()).startSupportActionMode(new ToolbarActionModeCallback(this, mAdapter));
 		} else if (!hasCheckedItems && mActionMode != null) {
 			mActionMode.finish();
 		}
@@ -174,7 +172,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 
 	private void saveList() {
 		try {
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(getContext().getFilesDir(), STATE_CONNECTIONS + ".obj")));
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(requireContext().getFilesDir(), STATE_CONNECTIONS + ".obj")));
 			objectOutputStream.writeObject(mConnections);
 			objectOutputStream.close();
 		} catch (Exception e) {
@@ -185,7 +183,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 	@SuppressWarnings("unchecked")
 	private ArrayList<ServerControllerConnection> loadList() {
 		try {
-			File inputFile = new File(getContext().getFilesDir(), STATE_CONNECTIONS + ".obj");
+			File inputFile = new File(requireContext().getFilesDir(), STATE_CONNECTIONS + ".obj");
 			if (inputFile.exists()) {
 				ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(inputFile));
 				Object list = objectInputStream.readObject();

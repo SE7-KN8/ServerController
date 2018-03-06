@@ -120,39 +120,39 @@ public class ServerControllerInfoFragment extends Fragment {
 		mApiVersion = layout.findViewById(R.id.text_view_api_version);
 
 		ServerControllerVersionReceiver versionReceiver = new ServerControllerVersionReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "version/", versionReceiver, ServerControllerVersion.class, mConnection.getApiKey(), versionReceiver), getContext());
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "version/", versionReceiver, ServerControllerVersion.class, mConnection.getApiKey(), versionReceiver), requireContext());
 
 		mAddonAdapter = new AddonListAdapter(mAddons);
 		RecyclerView recyclerViewAddons = layout.findViewById(R.id.info_addon_recycler);
-		LinearLayoutManager manager = new LinearLayoutManager(getContext()){
+		LinearLayoutManager manager = new LinearLayoutManager(requireContext()){
 			@Override
 			public boolean canScrollVertically() {
 				return false;
 			}
 		};
 		recyclerViewAddons.setLayoutManager(manager);
-		DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), manager.getOrientation());
+		DividerItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), manager.getOrientation());
 		recyclerViewAddons.addItemDecoration(itemDecoration);
 		recyclerViewAddons.setAdapter(mAddonAdapter);
 
 		ServerControllerAddonsReceiver addonsReceiver = new ServerControllerAddonsReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "addons/", addonsReceiver, ServerControllerAddons.class, mConnection.getApiKey(), addonsReceiver), getContext());
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "addons/", addonsReceiver, ServerControllerAddons.class, mConnection.getApiKey(), addonsReceiver), requireContext());
 
 		mPermissionsAdapter = new StringListAdapter(mPermissions);
 		RecyclerView recyclerViewPermissions = layout.findViewById(R.id.info_permissions_recycler);
-		manager = new LinearLayoutManager(getContext()){
+		manager = new LinearLayoutManager(requireContext()){
 			@Override
 			public boolean canScrollVertically() {
 				return false;
 			}
 		};
 		recyclerViewPermissions.setLayoutManager(manager);
-		itemDecoration = new DividerItemDecoration(getContext(), manager.getOrientation());
+		itemDecoration = new DividerItemDecoration(requireContext(), manager.getOrientation());
 		recyclerViewPermissions.addItemDecoration(itemDecoration);
 		recyclerViewPermissions.setAdapter(mPermissionsAdapter);
 
 		ServerControllerPermissionsReceiver permissionsReceiver = new ServerControllerPermissionsReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "user/permissions/", permissionsReceiver, ServerControllerPermissions.class, mConnection.getApiKey(), permissionsReceiver), getContext());
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "user/permissions/", permissionsReceiver, ServerControllerPermissions.class, mConnection.getApiKey(), permissionsReceiver), requireContext());
 
 		return layout;
 	}

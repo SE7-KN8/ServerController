@@ -1,5 +1,6 @@
 package se7kn8.servercontroller.app.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class AddonListAdapter extends RecyclerView.Adapter<AddonListAdapter.Serv
 		private TextView mVersion;
 		private TextView mAuthors;
 
-		public ServerControllerAddonViewHolder(View itemView) {
+		ServerControllerAddonViewHolder(View itemView) {
 			super(itemView);
 
 			mName = itemView.findViewById(R.id.text_view_name);
@@ -54,12 +55,13 @@ public class AddonListAdapter extends RecyclerView.Adapter<AddonListAdapter.Serv
 	}
 
 	@Override
-	public ServerControllerAddonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	@NonNull
+	public ServerControllerAddonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		return new ServerControllerAddonViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_servercontroller_addon, parent, false));
 	}
 
 	@Override
-	public void onBindViewHolder(ServerControllerAddonViewHolder holder, int position) {
+	public void onBindViewHolder(@NonNull ServerControllerAddonViewHolder holder, int position) {
 		holder.onBind(mAddons.get(position));
 	}
 }
