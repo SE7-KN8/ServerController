@@ -1,5 +1,6 @@
 package se7kn8.servercontroller.app.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import se7kn8.servercontroller.app.util.ActionModeFragment;
 import se7kn8.servercontroller.app.util.RecyclerViewTouchListener;
 import se7kn8.servercontroller.app.util.ServerControllerConnection;
 import se7kn8.servercontroller.app.util.ToolbarActionModeCallback;
+import se7kn8.servercontroller.app.viewmodel.ConnectionViewModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,21 +40,18 @@ import java.util.ArrayList;
 
 public class ConnectionListFragment extends Fragment implements AddServerControllerDialog.AddServerControllerDialogListener, ActionModeFragment {
 
-	private static final String STATE_CONNECTIONS = "connections";
-	private ArrayList<ServerControllerConnection> mConnections;
 	private ConnectionListAdapter mAdapter;
 	private ActionMode mActionMode;
+	private ConnectionViewModel mConnectionViewModel;
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mConnectionViewModel = ViewModelProviders.of(requireActivity()).get(ConnectionViewModel.class);
 
 		if (savedInstanceState == null) {
-			mConnections = loadList();
-		} else {
-			mConnections = (ArrayList<ServerControllerConnection>) savedInstanceState.getSerializable(STATE_CONNECTIONS);
+			mConnectionViewModel.getConnections().addAll(loadList());
 		}
 	}
 
@@ -62,8 +61,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		CoordinatorLayout layout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_connection_list, container, false);
 		RecyclerView view = layout.findViewById(R.id.connection_overview_recycler);
-
-		mAdapter = new ConnectionListAdapter(mConnections);
+		mAdapter = new ConnectionListAdapter(mConnectionViewModel.getConnections());
 		view.setAdapter(mAdapter);
 		view.setLayoutManager(new LinearLayoutManager(requireActivity()));
 		view.addOnItemTouchListener(new RecyclerViewTouchListener(requireActivity(), view, new RecyclerViewTouchListener.RecyclerViewClickListener() {
@@ -72,11 +70,8 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 				if (mActionMode != null) {
 					onItemSelected(position);
 				} else {
-					Fragment fragment = new ServerControllerOverviewFragment();
-					Bundle args = new Bundle();
-					args.putSerializable("connection", mConnections.get(position));
-					fragment.setArguments(args);
-					requireActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.fragment_container, fragment).addToBackStack(ServerControllerActivity.FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW).commit();
+					mConnectionViewModel.setCurrentConnection(mConnectionViewModel.getConnections().get(position));
+					requireActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.fragment_container, new ServerControllerOverviewFragment()).addToBackStack(ServerControllerActivity.FRAGMENT_TAG_SERVERCONTROLLER_OVERVIEW).commit();
 				}
 			}
 
@@ -108,15 +103,9 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 
 	@Override
 	public void addServerController(ServerControllerConnection connection) {
-		mConnections.add(connection);
+		mConnectionViewModel.addConnection(connection);
 		saveList();
 		mAdapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(STATE_CONNECTIONS, mConnections);
 	}
 
 	private void onItemSelected(int position) {
@@ -140,7 +129,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 				SparseBooleanArray array = mAdapter.getSelectedIds();
 				for (int i = (array.size()); i >= 0; i--) {
 					if (array.valueAt(i)) {
-						mConnections.remove(array.keyAt(i));
+						mConnectionViewModel.removeConnection(i);
 						mAdapter.notifyDataSetChanged();
 					}
 				}
@@ -170,10 +159,12 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 		fragment.show(getChildFragmentManager(), "addServerController");
 	}
 
+	private static final String FILE_NAME = "connections.obj";
+
 	private void saveList() {
 		try {
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(requireContext().getFilesDir(), STATE_CONNECTIONS + ".obj")));
-			objectOutputStream.writeObject(mConnections);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(requireContext().getFilesDir(), FILE_NAME)));
+			objectOutputStream.writeObject(mConnectionViewModel.getConnections());
 			objectOutputStream.close();
 		} catch (Exception e) {
 			throw new RuntimeException("Can't save mConnections list", e);
@@ -183,7 +174,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 	@SuppressWarnings("unchecked")
 	private ArrayList<ServerControllerConnection> loadList() {
 		try {
-			File inputFile = new File(requireContext().getFilesDir(), STATE_CONNECTIONS + ".obj");
+			File inputFile = new File(requireContext().getFilesDir(), FILE_NAME);
 			if (inputFile.exists()) {
 				ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(inputFile));
 				Object list = objectInputStream.readObject();

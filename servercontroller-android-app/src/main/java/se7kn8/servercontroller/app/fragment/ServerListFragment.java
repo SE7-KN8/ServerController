@@ -1,5 +1,6 @@
 package se7kn8.servercontroller.app.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,35 +17,24 @@ import se7kn8.servercontroller.app.adapter.ServerListAdapter;
 import se7kn8.servercontroller.app.util.GsonRequest;
 import se7kn8.servercontroller.app.util.ServerControllerConnection;
 import se7kn8.servercontroller.app.util.VolleyRequestQueue;
+import se7kn8.servercontroller.app.viewmodel.ConnectionViewModel;
+import se7kn8.servercontroller.app.viewmodel.ServerViewModel;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.ArrayList;
-
 public class ServerListFragment extends Fragment implements Response.Listener<ServerControllerServers>, Response.ErrorListener, SwipeRefreshLayout.OnRefreshListener {
-	private static final String STATE_CONNECTION = "connection";
-	private static final String STATE_SERVERS = "servers";
-
-	private ServerControllerConnection mConnection;
-	private ArrayList<ServerControllerServers.ServerControllerServer> mServers;
 	private ServerListAdapter mAdapter;
-
+	private ConnectionViewModel mConnectionViewModel;
+	private ServerViewModel mServerViewModel;
 	private SwipeRefreshLayout mSwipeRefresh;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null) {
-			if (getArguments() != null) {
-				mConnection = (ServerControllerConnection) getArguments().getSerializable("connection");
-			}
-			mServers = new ArrayList<>();
-		} else {
-			mConnection = (ServerControllerConnection) savedInstanceState.getSerializable(STATE_CONNECTION);
-			mServers = (ArrayList<ServerControllerServers.ServerControllerServer>) savedInstanceState.getSerializable(STATE_SERVERS);
-		}
+		mConnectionViewModel = ViewModelProviders.of(requireActivity()).get(ConnectionViewModel.class);
+		mServerViewModel = ViewModelProviders.of(requireActivity()).get(ServerViewModel.class);
 	}
 
 	@Nullable
@@ -56,7 +46,7 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 		mSwipeRefresh.setOnRefreshListener(this);
 
 		RecyclerView recyclerView = view.findViewById(R.id.server_list_recycler);
-		mAdapter = new ServerListAdapter(mServers, mConnection);
+		mAdapter = new ServerListAdapter(mServerViewModel.getServers(), mConnectionViewModel.getCurrentConnection());
 		recyclerView.setAdapter(mAdapter);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		loadData();
@@ -65,7 +55,8 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 	}
 
 	private void loadData(){
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "servers/", this, ServerControllerServers.class, mConnection.getApiKey(), this), this.getContext());
+		ServerControllerConnection connection = mConnectionViewModel.getCurrentConnection();
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(connection.toURL() + "servers/", this, ServerControllerServers.class, connection.getApiKey(), this), this.getContext());
 	}
 
 	@Override
@@ -75,16 +66,9 @@ public class ServerListFragment extends Fragment implements Response.Listener<Se
 
 	@Override
 	public void onResponse(ServerControllerServers response) {
-		mServers.clear();
-		mServers.addAll(response.getServerList());
+		mServerViewModel.getServers().clear();
+		mServerViewModel.getServers().addAll(response.getServerList());
 		mAdapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(STATE_CONNECTION, mConnection);
-		outState.putSerializable(STATE_SERVERS, mServers);
 	}
 
 	@Override

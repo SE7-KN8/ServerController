@@ -1,5 +1,6 @@
 package se7kn8.servercontroller.app.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,33 +17,26 @@ import se7kn8.servercontroller.api.rest.ServerControllerPermissions;
 import se7kn8.servercontroller.api.rest.ServerControllerVersion;
 import se7kn8.servercontroller.app.R;
 import se7kn8.servercontroller.app.adapter.AddonListAdapter;
-import se7kn8.servercontroller.app.adapter.StringListAdapter;
+import se7kn8.servercontroller.app.adapter.PermissionListAdapter;
 import se7kn8.servercontroller.app.util.GsonRequest;
 import se7kn8.servercontroller.app.util.ServerControllerConnection;
 import se7kn8.servercontroller.app.util.VolleyRequestQueue;
+import se7kn8.servercontroller.app.viewmodel.ConnectionViewModel;
+import se7kn8.servercontroller.app.viewmodel.InformationViewModel;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ServerControllerInfoFragment extends Fragment {
-
-	private static final String STATE_CONNECTION = "connection";
-	private static final String STATE_ADDONS = "addons";
-	private static final String STATE_PERMISSIONS = "permissions";
-
-	private ServerControllerConnection mConnection;
 
 	private TextView mVersion;
 	private TextView mApiVersion;
 
-	private ArrayList<ServerControllerAddons.ServerControllerAddonInfo> mAddons;
 	private AddonListAdapter mAddonAdapter;
 
-	private ArrayList<String> mPermissions;
-	private StringListAdapter mPermissionsAdapter;
+	private PermissionListAdapter mPermissionsAdapter;
+
+	private InformationViewModel mInformationViewModel;
 
 	private class ServerControllerVersionReceiver implements Response.Listener<ServerControllerVersion>, Response.ErrorListener {
 
@@ -62,8 +56,8 @@ public class ServerControllerInfoFragment extends Fragment {
 
 		@Override
 		public void onResponse(ServerControllerAddons response) {
-			mAddons.clear();
-			mAddons.addAll(response.getAddons());
+			mInformationViewModel.getAddons().clear();
+			mInformationViewModel.getAddons().addAll(response.getAddons());
 			mAddonAdapter.notifyDataSetChanged();
 		}
 
@@ -77,13 +71,8 @@ public class ServerControllerInfoFragment extends Fragment {
 
 		@Override
 		public void onResponse(ServerControllerPermissions response) {
-			mPermissions.clear();
-
-			List<String> permissions = new ArrayList<>();
-			for (ServerControllerPermissions.ServerControllerPermission serverControllerPermission : response.getPermissionList()) {
-				permissions.add(serverControllerPermission.getName());
-			}
-			mPermissions.addAll(permissions);
+			mInformationViewModel.getPermissions().clear();
+			mInformationViewModel.getPermissions().addAll(response.getPermissionList());
 			mPermissionsAdapter.notifyDataSetChanged();
 		}
 
@@ -94,21 +83,9 @@ public class ServerControllerInfoFragment extends Fragment {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null) {
-			if (getArguments() != null) {
-				mConnection = (ServerControllerConnection) getArguments().getSerializable("connection");
-				mAddons = new ArrayList<>();
-				mPermissions = new ArrayList<>();
-			}
-		} else {
-			mConnection = (ServerControllerConnection) savedInstanceState.getSerializable(STATE_CONNECTION);
-			mAddons = (ArrayList<ServerControllerAddons.ServerControllerAddonInfo>) savedInstanceState.getSerializable(STATE_ADDONS);
-			mPermissions = (ArrayList<String>) savedInstanceState.getSerializable(STATE_PERMISSIONS);
-		}
-
+		mInformationViewModel = ViewModelProviders.of(requireActivity()).get(InformationViewModel.class);
 	}
 
 	@Nullable
@@ -119,12 +96,14 @@ public class ServerControllerInfoFragment extends Fragment {
 		mVersion = layout.findViewById(R.id.text_view_version);
 		mApiVersion = layout.findViewById(R.id.text_view_api_version);
 
-		ServerControllerVersionReceiver versionReceiver = new ServerControllerVersionReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "version/", versionReceiver, ServerControllerVersion.class, mConnection.getApiKey(), versionReceiver), requireContext());
+		ServerControllerConnection currentConnection = ViewModelProviders.of(requireActivity()).get(ConnectionViewModel.class).getCurrentConnection();
 
-		mAddonAdapter = new AddonListAdapter(mAddons);
+		ServerControllerVersionReceiver versionReceiver = new ServerControllerVersionReceiver();
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(currentConnection.toURL() + "version/", versionReceiver, ServerControllerVersion.class, currentConnection.getApiKey(), versionReceiver), requireContext());
+
+		mAddonAdapter = new AddonListAdapter(mInformationViewModel.getAddons());
 		RecyclerView recyclerViewAddons = layout.findViewById(R.id.info_addon_recycler);
-		LinearLayoutManager manager = new LinearLayoutManager(requireContext()){
+		LinearLayoutManager manager = new LinearLayoutManager(requireContext()) {
 			@Override
 			public boolean canScrollVertically() {
 				return false;
@@ -136,11 +115,11 @@ public class ServerControllerInfoFragment extends Fragment {
 		recyclerViewAddons.setAdapter(mAddonAdapter);
 
 		ServerControllerAddonsReceiver addonsReceiver = new ServerControllerAddonsReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "addons/", addonsReceiver, ServerControllerAddons.class, mConnection.getApiKey(), addonsReceiver), requireContext());
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(currentConnection.toURL() + "addons/", addonsReceiver, ServerControllerAddons.class, currentConnection.getApiKey(), addonsReceiver), requireContext());
 
-		mPermissionsAdapter = new StringListAdapter(mPermissions);
+		mPermissionsAdapter = new PermissionListAdapter(mInformationViewModel.getPermissions());
 		RecyclerView recyclerViewPermissions = layout.findViewById(R.id.info_permissions_recycler);
-		manager = new LinearLayoutManager(requireContext()){
+		manager = new LinearLayoutManager(requireContext()) {
 			@Override
 			public boolean canScrollVertically() {
 				return false;
@@ -152,16 +131,8 @@ public class ServerControllerInfoFragment extends Fragment {
 		recyclerViewPermissions.setAdapter(mPermissionsAdapter);
 
 		ServerControllerPermissionsReceiver permissionsReceiver = new ServerControllerPermissionsReceiver();
-		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(mConnection.toURL() + "user/permissions/", permissionsReceiver, ServerControllerPermissions.class, mConnection.getApiKey(), permissionsReceiver), requireContext());
+		VolleyRequestQueue.getInstance().addToRequestQueue(new GsonRequest<>(currentConnection.toURL() + "user/permissions/", permissionsReceiver, ServerControllerPermissions.class, currentConnection.getApiKey(), permissionsReceiver), requireContext());
 
 		return layout;
-	}
-
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(STATE_CONNECTION, mConnection);
-		outState.putSerializable(STATE_ADDONS, mAddons);
-		outState.putSerializable(STATE_PERMISSIONS, mPermissions);
 	}
 }

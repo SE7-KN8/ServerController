@@ -10,24 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import se7kn8.servercontroller.app.R;
-import se7kn8.servercontroller.app.util.ServerControllerConnection;
 
 public class ServerControllerOverviewFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
-	private static final String STATE_CONNECTION = "connection";
-	private ServerControllerConnection connection;
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		if(savedInstanceState == null){
-			if(getArguments() != null){
-				connection = (ServerControllerConnection) getArguments().getSerializable("connection");
-			}
-		}else {
-			connection = (ServerControllerConnection) savedInstanceState.getSerializable(STATE_CONNECTION);
-		}
-	}
 
 	@Nullable
 	@Override
@@ -43,7 +27,7 @@ public class ServerControllerOverviewFragment extends Fragment implements Bottom
 
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 			case R.id.item_servers:
 				createFragment(new ServerListFragment());
 				return true;
@@ -58,16 +42,7 @@ public class ServerControllerOverviewFragment extends Fragment implements Bottom
 		}
 	}
 
-	private void createFragment(Fragment fragment){
-		Bundle args = new Bundle();
-		args.putSerializable("connection", connection);
-		fragment.setArguments(args);
+	private void createFragment(Fragment fragment) {
 		getChildFragmentManager().beginTransaction().replace(R.id.overview_fragment_container, fragment).commit();
-	}
-
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(STATE_CONNECTION, connection);
 	}
 }
