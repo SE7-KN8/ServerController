@@ -127,7 +127,7 @@ public class ConnectionListFragment extends Fragment implements AddServerControl
 		switch (id) {
 			case R.id.item_delete:
 				SparseBooleanArray array = mAdapter.getSelectedIds();
-				for (int i = (array.size()); i >= 0; i--) {
+				for (int i = (array.size() - 1); i >= 0; i--) {
 					if (array.valueAt(i)) {
 						mConnectionViewModel.removeConnection(i);
 						mAdapter.notifyDataSetChanged();
