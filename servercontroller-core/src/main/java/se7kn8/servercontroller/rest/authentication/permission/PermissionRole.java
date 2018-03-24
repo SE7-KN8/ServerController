@@ -13,4 +13,11 @@ public class PermissionRole implements Role {
 	public String getPermission() {
 		return permission;
 	}
+
+	@Override
+	public String toString() {
+		return "PermissionRole{" +
+				"permission='" + permission + '\'' +
+				'}';
+	}
 }

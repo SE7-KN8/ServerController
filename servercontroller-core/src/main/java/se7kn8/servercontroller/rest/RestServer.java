@@ -73,6 +73,11 @@ public class RestServer implements Runnable {
 		//TODO add gui to generate api keys
 		javalin = Javalin.create();
 		javalin.contextPath(basePath);
+
+		if (ServerController.DEBUG) {
+			javalin.enableRouteOverview("debug");
+		}
+
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
 			log.debug("{} requested {}", ctx.ip(), ctx.path());
 			String apiToken = ctx.header("token");
@@ -316,10 +321,10 @@ public class RestServer implements Runnable {
 		javalin.post("/server/:id/command", ctx -> {
 			ServerControllerServerCommand command = ctx.bodyAsClass(ServerControllerServerCommand.class);
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
-			if(handler.isPresent()){
+			if (handler.isPresent()) {
 				handler.get().getServer().sendCommand(command.getCommand());
 				sendMessage(SUCCESSFUL, 200, ctx);
-			}else{
+			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.command"));
