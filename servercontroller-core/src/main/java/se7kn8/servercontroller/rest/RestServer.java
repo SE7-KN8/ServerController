@@ -70,7 +70,6 @@ public class RestServer implements Runnable {
 	public void run() {
 		permissions = new ArrayList<>();
 		apiKeyManager = ApiKeyManager.loadFromFile(SAVE_PATH);
-		//TODO add gui to generate api keys
 		javalin = Javalin.create();
 		javalin.contextPath(basePath);
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
@@ -136,6 +135,8 @@ public class RestServer implements Runnable {
 		createServerPropertiesEndpoint();
 		createServerLogEndpoint();
 		createServerCommandEndpoint();
+
+		setupLogWebSocket();
 	}
 
 	/*private static SslContextFactory getSslContextFactory() {
@@ -323,6 +324,12 @@ public class RestServer implements Runnable {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.command"));
+	}
+
+	private void setupLogWebSocket() {
+		javalin.ws("/server/:id/log/ws", ws -> {
+			new ServerLogWebSocket(apiKeyManager, manager, ws);
+		});
 	}
 
 	private void sendError(String message, int code, Context ctx) {
