@@ -176,7 +176,7 @@ public class ServerSave {
 	}
 
 	public static void loadServerController(@NotNull ServerManager serverManager) {
-		FileUtil.openFileChooser("*.xml", ".xml").ifPresent(file -> ServerSave.loadServerController(file, true, serverManager));
+		FileUtil.openFileChooser("*.json", ".json").ifPresent(file -> ServerSave.loadServerController(file, true, serverManager));
 	}
 
 	private static void loadServerController(@NotNull String path, boolean showDialog, @NotNull ServerManager serverManager) {
