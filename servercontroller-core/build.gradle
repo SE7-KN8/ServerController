@@ -5,7 +5,6 @@ plugins {
 dependencies {
     compile project(':servercontroller-api')
     compile project(':servercontroller-rest-api')
-    compile 'org.jdom:jdom2:2.0.6'
     compile 'org.fxmisc.richtext:richtextfx:0.8.2'
     compile 'commons-cli:commons-cli:1.4'
     compile 'org.controlsfx:controlsfx:8.40.14'

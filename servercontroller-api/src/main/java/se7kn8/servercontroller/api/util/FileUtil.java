@@ -20,6 +20,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by se7kn8 on 19.04.2017.
@@ -59,8 +60,8 @@ public class FileUtil {
 	 * @param fileName The file name
 	 * @return the path to the file or null if the user canceled the operation
 	 */
-	@Nullable
-	public static String openFileChooser(String fileType, String fileName, boolean save) {
+	@NotNull
+	public static Optional<String> openFileChooser(String fileType, String fileName, boolean save) {
 
 		FileChooser fc = new FileChooser();
 
@@ -86,10 +87,10 @@ public class FileUtil {
 		if (f != null) {
 			ServerControllerPreferences.saveSetting(FileUtil.SAVE_KEY_LAST_LOCATION, f.getParent());
 
-			return f.getAbsolutePath();
+			return Optional.of(f.getAbsolutePath());
 		}
 
-		return null;
+		return Optional.empty();
 
 	}
 
@@ -98,8 +99,8 @@ public class FileUtil {
 	 * @param fileName The file name
 	 * @return the path to the file or null if the user canceled the operation
 	 */
-	@Nullable
-	public static String openFileChooser(String fileType, String fileName) {
+	@NotNull
+	public static Optional<String> openFileChooser(String fileType, String fileName) {
 		return openFileChooser(fileType, fileName, false);
 	}
 
