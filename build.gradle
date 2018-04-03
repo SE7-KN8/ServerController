@@ -1,12 +1,12 @@
 allprojects {
-    task info doLast { task -> println "Task $task.project.name loaded"}
+    task info doLast { task -> println "Task $task.project.name loaded" }
     task clearJarCopys doLast { delete "${projectDir}/jarCopys" }
 }
 
-def static getBuildNumber(){
+def static getBuildNumber() {
 
     def number = System.getenv('TRAVIS_BUILD_NUMBER')
-    if(number == null){
+    if (number == null) {
         number = "snapshot"
     }
 
@@ -52,6 +52,7 @@ subprojects {
         google()
         jcenter()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -60,7 +61,7 @@ task copyJars(type: Copy) {
     into "$projectDir/jarCopys"
 }
 
-task copyAddons(type: Copy){
+task copyAddons(type: Copy) {
     from subprojects.collect { it.tasks.withType(Jar) }
     into System.getProperty("user.home") + "/.servercontroller/addons"
 }

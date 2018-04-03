@@ -1,26 +1,76 @@
 package se7kn8.servercontroller.api.server;
 
-import se7kn8.servercontroller.api.server.jna.Kernel32;
-import se7kn8.servercontroller.api.server.jna.W32API;
 import se7kn8.servercontroller.api.util.ErrorCode;
+import se7kn8.servercontroller.api.util.FileUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import com.sun.jna.Pointer;
+import com.google.common.collect.Maps;
+import com.pty4j.PtyProcess;
+import com.sun.jna.Platform;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public abstract class CLIServer extends NamedServer {
+
+	private void setupNativeLibraries() {
+		try {
+			List<String> nativeLibraries = new ArrayList<>();
+
+			if (Platform.isWindows()) {
+				if (Platform.is64Bit()) {
+					nativeLibraries.add("libpty/win/x86_64/winpty.dll");
+					nativeLibraries.add("libpty/win/x86_64/winpty-agent.exe");
+					nativeLibraries.add("libpty/win/x86_64/cyglaunch.exe");
+				} else {
+					nativeLibraries.add("libpty/win/x86/winpty.dll");
+					nativeLibraries.add("libpty/win/x86/winpty-agent.exe");
+				}
+			} else if (Platform.isLinux()) {
+				if (Platform.is64Bit()) {
+					nativeLibraries.add("libpty/linux/x86_64/libpty.so");
+				} else {
+					nativeLibraries.add("libpty/linux/x86/libpty.so");
+				}
+			} else if (Platform.isMac()) {
+				if (Platform.is64Bit()) {
+					nativeLibraries.add("libpty/macosx/x86_64/libpty.dylib");
+				} else {
+					nativeLibraries.add("libpty/macosx/x86/libpty.dylib");
+				}
+			}
+
+			for (String nativeLibrary : nativeLibraries) {
+				Path nativePath = FileUtil.ROOT_PATH.resolve("native").resolve(nativeLibrary);
+
+				if (Files.notExists(nativePath)) {
+					Files.createDirectories(nativePath.getParent());
+					InputStream inputStream = ClassLoader.getSystemResourceAsStream(nativeLibrary);
+					Files.copy(inputStream, nativePath);
+					inputStream.close();
+				}
+
+			}
+
+			System.setProperty("PTY_LIB_FOLDER", FileUtil.ROOT_PATH.resolve("native").resolve("libpty").toString());
+		} catch (Exception e) {
+			log.error("Error while creating native libraries: ", e);
+		}
+
+	}
 
 	private final class MessageReader extends Thread {
 		@Override
@@ -63,7 +113,7 @@ public abstract class CLIServer extends NamedServer {
 	private BufferedWriter outputWriter;
 	private WaitForExit waitForExitThread;
 	private MessageReader messageReaderThread;
-	private Process serverProcess;
+	private PtyProcess serverProcess;
 	private int pid = 0;
 	private String[] args;
 	private Logger log = LogManager.getLogger();
@@ -96,7 +146,15 @@ public abstract class CLIServer extends NamedServer {
 
 				log.info("[{}]: Start with command: '{}'; Working directory is '{}'", getName(), Arrays.toString(cmd), getWorkingDirectory().toFile().toString());
 
-				ProcessBuilder serverProcessBuilder = new ProcessBuilder(cmd);
+				setupNativeLibraries();
+				Map<String, String> envs = Maps.newHashMap(System.getenv());
+				serverProcess = PtyProcess.exec(cmd, envs, getWorkingDirectory().toString());
+				inputReader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
+				outputWriter = new BufferedWriter(new OutputStreamWriter(serverProcess.getOutputStream()));
+				messageReaderThread.start();
+				waitForExitThread.start();
+
+				/*ProcessBuilder serverProcessBuilder = new ProcessBuilder(cmd);
 				serverProcessBuilder.redirectErrorStream(true);
 				serverProcessBuilder.directory(getWorkingDirectory().toFile());
 				serverProcess = serverProcessBuilder.start();
@@ -115,7 +173,7 @@ public abstract class CLIServer extends NamedServer {
 					W32API.HANDLE handle = new W32API.HANDLE();
 					handle.setPointer(Pointer.createConstant(id.getLong(serverProcess)));
 					pid = kernel.GetProcessId(handle);
-				}
+				}*/
 			} catch (Exception e) {
 				setState(ServerState.STOPPED);
 				e.printStackTrace();
@@ -168,7 +226,7 @@ public abstract class CLIServer extends NamedServer {
 		try {
 			outputWriter.write(command + "\n");
 			outputWriter.flush();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			onError(e);
 			e.printStackTrace();
 		}
