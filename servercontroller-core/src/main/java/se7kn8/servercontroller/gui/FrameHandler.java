@@ -219,11 +219,15 @@ public class FrameHandler {
 		return serverManager;
 	}
 
+	//TODO rework
+	@Deprecated
 	public static void showBar() {
 		log.debug("Showing the progress bar");
 		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(true));
 	}
 
+	//TODO rework
+	@Deprecated
 	public static void hideBar() {
 		log.debug("Hiding the progress bar");
 		Platform.runLater(() -> FrameHandler.currentProgress.setVisible(false));

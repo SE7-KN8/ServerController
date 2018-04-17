@@ -26,6 +26,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ public class RestServer implements Runnable {
 	private final String ERROR_NOT_FOUND = "Not found";
 	private final String UNAUTHORIZED = "Unauthorized";
 	private final String SUCCESSFUL = "Successful";
+	private final Gson gson = new GsonBuilder().create();
 
 	private List<String> permissions;
 
@@ -73,6 +77,11 @@ public class RestServer implements Runnable {
 		//TODO add gui to generate api keys
 		javalin = Javalin.create();
 		javalin.contextPath(basePath);
+
+		if (ServerController.DEBUG) {
+			javalin.enableRouteOverview("debug");
+		}
+
 		javalin.accessManager((handler, ctx, permittedRoles) -> {
 			log.debug("{} requested {}", ctx.ip(), ctx.path());
 			String apiToken = ctx.header("token");
@@ -160,22 +169,24 @@ public class RestServer implements Runnable {
 		ServerControllerVersion version = new ServerControllerVersion();
 		version.setVersion(ServerController.VERSION);
 		version.setApiVersion(RestServer.API_VERSION);
-		javalin.get("/version", ctx -> ctx.json(version), createRoleForPermission("servercontroller.version"));
+		javalin.get("/version", ctx -> sendJson(ctx, version), createRoleForPermission("servercontroller.version"));
 	}
 
 	private void createAddonsEndpoint() {
-		List<ServerControllerAddons.ServerControllerAddonInfo> addonInfoList = new ArrayList<>();
-		AddonLoader.ADDONS.forEach((id, addon) -> {
-			ServerControllerAddons.ServerControllerAddonInfo info = new ServerControllerAddons.ServerControllerAddonInfo();
-			info.setId(addon.getAddonInfo().getId());
-			info.setName(addon.getAddonInfo().getName());
-			info.setAuthors(addon.getAddonInfo().getAuthors());
-			info.setVersion(addon.getAddonInfo().getVersion().toString());
-			addonInfoList.add(info);
-		});
-		ServerControllerAddons addons = new ServerControllerAddons();
-		addons.setAddons(addonInfoList);
-		javalin.get("/addons", ctx -> ctx.json(addons), createRoleForPermission("servercontroller.addons"));
+		javalin.get("/addons", ctx -> {
+			List<ServerControllerAddons.ServerControllerAddonInfo> addonInfoList = new ArrayList<>();
+			AddonLoader.ADDONS.forEach((id, addon) -> {
+				ServerControllerAddons.ServerControllerAddonInfo info = new ServerControllerAddons.ServerControllerAddonInfo();
+				info.setId(addon.getAddonInfo().getId());
+				info.setName(addon.getAddonInfo().getName());
+				info.setAuthors(addon.getAddonInfo().getAuthors());
+				info.setVersion(addon.getAddonInfo().getVersion().toString());
+				addonInfoList.add(info);
+			});
+			ServerControllerAddons addons = new ServerControllerAddons();
+			addons.setAddons(addonInfoList);
+			sendJson(ctx, addons);
+		}, createRoleForPermission("servercontroller.addons"));
 	}
 
 	private void createServersEndpoint() {
@@ -192,7 +203,7 @@ public class RestServer implements Runnable {
 
 			ServerControllerServers servers = new ServerControllerServers();
 			servers.setServerList(serverList);
-			ctx.json(servers);
+			sendJson(ctx, servers);
 		}, createRoleForPermission("servercontroller.servers"));
 	}
 
@@ -202,7 +213,7 @@ public class RestServer implements Runnable {
 			if (handler.isPresent()) {
 				ServerControllerServerState state = new ServerControllerServerState();
 				state.setState(handler.get().getServer().getState().name());
-				ctx.json(state);
+				sendJson(ctx, state);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
@@ -281,7 +292,7 @@ public class RestServer implements Runnable {
 				permissionList.add(serverControllerPermission);
 			}
 			serverControllerPermissions.setPermissionList(permissionList);
-			ctx.json(serverControllerPermissions);
+			sendJson(ctx, serverControllerPermissions);
 		}, createRoleForPermission("servercontroller.user.permissions"));
 	}
 
@@ -291,7 +302,7 @@ public class RestServer implements Runnable {
 			if (handler.isPresent()) {
 				ServerControllerServerProperties serverProperties = new ServerControllerServerProperties();
 				serverProperties.setProperties(handler.get().getServer().getProperties());
-				ctx.json(serverProperties);
+				sendJson(ctx, serverProperties);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
@@ -305,7 +316,7 @@ public class RestServer implements Runnable {
 			if (handler.isPresent()) {
 				ServerControllerServerLog serverLog = new ServerControllerServerLog();
 				serverLog.setLines(handler.get().getServer().getLatestLog());
-				ctx.json(serverLog);
+				sendJson(ctx, serverLog);
 			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
@@ -314,12 +325,12 @@ public class RestServer implements Runnable {
 
 	private void createServerCommandEndpoint() {
 		javalin.post("/server/:id/command", ctx -> {
-			ServerControllerServerCommand command = ctx.bodyAsClass(ServerControllerServerCommand.class);
+			ServerControllerServerCommand command = getObjectFromJson(ctx.body(), ServerControllerServerCommand.class);
 			Optional<BasicServerHandler> handler = manager.findServerByID(ctx.param("id"));
-			if(handler.isPresent()){
+			if (handler.isPresent()) {
 				handler.get().getServer().sendCommand(command.getCommand());
 				sendMessage(SUCCESSFUL, 200, ctx);
-			}else{
+			} else {
 				sendError(ERROR_NOT_FOUND, 404, ctx);
 			}
 		}, createRoleForPermission("servercontroller.server.command"));
@@ -328,13 +339,23 @@ public class RestServer implements Runnable {
 	private void sendError(String message, int code, Context ctx) {
 		ServerControllerError error = new ServerControllerError();
 		error.setErrorMessage(message);
-		ctx.status(code).json(error);
+		ctx.status(code);
+		sendJson(ctx, error);
 	}
 
 	private void sendMessage(String message, int code, Context ctx) {
 		ServerControllerMessage serverControllerMessage = new ServerControllerMessage();
 		serverControllerMessage.setMessage(message);
-		ctx.status(code).json(serverControllerMessage);
+		ctx.status(code);
+		sendJson(ctx, serverControllerMessage);
+	}
+
+	private void sendJson(Context ctx, Object toSerialize) {
+		ctx.result(gson.toJson(toSerialize)).contentType("application/json");
+	}
+
+	private <T> T getObjectFromJson(String json, Class<T> c) {
+		return gson.fromJson(json, c);
 	}
 
 	@NotNull
