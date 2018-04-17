@@ -18,22 +18,10 @@ include 'services:webservice'
 
 rootProject.name = 'ServerController'
 
-if(System.getenv("CI")){
-    if (System.getenv("BUILD_ANDROID")) {
-        //Disabled until .travis.yml is fixed
-        //includeApp()
-        //includeRest()
-    }else{
-        includeCore()
-        includeRest()
-        includeAddons()
-    }
-}else{
-    includeCore()
-    includeRest()
-    includeApp()
-    includeAddons()
-}
+includeRest()
+includeCore()
+includeAddons()
+
 
 def includeRest(){
     include 'servercontroller-rest-api'
@@ -42,10 +30,6 @@ def includeRest(){
 def includeCore(){
     include 'servercontroller-api'
     include 'servercontroller-core'
-}
-
-def includeApp(){
-    include 'servercontroller-android-app'
 }
 
 def includeAddons() {
