@@ -50,13 +50,14 @@ public class ServerLogWebSocket {
 		handler.onError(this::handleException);
 	}
 
-	private void handleConnect(WsSession session) throws Exception {
+	private void handleConnect(@NotNull WsSession session) throws Exception {
 		Optional<BasicServerHandler> optionalHandler = manager.findServerByID(session.param("id"));
 		if (!optionalHandler.isPresent()) {
 			session.close(1001, "Server not found");
 		} else {
 			//TODO replace this with websocket-access-manager in future javalin version
-			if(apiKeyManager.canExecute(session.header("token"), "servercontroller.server.log")){
+			String token = session.header("token");
+			if (token != null && apiKeyManager.canExecute(token, "servercontroller.server.log")) {
 				ServerLogListener listener = new ServerLogListener(session);
 				optionalHandler.get().getServer().addMessageListener(listener);
 				map.put(session.getId(), listener);
@@ -64,11 +65,11 @@ public class ServerLogWebSocket {
 		}
 	}
 
-	private void handleMessage(WsSession session, String msg) throws Exception {
+	private void handleMessage(@NotNull WsSession session, String msg) throws Exception {
 		//For future use
 	}
 
-	private void handleClose(WsSession session, int statusCode, String reason) throws Exception {
+	private void handleClose(@NotNull WsSession session, int statusCode, String reason) throws Exception {
 		Optional<BasicServerHandler> optionalHandler = manager.findServerByID(session.param("id"));
 		if (!optionalHandler.isPresent()) {
 			session.close(1001, "Server not found");

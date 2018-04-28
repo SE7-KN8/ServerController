@@ -216,7 +216,11 @@ public class ServerManager {
 
 	@NotNull
 	public Optional<BasicServerHandler> findServerByID(String id) {
-		return servers.stream().filter(basicServerHandler -> basicServerHandler.getServer().getName().equals(id)).findFirst();
+		if (id != null) {
+			return servers.stream().filter(basicServerHandler -> basicServerHandler.getServer().getName().equals(id)).findFirst();
+		} else {
+			return Optional.empty();
+		}
 	}
 
 }
