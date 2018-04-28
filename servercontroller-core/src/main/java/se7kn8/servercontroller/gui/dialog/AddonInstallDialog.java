@@ -33,23 +33,16 @@ public class AddonInstallDialog extends StageDialog {
 		BorderPane root = new BorderPane();
 
 		Button openBtn = new Button(I18N.translate("file_choose"));
-		openBtn.setOnAction(event -> {
-			String file = FileUtil.openFileChooser("*.jar", "JAR");
-
-			if (file != null && file.endsWith(".jar")) {
-
-				Path addonPath = Paths.get(file);
-				try {
-					Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
-					Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-					DialogUtil.showInformationAlert("", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-
+		openBtn.setOnAction(event -> FileUtil.openFileChooser("*.jar", "JAR").ifPresent(file -> {
+			Path addonPath = Paths.get(file);
+			try {
+				Files.createDirectories(AddonLoader.ADDON_TEMP_PATH);
+				Files.copy(addonPath, AddonLoader.ADDON_TEMP_PATH.resolve(addonPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+				DialogUtil.showInformationAlert("", I18N.format("successful_addon_copy", addonPath.getFileName().toString()));
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
-
-		});
+		}));
 
 		root.setCenter(new Label(I18N.translate("dialog_addon_install_drag_and_drop"), openBtn));
 

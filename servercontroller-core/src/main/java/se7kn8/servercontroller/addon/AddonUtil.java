@@ -337,7 +337,7 @@ public class AddonUtil {
 			Button b = new Button(I18N.format("file_choose"));
 			b.setPrefWidth(dialogRow.getPrefWidth());
 			b.setPrefHeight(dialogRow.getPrefHeight());
-			b.setOnAction(e -> field.setText(FileUtil.openFileChooser(dialogRow.getFileExtension(), dialogRow.getFileType())));
+			b.setOnAction(e -> FileUtil.openFileChooser(dialogRow.getFileExtension(), dialogRow.getFileType()).ifPresent(field::setText));
 
 			GridPane.setColumnIndex(b, 2);
 			GridPane.setRowIndex(b, row);

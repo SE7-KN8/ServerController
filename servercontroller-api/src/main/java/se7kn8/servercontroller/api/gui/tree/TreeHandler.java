@@ -116,9 +116,9 @@ public class TreeHandler<T extends TreeEntry<?>> {
 	public void updateSelectedEntry() {
 		if (updateSelection) {
 			TreeItem<T> item = this.getTreeView().getSelectionModel().getSelectedItem();
-			if(item != null){
+			if (item != null) {
 				item.getValue().onSelect();
-			}else{
+			} else {
 				log.info("Selected entry is null!");
 			}
 		}

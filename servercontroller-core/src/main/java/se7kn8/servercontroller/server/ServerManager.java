@@ -67,15 +67,15 @@ public class ServerManager {
 	}
 
 	public void startSelectedServer() {
-		rootTabHandler.getSelectedTabEntry().getItem().startServer();
+		rootTabHandler.getSelectedTabEntry().ifPresent(tabEntry -> tabEntry.getItem().startServer());
 	}
 
 	public void restartSelectedServer() {
-		rootTabHandler.getSelectedTabEntry().getItem().restartServer();
+		rootTabHandler.getSelectedTabEntry().ifPresent(tabEntry -> tabEntry.getItem().restartServer());
 	}
 
 	public void stopSelectedServer() {
-		rootTabHandler.getSelectedTabEntry().getItem().stopServer();
+		rootTabHandler.getSelectedTabEntry().ifPresent(tabEntry -> tabEntry.getItem().stopServer());
 	}
 
 	@NotNull
@@ -157,16 +157,21 @@ public class ServerManager {
 
 	public void removeSelectedServer() {
 		if (servers.size() > 0) {
-			BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
-			servers.remove(handler);
-			rootTreeHandler.disableUpdateEntry();
-			rootTabHandler.disableUpdateEntry();
-			rootTabHandler.closeSelectedTab();
-			rootTreeHandler.removeSelectedItem();
-			rootTabHandler.enableUpdateEntry();
-			rootTreeHandler.enableUpdateEntry();
-			rootTreeHandler.updateSelectedEntry();
-			rootTabHandler.updateSelectedEntry();
+
+			Optional<TabEntry<BasicServerHandler>> basicServerHandlerTabEntry = rootTabHandler.getSelectedTabEntry();
+
+			if (basicServerHandlerTabEntry.isPresent()) {
+				BasicServerHandler handler = basicServerHandlerTabEntry.get().getItem();
+				servers.remove(handler);
+				rootTreeHandler.disableUpdateEntry();
+				rootTabHandler.disableUpdateEntry();
+				rootTabHandler.closeSelectedTab();
+				rootTreeHandler.removeSelectedItem();
+				rootTabHandler.enableUpdateEntry();
+				rootTreeHandler.enableUpdateEntry();
+				rootTreeHandler.updateSelectedEntry();
+				rootTabHandler.updateSelectedEntry();
+			}
 		}
 	}
 
@@ -180,6 +185,7 @@ public class ServerManager {
 		return rootTreeHandler;
 	}
 
+	@NotNull
 	public AddonRegistryHelper getRegistryHelper() {
 		return registryHelper;
 	}
@@ -191,7 +197,7 @@ public class ServerManager {
 		servers.clear();
 	}
 
-	public void selectServer(BasicServerHandler handler) {
+	public void selectServer(@NotNull BasicServerHandler handler) {
 		rootTabHandler.getTabEntries().forEach(entry -> {
 			if (entry.getItem() == handler) {
 				rootTabHandler.selectEntry(entry);
@@ -200,10 +206,10 @@ public class ServerManager {
 	}
 
 	public void editSelectedServer() {
-		BasicServerHandler handler = rootTabHandler.getSelectedTabEntry().getItem();
-		AddonUtil.loadServerCreateDialog(handler.getServer().getAddonID(), handler.getServer().getServerCreatorID(), handler.getServer(), this);
+		rootTabHandler.getSelectedTabEntry().ifPresent(tabEntry -> AddonUtil.loadServerCreateDialog(tabEntry.getItem().getServer().getAddonID(), tabEntry.getItem().getServer().getServerCreatorID(), tabEntry.getItem().getServer(), this));
 	}
 
+	@NotNull
 	public List<String> getServerIds() {
 		return servers.stream().map(basicServerHandler -> basicServerHandler.getServer().getName()).collect(Collectors.toList());
 	}

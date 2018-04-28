@@ -12,6 +12,7 @@ import javafx.scene.control.TabPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TabHandler<T extends TabEntry<?>> {
 
@@ -32,12 +33,12 @@ public class TabHandler<T extends TabEntry<?>> {
 			});
 		}
 
-		public void refresh(){
+		public void refresh() {
 			//TODO use properties
 			createTab(getTabEntry());
 		}
 
-		private void createTab(T value){
+		private void createTab(T value) {
 			setText(value.getTitle());
 			setClosable(value.isCloseable());
 			setContent(value.getContent());
@@ -90,8 +91,8 @@ public class TabHandler<T extends TabEntry<?>> {
 	}
 
 	public boolean closeSelectedTab() {
-		T entry = getSelectedTabEntry();
-		if (entry.onClose()) {
+		Optional<T> optionalEntry = getSelectedTabEntry();
+		if (optionalEntry.isPresent() && optionalEntry.get().onClose()) {
 			rootPane.getTabs().remove(rootPane.getSelectionModel().getSelectedIndex());
 			return true;
 		}
@@ -114,8 +115,13 @@ public class TabHandler<T extends TabEntry<?>> {
 	}
 
 	@NotNull
-	public T getSelectedTabEntry() {
-		return getEntryFromTab(rootPane.getSelectionModel().getSelectedItem());
+	public Optional<T> getSelectedTabEntry() {
+		Tab item = rootPane.getSelectionModel().getSelectedItem();
+		if (item == null) {
+			return Optional.empty();
+		} else {
+			return Optional.of(getEntryFromTab(item));
+		}
 	}
 
 	@NotNull
@@ -135,10 +141,10 @@ public class TabHandler<T extends TabEntry<?>> {
 
 	@SuppressWarnings("unchecked")
 	@NotNull
-	public CustomTab castTab(@NotNull Tab tab){
-		try{
+	public CustomTab castTab(@NotNull Tab tab) {
+		try {
 			return (CustomTab) tab;
-		}catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			//Should ever happen
 			throw new RuntimeException(e);
 		}
@@ -163,8 +169,8 @@ public class TabHandler<T extends TabEntry<?>> {
 		});
 	}
 
-	public void refresh(){
-		getTabPane().getTabs().forEach(tab->{
+	public void refresh() {
+		getTabPane().getTabs().forEach(tab -> {
 			getEntryFromTab(tab).refresh();
 			castTab(tab).refresh();
 		});
